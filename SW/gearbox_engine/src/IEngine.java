@@ -6,7 +6,7 @@ package egineandgearbox;
  */
 public interface IEngine {
 
-    void operateEngine(int gearState, boolean gasPedal);
+    void operateEngine(int gearState, boolean throttle);
 
     double getRpm();
 
