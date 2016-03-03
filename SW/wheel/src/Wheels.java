@@ -1,8 +1,9 @@
 package wheels;
 
-class Wheels {
+class Wheels implements IWheels {
 //author: Ferter Viktor
 //Last modified: Sipos Pal
+//Last Last modified: Apor
 	
 	
 	double speed; 						   //given in km/h 
@@ -50,6 +51,15 @@ class Wheels {
 		speed+= accelerationAdjustment*torque
 				-brakeAdjustment*brakePedal
 				-natureBrake;
+	}
+	
+	//Interface metodusok
+	public double Irany(){
+		return direction;
+	}
+	
+	public double Sebesseg(){
+		return direction;
 	}
 
 }
