@@ -13,7 +13,7 @@ class Wheels implements IWheels {
     static double turningAdjustment = 0.2;      //proportion to simulate turning realistically
 	static double accelerationAdjustment = 0.2; //proportion to convert torque to acceleration
 	static double brakeAdjustment = 0.2;		//proportion to turn brake pedal to deceleration
-	static double natureBrake = 0.2;			//deceleration of environment
+	static double natureBrake = 0.02;			//deceleration of environment
     
 	public Wheels()
 	{
@@ -48,9 +48,15 @@ class Wheels implements IWheels {
 	
 	private void calcSpeed(double torque, double brakePedal)
 	{
-		speed+= accelerationAdjustment*torque
-				-brakeAdjustment*brakePedal
-				-natureBrake;
+		speed += accelerationAdjustment * torque - natureBrake * speed;
+		if(torque >= 0)
+		{
+			speed -= brakeAdjustment * brakePedal;
+		}
+		else
+		{
+			speed += brakeAdjustment * brakePedal;
+		}
 	}
 	
 	//Interface metodusok
