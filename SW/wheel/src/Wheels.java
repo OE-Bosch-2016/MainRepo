@@ -60,12 +60,12 @@ class Wheels implements IWheels {
 	}
 	
 	//Interface metodusok
-	public double Irany(){
+	public double Direction(){
 		return direction;
 	}
 	
-	public double Sebesseg(){
-		return direction;
+	public double Speed(){
+		return speed;
 	}
 
 }
