@@ -1,8 +1,6 @@
 package hu.nik.project.environment.objects;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * Created by Róbert on 2016.02.27..
@@ -19,6 +17,14 @@ public class SceneObjectWithConcreteClassTest {
     }
 
     @Test
+    public void cantBeNagative() throws Exception{
+        sceneObject = new Parking(-1, 40, 20, Parking.ParkingType.PARKING_90);
+        Assert.fail("The X or Y position is negative! X: "+sceneObject.getPositionX()+" Y: "+sceneObject.getPositionY());
+        sceneObject = new Parking(50, -2, 20, Parking.ParkingType.PARKING_90);
+        Assert.fail("The X or Y position is negative! X: "+sceneObject.getPositionX()+" Y: "+sceneObject.getPositionY());
+    }
+
+    @Test
     public void testGetObjectType() throws Exception {
         Assert.assertEquals(Parking.ParkingType.PARKING_90, sceneObject.getObjectType());
     }
@@ -30,12 +36,6 @@ public class SceneObjectWithConcreteClassTest {
     }
 
     @Test
-    public void testGetPositionY() throws Exception {
-        Assert.assertNotEquals(90, sceneObject.getPositionY());
-        Assert.assertEquals(40, sceneObject.getPositionY());
-    }
-
-    @Test
     public void testGetRotation() throws Exception {
         Assert.assertNotEquals(90, sceneObject.getRotation());
         Assert.assertEquals(20, sceneObject.getRotation(), 0.00001);
@@ -44,6 +44,7 @@ public class SceneObjectWithConcreteClassTest {
     @Test(expected = SceneObjectException.class)
     public void testExeptionThrowWithRotation() throws SceneObjectException {
         sceneObject = new Parking(999,999, -500, Parking.ParkingType.PARKING_BOLLARD);
+        sceneObject = new Parking(999,999, 500, Parking.ParkingType.PARKING_BOLLARD);
     }
 
     @Test
