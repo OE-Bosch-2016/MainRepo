@@ -5,5 +5,5 @@ package Light;
  */
 public enum TypeOfLight {
 
-    SideDirectionIndicator,LowBeam,ParkingLight,HighBeam,DayTimeRunningLight,FogLamp,CorneringLight,FrontDirectionIndicator,StopLamp,BackUpLamp,RearDirectionIndicator,TailLight,RearFogLamp
+    SideDirectionIndicator,LowBeam,ParkingLight,HighBeam,DayTimeRunningLight,FogLamp,CorneringLight,FrontDirectionIndicator,StopLamp,BackUpLamp,RearDirectionIndicator,TailLight,RearFogLamp,Lamp
 }
