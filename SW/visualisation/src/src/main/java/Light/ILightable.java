@@ -9,4 +9,6 @@ public interface ILightable {
 
     TypeOfLight getTypeOfLamp();
 
+    String bugReport(String Message);
+
 }
