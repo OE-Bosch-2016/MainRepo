@@ -22,7 +22,6 @@ public class Top extends JFrame {
     // HMI elements
     private Mileage mileage;
 
-    // Delete ??
     private static final int DISPLAY_MAX = 220;
     private final DefaultValueDataset dataset = new DefaultValueDataset();
     private final DefaultValueDataset displayDataset = new DefaultValueDataset();
@@ -52,12 +51,7 @@ public class Top extends JFrame {
 
         setValue(50);
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                frame.setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(() -> frame.setVisible(true));
         //*****
 
         // Test
