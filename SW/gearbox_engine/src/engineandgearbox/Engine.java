@@ -6,7 +6,7 @@ package engineandgearbox;
  */
 public class Engine implements IEngine {
 
-    final int maxRpm = 6000;
+    final int maxRpm = 4000;
     final int minRpm = 500;
     private double rpm;
     private double torque;
@@ -20,20 +20,20 @@ public class Engine implements IEngine {
 
     @Override
     public void operateEngine(int gearState, boolean throttle) {
-        if (gearState == lastGearState) { //nincs váltás
+        if (gearState == lastGearState) { //no shift
             calculateRpm(throttle);
-        } else if (gearState > lastGearState) { //fel váltás
+        } else if (gearState > lastGearState) { //shift up
             shiftUp(gearState);
-        } else { //le váltás
+        } else { //shift down
             shiftDown(gearState);
         }
     }
 
     private void shiftUp(int gearState) {
         if (gearState == 0) {
-            shiftToN(); //üresbe tesszük hátramenetből
+            shiftToN(); //shift from R to N
         } else if (lastGearState == 0) {
-            shiftFromN(gearState); //egyesbe tesszük
+            shiftFromN(gearState); //shift to 1 from N
         } else {
             rpm -= 1500;
         }
@@ -42,9 +42,9 @@ public class Engine implements IEngine {
 
     private void shiftDown(int gearState) {
         if (gearState == 0) {
-            shiftToN(); //üresbe tesszük előremenetből
+            shiftToN(); //shift to N
         } else if (lastGearState == 0) {
-            shiftFromN(gearState); //hátramenetbe tesszük
+            shiftFromN(gearState); //shift to R
         } else {
             rpm += 500;
         }
@@ -58,16 +58,14 @@ public class Engine implements IEngine {
     }
 
     private void calculateRpm(boolean throttle) {
-        //double time = Math.cosh(rpm / 1600) - 5;
-        double time = 5*(Math.pow(Math.E, rpm/1600)-1);
+        double time = 5 * (Math.pow(Math.E, rpm / 1600) - 1);
         if (throttle) {
             time += 1;
         } else {
             time -= 1;
         }
         if (time > 0) {
-           // rpm = Math.log(time + 1 + Math.sqrt((time + 1) * (time + 1) - 1)) * 1600;
-            rpm = (Math.log((time+5)/5))*1600;
+            rpm = (Math.log((time + 5) / 5)) * 1600;
             if (rpm > maxRpm) {
                 rpm = maxRpm;
             } else if (rpm < minRpm) {
@@ -78,9 +76,18 @@ public class Engine implements IEngine {
     }
 
     private void calculateTorque() {
-        torque = (lastGearState - 1) * 6000 + rpm;
-        if (lastGearState == 0) {
-            torque = 0;
+
+        switch (lastGearState) {
+            case 0://now in N
+                torque = 0;
+                break;
+            case -1://now in R
+            case 1://now in 1
+                torque = rpm / 10;
+                break;
+            default://now in > 1
+                torque = rpm / 10 - lastGearState * 20;
+                break;
         }
     }
 
