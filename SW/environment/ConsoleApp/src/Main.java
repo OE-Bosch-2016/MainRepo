@@ -9,7 +9,7 @@ import hu.nik.project.environment.XMLParserException;
 public class Main {
     public static void main(String [ ] args) {
         try {
-            Scene scene = new Scene("");
+            Scene scene = new Scene("C:\\Users\\thecy\\Documents\\Android\\MainRepo\\SW\\environment\\TestSource\\testScene.xml");
             System.out.println(scene.toString());
         }catch (XMLParserException e) {
             System.out.println("Error during the XML parsing: " + e.getMessage());
