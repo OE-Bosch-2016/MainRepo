@@ -181,6 +181,7 @@ public class Scene {
         } catch (SceneObjectException e) {
             try {
                 logger.log("SceneObject with ID:" + id + " can't be added -> " + e.getMessage());
+                logger.emptyLine();
             } catch (LoggerException ex) {
                 // No logging happens
             }
@@ -236,7 +237,14 @@ public class Scene {
 
                 NodeList transformList = objectElement.getElementsByTagName("Transform");
                 Element transformElement = (Element) transformList.item(0);
-                Double rotation = (double)Math.round(Math.toDegrees(Math.acos(Double.parseDouble(transformElement.getAttribute("m11")))));
+
+                Double rotation = (double)Math.round(Math.toDegrees(Math.atan2(-1 * Double.parseDouble(transformElement.getAttribute("m12")),
+                        Double.parseDouble(transformElement.getAttribute("m11")))));
+
+                if (rotation == -0.0) rotation = 0.0;
+                else
+                    if (rotation < 0) rotation = 360 + rotation;
+
 
                 createSceneObject(id, objectName, positionX, positionY, rotation);
             }

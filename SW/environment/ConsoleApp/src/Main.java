@@ -1,6 +1,8 @@
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.XMLParserException;
 
+import java.lang.reflect.Array;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
@@ -8,6 +10,7 @@ import hu.nik.project.environment.XMLParserException;
  */
 public class Main {
     public static void main(String [ ] args) {
+
         try {
             String xmlPath;
 

@@ -8,7 +8,6 @@ package hu.nik.project.environment.logger;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 

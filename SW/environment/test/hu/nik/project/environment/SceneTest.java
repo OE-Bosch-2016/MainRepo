@@ -1,7 +1,7 @@
 package hu.nik.project.environment;
 
+import hu.nik.project.environment.objects.AdvancedRoad;
 import hu.nik.project.environment.objects.SceneObject;
-import hu.nik.project.environment.objects.SimpleRoad;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,12 +41,12 @@ public class SceneTest {
 
     @Test
     public void testGetSceneObjectByPosition() throws Exception {
-        SceneObject testObject = scene.getSceneObjectByPosition(2175, 2375);
-        Assert.assertEquals(testObject.getClass(), SimpleRoad.class);
+        SceneObject testObject = scene.getSceneObjectByPosition(2525, 2263);
+        Assert.assertEquals(testObject.getClass(), AdvancedRoad.class);
     }
 
     @Test
     public void testToString() throws Exception {
-        Assert.assertEquals("Scene Width: 5000 Height: 4000 Number of SceneObjects: 67", scene.toString());
+        Assert.assertEquals("Scene Width: 5000 Height: 4000 Number of SceneObjects: 66", scene.toString());
     }
 }
