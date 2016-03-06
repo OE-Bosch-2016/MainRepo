@@ -1,6 +1,6 @@
 package wheels;
 
-class Wheels implements IWheels {
+public class Wheels implements IWheels {
 //author: Ferter Viktor
 //Last modified: Sipos Pal
 //Last Last modified: Apor
@@ -10,7 +10,7 @@ class Wheels implements IWheels {
 	double direction; 					   //given in degree 0-360
 	
 	//adjust these by testing
-    static double turningAdjustment = 0.2;      //proportion to simulate turning realistically
+    	static double turningAdjustment = 0.2;      //proportion to simulate turning realistically
 	static double accelerationAdjustment = 0.2; //proportion to convert torque to acceleration
 	static double brakeAdjustment = 0.2;		//proportion to turn brake pedal to deceleration
 	static double natureBrake = 0.02;			//deceleration of environment
@@ -44,6 +44,7 @@ class Wheels implements IWheels {
 	{
 		double phiDirection=driverWheel*speed*turningAdjustment;
 		direction += phiDirection;
+		direction = direction % 360;
 	}
 	
 	private void calcSpeed(double torque, double brakePedal)
