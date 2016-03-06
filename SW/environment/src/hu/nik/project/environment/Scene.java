@@ -209,7 +209,7 @@ public class Scene {
             doc = db.parse(new File(xmlPath));
 
             try {
-                logger.log("XML parsing started!");
+                logger.log("XML parsing started, source-file:" + xmlPath);
                 logger.emptyLine();
             } catch (LoggerException e) {
                 // No logging happens!
@@ -242,7 +242,7 @@ public class Scene {
             }
 
             try {
-                logger.log("XML parsing completed!");
+                logger.log(String.format("XML parsing completed in %1d milliseconds!", logger.getElapsedTime() ));
             } catch (LoggerException e) {
                 // No logging happens!
             }

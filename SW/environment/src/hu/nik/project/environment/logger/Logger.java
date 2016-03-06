@@ -8,18 +8,23 @@ package hu.nik.project.environment.logger;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Logger {
 
     private String filename;
     private Path logFilePath;
+    private Timestamp startTime;
 
     public Logger(String filename) throws LoggerException {
         this.filename = filename;
+        this.startTime = Timestamp.valueOf(LocalDateTime.now());
 
         createLog();
         log("-------------------------------------------------------------------------");
-        log("Logging started");
+        log(String.format("Logging started at %1tc", startTime));
         emptyLine();
     }
 
@@ -48,5 +53,10 @@ public class Logger {
 
     public void emptyLine() throws LoggerException {
         log("");
+    }
+
+    public long getElapsedTime() {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        return now.getTime() - startTime.getTime();
     }
 }
