@@ -18,7 +18,7 @@ public class DirectionSign extends Sign {
 
     private DirectionType type;
 
-    public DirectionSign(int positionX, int positionY, double rotation, DirectionType type) throws SceneObjectException {
+    public DirectionSign(int positionX, int positionY, int rotation, DirectionType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

@@ -13,7 +13,7 @@ public class People extends Misc {
 
     private PeopleType type;
 
-    public People(int positionX, int positionY, double rotation, PeopleType type) throws SceneObjectException {
+    public People(int positionX, int positionY, int rotation, PeopleType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

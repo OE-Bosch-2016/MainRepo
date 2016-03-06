@@ -7,7 +7,7 @@ package hu.nik.project.environment.objects;
  */
 abstract public class Sign<T> extends SceneObject {
 
-    public Sign(int positionX, int positionY, double rotation) throws SceneObjectException {
+    public Sign(int positionX, int positionY, int rotation) throws SceneObjectException {
         super(positionX, positionY, rotation);
     }
 

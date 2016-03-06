@@ -15,7 +15,7 @@ public class DirectionSignTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        directionSign = new DirectionSign(222,222, 85.55, DirectionSign.DirectionType.FORWARD);
+        directionSign = new DirectionSign(222,222, 85, DirectionSign.DirectionType.FORWARD);
     }
 
     @Test
@@ -27,6 +27,6 @@ public class DirectionSignTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(222, directionSign.getPositionX());
         Assert.assertEquals(222, directionSign.getPositionY());
-        Assert.assertEquals(85.55, directionSign.getRotation(), 0.00001);
+        Assert.assertEquals(85, directionSign.getRotation(), 0.00001);
     }
 }

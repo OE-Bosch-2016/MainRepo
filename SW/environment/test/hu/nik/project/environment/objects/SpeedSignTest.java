@@ -15,7 +15,7 @@ public class SpeedSignTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        speedSign = new SpeedSign(700, 700, 270.555555, SpeedSign.SpeedSignType.LIMIT_100);
+        speedSign = new SpeedSign(700, 700, 270, SpeedSign.SpeedSignType.LIMIT_100);
     }
 
     @Test
@@ -27,6 +27,6 @@ public class SpeedSignTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(700, speedSign.getPositionX());
         Assert.assertEquals(700, speedSign.getPositionY());
-        Assert.assertEquals(270.555555, speedSign.getRotation(), 0.00001);
+        Assert.assertEquals(270, speedSign.getRotation(), 0.00001);
     }
 }

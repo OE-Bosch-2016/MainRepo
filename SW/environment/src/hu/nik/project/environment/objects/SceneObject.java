@@ -8,9 +8,9 @@ package hu.nik.project.environment.objects;
 public abstract class SceneObject<T> {
     private int positionX;
     private int positionY;
-    private double rotation;
+    private int rotation;
 
-    public SceneObject(int positionX, int positionY, double rotation) throws SceneObjectException{
+    public SceneObject(int positionX, int positionY, int rotation) throws SceneObjectException{
 
         if (positionX >=0 && positionY>=0) {
             this.positionX = positionX;

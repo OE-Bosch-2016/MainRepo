@@ -6,7 +6,7 @@ package hu.nik.project.environment.objects;
  * Abstract class for Misc
  */
 abstract public class Misc<T> extends SceneObject {
-    public Misc(int positionX, int positionY, double rotation) throws SceneObjectException {
+    public Misc(int positionX, int positionY, int rotation) throws SceneObjectException {
         super(positionX, positionY, rotation);
     }
 

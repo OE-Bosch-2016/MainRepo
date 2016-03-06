@@ -13,7 +13,7 @@ public class CrossWalk extends Misc {
 
     private CrossWalkType type;
 
-    public CrossWalk(int positionX, int positionY, double rotation, CrossWalkType type) throws SceneObjectException {
+    public CrossWalk(int positionX, int positionY, int rotation, CrossWalkType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

@@ -15,7 +15,7 @@ public class PrioritySign extends Sign {
 
     private PrioritySignType type;
 
-    public PrioritySign(int positionX, int positionY, double rotation, PrioritySignType type) throws SceneObjectException {
+    public PrioritySign(int positionX, int positionY, int rotation, PrioritySignType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

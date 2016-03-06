@@ -19,7 +19,7 @@ public class SimpleRoad extends Road {
 
     private SimpleRoadType type;
 
-    public SimpleRoad(int positionX, int positionY, double rotation, SimpleRoadType type) throws SceneObjectException {
+    public SimpleRoad(int positionX, int positionY, int rotation, SimpleRoadType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

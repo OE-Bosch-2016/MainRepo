@@ -16,7 +16,7 @@ public class AdvancedRoad extends Road {
 
     private AdvancedRoadType type;
 
-    public AdvancedRoad(int positionX, int positionY, double rotation, AdvancedRoadType type) throws SceneObjectException {
+    public AdvancedRoad(int positionX, int positionY, int rotation, AdvancedRoadType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

@@ -15,7 +15,7 @@ public class Parking extends Misc {
 
     private ParkingType type;
 
-    public Parking(int positionX, int positionY, double rotation, ParkingType type) throws SceneObjectException {
+    public Parking(int positionX, int positionY, int rotation, ParkingType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

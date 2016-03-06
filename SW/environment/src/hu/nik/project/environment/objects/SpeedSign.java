@@ -19,7 +19,7 @@ public class SpeedSign extends Sign {
 
     private SpeedSignType type;
 
-    public SpeedSign(int positionX, int positionY, double rotation, SpeedSignType type) throws SceneObjectException {
+    public SpeedSign(int positionX, int positionY, int rotation, SpeedSignType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

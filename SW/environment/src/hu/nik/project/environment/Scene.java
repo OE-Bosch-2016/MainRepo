@@ -63,7 +63,7 @@ public class Scene {
         return null;
     }
 
-    private void createSceneObject(int id, String objectName, int positionX, int positionY, double rotation) {
+    private void createSceneObject(int id, String objectName, int positionX, int positionY, int rotation) {
 
         int size = sceneObjects.size();
         try {
@@ -238,10 +238,10 @@ public class Scene {
                 NodeList transformList = objectElement.getElementsByTagName("Transform");
                 Element transformElement = (Element) transformList.item(0);
 
-                Double rotation = (double)Math.round(Math.toDegrees(Math.atan2(-1 * Double.parseDouble(transformElement.getAttribute("m12")),
+                int rotation = (int)Math.round(Math.toDegrees(Math.atan2(-1 * Double.parseDouble(transformElement.getAttribute("m12")),
                         Double.parseDouble(transformElement.getAttribute("m11")))));
 
-                if (rotation == -0.0) rotation = 0.0;
+                if (rotation == -0) rotation = 0;
                 else
                     if (rotation < 0) rotation = 360 + rotation;
 

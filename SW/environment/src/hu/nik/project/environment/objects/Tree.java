@@ -13,7 +13,7 @@ public class Tree extends Misc {
 
     private TreeType type;
 
-    public Tree(int positionX, int positionY, double rotation, TreeType type) throws SceneObjectException {
+    public Tree(int positionX, int positionY, int rotation, TreeType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

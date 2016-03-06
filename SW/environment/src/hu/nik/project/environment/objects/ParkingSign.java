@@ -14,7 +14,7 @@ public class ParkingSign extends Sign {
 
     private ParkingSignType type;
 
-    public ParkingSign(int positionX, int positionY, double rotation, ParkingSignType type) throws SceneObjectException {
+    public ParkingSign(int positionX, int positionY, int rotation, ParkingSignType type) throws SceneObjectException {
         super(positionX, positionY, rotation);
         this.type = type;
     }

@@ -7,7 +7,7 @@ package hu.nik.project.environment.objects;
  */
 abstract public class Road<T> extends SceneObject {
 
-    public Road(int positionX, int positionY, double rotation) throws SceneObjectException {
+    public Road(int positionX, int positionY, int rotation) throws SceneObjectException {
         super(positionX, positionY, rotation);
     }
 
