@@ -5,6 +5,8 @@ import org.jfree.chart.plot.dial.*;
 import org.jfree.data.general.DefaultValueDataset;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 /**
@@ -51,13 +53,19 @@ public class Top extends JFrame {
 
         setValue(50);
 
-        SwingUtilities.invokeLater(() -> frame.setVisible(true));
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                 frame.setVisible(true);
+            }
+        });
         //*****
 
         // Test
-        test_slider.addChangeListener(e -> {
-           int value = test_slider.getValue();
-            mileage.mileage(value);
+        test_slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                int value = test_slider.getValue();
+                mileage.mileage(value);
+            }
         });
     }
 
@@ -92,8 +100,10 @@ public class Top extends JFrame {
 
 
     // Listener --------------------------------------------------------------------------------------------------------
-    private Mileage.OnMileAgeListener mileAgeListener = mile -> {
-        hmi_mileage_text_area.setText(String.valueOf(mile) + Mileage.UNIT);
-        setValue((int) mile);
+    private Mileage.OnMileAgeListener mileAgeListener = new Mileage.OnMileAgeListener() {
+        public void changed(float mile) {
+            hmi_mileage_text_area.setText(String.valueOf(mile) + Mileage.UNIT);
+            setValue((int) mile);
+        }
     };
 }
