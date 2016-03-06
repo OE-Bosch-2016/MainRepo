@@ -11,8 +11,11 @@ public abstract class SceneObject<T> {
     private double rotation;
 
     public SceneObject(int positionX, int positionY, double rotation) throws SceneObjectException{
-        this.positionX = positionX;
-        this.positionY = positionY;
+        if (positionX >=0 && positionY>=0) {
+            this.positionX = positionX;
+            this.positionY = positionY;
+        } else
+            throw new SceneObjectException("The X or Y position is negative!");
 
         if ((rotation >= 0) && (rotation <= 360))
             this.rotation = rotation;

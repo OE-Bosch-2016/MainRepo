@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -20,6 +22,11 @@ public class SceneTest {
     @BeforeClass
     public static void setUp() throws Exception {
         scene = new Scene("TestSource\\testScene.xml");
+    }
+
+    @Test(expected=XMLParserException.class)
+    public void testExist() throws Exception{
+        scene = new Scene("TestSource\\notExist.xml");
     }
 
     @Test

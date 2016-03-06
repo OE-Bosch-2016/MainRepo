@@ -16,12 +16,10 @@ public class SceneObjectWithConcreteClassTest {
         sceneObject = new Parking(50, 40, 20, Parking.ParkingType.PARKING_90);
     }
 
-    @Test
+    @Test(expected = SceneObjectException.class)
     public void cantBeNagative() throws Exception{
         sceneObject = new Parking(-1, 40, 20, Parking.ParkingType.PARKING_90);
-        Assert.fail("The X or Y position is negative! X: "+sceneObject.getPositionX()+" Y: "+sceneObject.getPositionY());
         sceneObject = new Parking(50, -2, 20, Parking.ParkingType.PARKING_90);
-        Assert.fail("The X or Y position is negative! X: "+sceneObject.getPositionX()+" Y: "+sceneObject.getPositionY());
     }
 
     @Test
