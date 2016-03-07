@@ -45,6 +45,10 @@ public class Wheels implements IWheels {
 		double phiDirection=driverWheel*speed*turningAdjustment;
 		direction += phiDirection;
 		direction = direction % 360;
+		if (direction<0)
+		{
+			direction=360+direction;
+		}
 	}
 	
 	private void calcSpeed(double torque, double brakePedal)
