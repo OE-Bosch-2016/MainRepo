@@ -1,7 +1,6 @@
 package engineandgearbox;
 
-/**
- *
+/*
  * @author Laci & Patrik
  */
 public class Engine implements IEngine {
@@ -20,13 +19,12 @@ public class Engine implements IEngine {
 
     @Override
     public void operateEngine(int gearState, boolean throttle) {
-        if (gearState == lastGearState) { //no shift
-            calculateRpm(throttle);
-        } else if (gearState > lastGearState) { //shift up
+        if (gearState > lastGearState) { //shift up
             shiftUp(gearState);
-        } else { //shift down
+        } else if(gearState < lastGearState){ //shift down
             shiftDown(gearState);
         }
+            calculateRpm(throttle);
     }
 
     private void shiftUp(int gearState) {
@@ -52,6 +50,7 @@ public class Engine implements IEngine {
     }
 
     private void shiftFromN(int gearState) {
+        rpm -= 1500;
     }
 
     private void shiftToN() {
@@ -60,11 +59,14 @@ public class Engine implements IEngine {
     private void calculateRpm(boolean throttle) {
         double time = 5 * (Math.pow(Math.E, rpm / 1600) - 1);
         if (throttle) {
-            time += 1;
+            time += 0.5;
         } else {
-            time -= 1;
+            time -= 0.5;
         }
-        if (time > 0) {
+        if (time < 0) {
+            time = 0;
+        }
+        if (time >= 0) {
             rpm = (Math.log((time + 5) / 5)) * 1600;
             if (rpm > maxRpm) {
                 rpm = maxRpm;
@@ -76,12 +78,13 @@ public class Engine implements IEngine {
     }
 
     private void calculateTorque() {
-
         switch (lastGearState) {
             case 0://now in N
                 torque = 0;
                 break;
             case -1://now in R
+                torque = -1 * rpm / 10;
+                break;
             case 1://now in 1
                 torque = rpm / 10;
                 break;

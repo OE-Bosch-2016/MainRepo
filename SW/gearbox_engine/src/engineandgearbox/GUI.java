@@ -1,4 +1,5 @@
 /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -22,6 +23,7 @@ public class GUI extends javax.swing.JFrame {
         initComponents();
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -97,7 +99,11 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelRPM)
                     .addComponent(labelTorque)
-                    .addComponent(labelGearState)
+                    .addComponent(labelGearState))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonStart)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonThrottle)
@@ -107,7 +113,7 @@ public class GUI extends javax.swing.JFrame {
                         .addComponent(buttonGearLeverToN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(buttonGearLeverToR)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,7 +124,7 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(labelTorque)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelGearState)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 196, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonThrottle)
                     .addComponent(buttonGearLeverToD)
@@ -126,7 +132,7 @@ public class GUI extends javax.swing.JFrame {
                     .addComponent(buttonGearLeverToR))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonStart)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         labelGearState.getAccessibleContext().setAccessibleName("labelGearLever");
@@ -167,6 +173,8 @@ public class GUI extends javax.swing.JFrame {
 
     private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
         // TODO add your handling code here:
+        canvasForm = new CanvasForm();
+        canvasForm.show();
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -178,15 +186,18 @@ public class GUI extends javax.swing.JFrame {
         }, 100, 100);
     }//GEN-LAST:event_buttonStartActionPerformed
     public void modifyLabels() {
-        this.labelRPM.setText("Engine RPM: " + eg.getRpm());
-        this.labelTorque.setText("Torque: " + eg.getTorque());
+        this.labelRPM.setText("Engine RPM: " + (int)eg.getRpm());
+        this.labelTorque.setText("Torque: " + (int)eg.getTorque() + " Nm");
         this.labelGearState.setText("Gear:" + gb.getStage());
+         canvasForm.jPanel2.Rajzol(canvasForm.getGraphics(),eg.getRpm(),eg.getTorque());
+        
     }
     public boolean gas = true;
     public int gearLever = 0;
     public Gearbox gb = new Gearbox(gearLever);
     public Engine eg = new Engine(gb.getStage());
     public Timer timer;
+    public CanvasForm canvasForm;
 
     /**
      * @param args the command line arguments
