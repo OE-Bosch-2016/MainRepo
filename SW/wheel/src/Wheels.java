@@ -51,8 +51,17 @@ public class Wheels implements IWheels {
 		}
 	}
 	
-	private void calcSpeed(double torque, double brakePedal)
+	private void calcSpeed(double torque, double brakePedal, double RPM)
 	{
+		/*
+		Power (kW) = Torque (N.m) x Speed (RPM) /0.0095488
+		c=0.3
+		D=1.25
+		A=3
+		v = (2*P/(c*D*A))^(1/3)
+		natureBrake=0.3*1.25*3=1.125; 
+		*/
+		
 		speed = Math.pow((2*(torque*RPM/0.0095488)/(natureBrake)), new Double("0.3333333");
 		if(torque >= 0)
 		{
