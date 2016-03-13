@@ -7,7 +7,6 @@ import org.jfree.data.general.DefaultValueDataset;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 
 /**
  * Created by haxxi on 2016.03.01..
@@ -19,6 +18,15 @@ public class Top extends JFrame {
     private JSlider test_slider;
     private JPanel rootPanel;
     private JPanel ui_panel;
+    private JPanel mileAgePanel;
+    private JPanel tachometerPanel;
+    private JTextArea textAreaD;
+    private JTextArea textAreaN;
+    private JTextArea textAreaR;
+    private JTextArea textAreaP;
+    private JTextArea a1TextArea;
+    private JTextArea a2TextArea;
+    private JPanel gearShiftPanel;
 
 
     // HMI elements
@@ -27,38 +35,26 @@ public class Top extends JFrame {
     private static final int DISPLAY_MAX = 220;
     private final DefaultValueDataset dataset = new DefaultValueDataset();
     private final DefaultValueDataset displayDataset = new DefaultValueDataset();
-    private final JFrame frame = new JFrame();
 
 
     public Top() {
         init();
     }
 
+
+
     private void init() {
+        mileage = new Mileage();
+        mileage.setMileAgeListener(mileAgeListener);
+        mileAgePanel.add(buildDialPlot(0, DISPLAY_MAX, 20));
+        tachometerPanel.add(buildDialPlot(0, 6000, 1000));
+
+        setValue(50);
+
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         setContentPane(rootPanel);
         pack();
-
-        mileage = new Mileage();
-        mileage.setMileAgeListener(mileAgeListener);
-
-
-        //****
-        frame.setPreferredSize(new Dimension(300, 300));
-        frame.add(buildDialPlot(0, DISPLAY_MAX, 20));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        setValue(50);
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                 frame.setVisible(true);
-            }
-        });
-        //*****
 
         // Test
         test_slider.addChangeListener(new ChangeListener() {
