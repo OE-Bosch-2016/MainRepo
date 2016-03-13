@@ -1,4 +1,5 @@
 import Interfaces.IWheelVisualization;
+import Listeners.OnVehicleListener;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;
@@ -11,8 +12,8 @@ public abstract class Visualization implements IWheelVisualization {
     private Canvas _mapArea;
     private TextField _speedoMeter;  //refactor to textbox or something
     private Car _car;
+    private OnVehicleListener _vehicleListener;
 
-    //TODO: Vehicle listener
 
     public Visualization(Canvas mapArea, TextField speedoMeter, Car car) {
         _mapArea = mapArea;
@@ -41,5 +42,9 @@ public abstract class Visualization implements IWheelVisualization {
         return _car.RotateCar(degree);
     }
 
-    //TODO: Add vehicle listener!
+    public void setOnVehicleListener(OnVehicleListener listener){
+        _vehicleListener=listener;
+    }
+
+
 }

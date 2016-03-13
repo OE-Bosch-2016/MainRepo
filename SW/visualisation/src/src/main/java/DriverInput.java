@@ -1,16 +1,19 @@
 import Interfaces.IDriverInputEngine;
+import Interfaces.IDriverInputGearBox;
 import Interfaces.IDriverInputWheel;
 import Listeners.OnBreakSteeringWheelListener;
 import Listeners.OnGasListener;
+import Listeners.OnGearPositionListener;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by secured on 2016. 03. 06..
  */
-public abstract class DriverInput implements IDriverInputWheel, IDriverInputEngine {
+public abstract class DriverInput implements IDriverInputWheel, IDriverInputEngine, IDriverInputGearBox {
 
     private OnBreakSteeringWheelListener _breakSteeringWheelListener;
     private OnGasListener _gasListener;
+    private OnGearPositionListener _gearPositionListener;
 
     public DriverInput(){
     }
@@ -39,8 +42,12 @@ public abstract class DriverInput implements IDriverInputWheel, IDriverInputEngi
         else{
             throw new NullPointerException("BreakStearingWheelListener is null!");
         }
-
     }
+
+    public void StartVehicle(){
+        throw new NotImplementedException();
+    }
+
 
     //@Override
     public void addBreakSteeringWheelListener(OnBreakSteeringWheelListener listener) {
@@ -49,5 +56,9 @@ public abstract class DriverInput implements IDriverInputWheel, IDriverInputEngi
 
     public void addGasListener(OnGasListener listener) {
         _gasListener=listener;
+    }
+
+    public void addGearPositionListener(OnGearPositionListener listener) {
+        _gearPositionListener = listener;
     }
 }
