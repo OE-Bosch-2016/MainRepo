@@ -7,7 +7,7 @@ public class Config {
 
     public static int imageSizeX = 400;
     public static int imageSizeY = 400;
-    public static String pathMap1 = "../resources/maps/road_1.png";
-    public static String pathMap2 = "../resources/maps/road_2.png";
+    public static String pathMap1 = "src/main/resources/maps/road_1.png";
+    public static String pathMap2 = "src/main/resources/maps/road_2.png";
 
 }

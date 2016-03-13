@@ -16,10 +16,8 @@ public class MapLoader {
     public static int MAP1 = 0;
     public static int MAP2 = 1;
 
-    private static int mapType;
-
     // Getter ----------------------------------------------------------------------------------------------------------
-    public static ImageIcon getImage() {
+    public static ImageIcon getImage(int mapType) {
         ImageIcon icon = null;
         try {
             BufferedImage scaledImage = ImageIO.read(new File(mapType == MAP2 ? Config.pathMap2 : Config.pathMap1));
@@ -29,10 +27,5 @@ public class MapLoader {
             e.printStackTrace();
         }
         return icon;
-    }
-
-    // Setter ----------------------------------------------------------------------------------------------------------
-    public static void setMapType(int mapType) {
-        MapLoader.mapType = mapType;
     }
 }

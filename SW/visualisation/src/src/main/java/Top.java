@@ -1,4 +1,5 @@
 import HMI.Mileage;
+import Map.MapLoader;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
@@ -27,6 +28,8 @@ public class Top extends JFrame {
     private JTextArea a1TextArea;
     private JTextArea a2TextArea;
     private JPanel gearShiftPanel;
+    private JPanel hmi;
+    private JLabel mapLabel;
 
 
     // HMI elements
@@ -48,7 +51,6 @@ public class Top extends JFrame {
         mileage.setMileAgeListener(mileAgeListener);
         mileAgePanel.add(buildDialPlot(0, DISPLAY_MAX, 20));
         tachometerPanel.add(buildDialPlot(0, 6000, 1000));
-
         setValue(50);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -56,6 +58,8 @@ public class Top extends JFrame {
         setContentPane(rootPanel);
         pack();
 
+
+        mapLabel.setIcon(MapLoader.getImage(MapLoader.MAP1));
         // Test
         test_slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
