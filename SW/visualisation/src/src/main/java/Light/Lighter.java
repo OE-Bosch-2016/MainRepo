@@ -1,5 +1,7 @@
 package Light;
 
+import Interfaces.ILightable;
+
 /**
  * Created by Perec on 2016.03.06..
  */

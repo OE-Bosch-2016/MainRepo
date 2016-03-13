@@ -1,5 +1,7 @@
 package HMI;
 
+import Interfaces.IMileage;
+
 import javax.swing.*;
 
 /**

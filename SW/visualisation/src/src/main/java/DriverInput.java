@@ -1,12 +1,14 @@
-import SteeringWheel.IDriverInputWheel;
-import SteeringWheel.OnBreakSteeringWheelListener;
+import Interfaces.IDriverInputWheel;
+import Listeners.OnBreakSteeringWheelListener;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created by secured on 2016. 03. 06..
  */
 public abstract class DriverInput implements IDriverInputWheel {
 
-    OnBreakSteeringWheelListener _breakSteeringWheelListener;
+    private OnBreakSteeringWheelListener _breakSteeringWheelListener;
+
 
     public DriverInput(){
     }
@@ -24,4 +26,14 @@ public abstract class DriverInput implements IDriverInputWheel {
     public void addBreakSteeringWheelListener(OnBreakSteeringWheelListener listener) {
         _breakSteeringWheelListener=listener;
     }
+
+    public void PushGas(){
+        throw new NotImplementedException();
+    }
+
+    public void PushBreak(){
+        throw new NotImplementedException();
+    }
+
+
 }
