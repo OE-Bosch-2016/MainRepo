@@ -30,6 +30,7 @@ public class Top extends JFrame {
     private JPanel gearShiftPanel;
     private JPanel hmi;
     private JLabel mapLabel;
+    private JPanel mapPanel;
 
 
     // HMI elements
