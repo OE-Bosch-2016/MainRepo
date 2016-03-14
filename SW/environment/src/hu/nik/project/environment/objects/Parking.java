@@ -1,5 +1,7 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
@@ -15,8 +17,8 @@ public class Parking extends Misc {
 
     private ParkingType type;
 
-    public Parking(int positionX, int positionY, int rotation, ParkingType type) throws SceneObjectException {
-        super(positionX, positionY, rotation);
+    public Parking(ScenePoint basePosition, int rotation, ParkingType type) throws SceneObjectException {
+        super(basePosition, rotation);
         this.type = type;
     }
 

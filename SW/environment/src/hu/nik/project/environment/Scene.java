@@ -55,123 +55,123 @@ public class Scene {
     }
 
 
-    public SceneObject getSceneObjectByPosition(int positionX, int positionY) {
+    public SceneObject getSceneObjectByPosition(ScenePoint basePosition) {
         for (SceneObject s : sceneObjects) {
-            if (s.getPositionX() == positionX && s.getPositionY() == positionY)
+            if (s.getBasePosition().equals(basePosition))
                 return s;
         }
         return null;
     }
 
-    private void createSceneObject(int id, String objectName, int positionX, int positionY, int rotation) {
+    private void createSceneObject(int id, String objectName, ScenePoint basePosition, int rotation) {
 
         int size = sceneObjects.size();
         try {
             switch (objectName) {
                 case "data/misc/crosswalks/crosswalk_5_stripes.svg":
-                    sceneObjects.add(new CrossWalk(positionX, positionY, rotation, CrossWalk.CrossWalkType.CROSSWALK_5));
+                    sceneObjects.add(new CrossWalk(basePosition, rotation, CrossWalk.CrossWalkType.CROSSWALK_5));
                     break;
                 case "data/misc/parking/parking_0.svg":
-                    sceneObjects.add(new Parking(positionX, positionY, rotation, Parking.ParkingType.PARKING_0));
+                    sceneObjects.add(new Parking(basePosition, rotation, Parking.ParkingType.PARKING_0));
                     break;
                 case "data/misc/parking/parking_90.svg":
-                    sceneObjects.add(new Parking(positionX, positionY, rotation, Parking.ParkingType.PARKING_90));
+                    sceneObjects.add(new Parking(basePosition, rotation, Parking.ParkingType.PARKING_90));
                     break;
                 case "data/misc/parking/parking_bollard.pix":
-                    sceneObjects.add(new Parking(positionX, positionY, rotation, Parking.ParkingType.PARKING_BOLLARD));
+                    sceneObjects.add(new Parking(basePosition, rotation, Parking.ParkingType.PARKING_BOLLARD));
                     break;
                 case "data/misc/people/man03.pix":
-                    sceneObjects.add(new People(positionX, positionY, rotation, People.PeopleType.MAN));
+                    sceneObjects.add(new People(basePosition, rotation, People.PeopleType.MAN));
                     break;
                 case "data/misc/trees/tree_top_view.pix":
-                    sceneObjects.add(new Tree(positionX, positionY, rotation, Tree.TreeType.TREE_TOP_VIEW));
+                    sceneObjects.add(new Tree(basePosition, rotation, Tree.TreeType.TREE_TOP_VIEW));
                     break;
                 case "data/road_signs/direction/209-30_.svg":
-                    sceneObjects.add(new DirectionSign(positionX, positionY, rotation, DirectionSign.DirectionType.FORWARD));
+                    sceneObjects.add(new DirectionSign(basePosition, rotation, DirectionSign.DirectionType.FORWARD));
                     break;
                 case "data/road_signs/direction/211-10_.svg":
-                    sceneObjects.add(new DirectionSign(positionX, positionY, rotation, DirectionSign.DirectionType.LEFT));
+                    sceneObjects.add(new DirectionSign(basePosition, rotation, DirectionSign.DirectionType.LEFT));
                     break;
                 case "data/road_signs/direction/211-20_.svg":
-                    sceneObjects.add(new DirectionSign(positionX, positionY, rotation, DirectionSign.DirectionType.RIGHT));
+                    sceneObjects.add(new DirectionSign(basePosition, rotation, DirectionSign.DirectionType.RIGHT));
                     break;
                 case "data/road_signs/direction/214-10_.svg":
-                    sceneObjects.add(new DirectionSign(positionX, positionY, rotation, DirectionSign.DirectionType.FORWARD_LEFT));
+                    sceneObjects.add(new DirectionSign(basePosition, rotation, DirectionSign.DirectionType.FORWARD_LEFT));
                     break;
                 case "data/road_signs/direction/214-20_.svg":
-                    sceneObjects.add(new DirectionSign(positionX, positionY, rotation, DirectionSign.DirectionType.FORWARD_RIGHT));
+                    sceneObjects.add(new DirectionSign(basePosition, rotation, DirectionSign.DirectionType.FORWARD_RIGHT));
                     break;
                 case "data/road_signs/direction/215_.svg":
-                    sceneObjects.add(new DirectionSign(positionX, positionY, rotation, DirectionSign.DirectionType.ROUNDABOUT));
+                    sceneObjects.add(new DirectionSign(basePosition, rotation, DirectionSign.DirectionType.ROUNDABOUT));
                     break;
                 case "data/road_signs/parking/314_10_.svg":
-                    sceneObjects.add(new ParkingSign(positionX, positionY, rotation, ParkingSign.ParkingSignType.PARKING_LEFT));
+                    sceneObjects.add(new ParkingSign(basePosition, rotation, ParkingSign.ParkingSignType.PARKING_LEFT));
                     break;
                 case "data/road_signs/parking/314_20_.svg":
-                    sceneObjects.add(new ParkingSign(positionX, positionY, rotation, ParkingSign.ParkingSignType.PARKING_RIGHT));
+                    sceneObjects.add(new ParkingSign(basePosition, rotation, ParkingSign.ParkingSignType.PARKING_RIGHT));
                     break;
                 case "data/road_signs/priority/205_.svg":
-                    sceneObjects.add(new PrioritySign(positionX, positionY, rotation, PrioritySign.PrioritySignType.GIVEAWAY));
+                    sceneObjects.add(new PrioritySign(basePosition, rotation, PrioritySign.PrioritySignType.GIVEAWAY));
                     break;
                 case "data/road_signs/priority/206_.svg":
-                    sceneObjects.add(new PrioritySign(positionX, positionY, rotation, PrioritySign.PrioritySignType.STOP));
+                    sceneObjects.add(new PrioritySign(basePosition, rotation, PrioritySign.PrioritySignType.STOP));
                     break;
                 case "data/road_signs/priority/306_.svg":
-                    sceneObjects.add(new PrioritySign(positionX, positionY, rotation, PrioritySign.PrioritySignType.PRIORITY_ROAD));
+                    sceneObjects.add(new PrioritySign(basePosition, rotation, PrioritySign.PrioritySignType.PRIORITY_ROAD));
                     break;
                 case "data/road_signs/speed/274_51_.svg":
-                    sceneObjects.add(new SpeedSign(positionX, positionY, rotation, SpeedSign.SpeedSignType.LIMIT_10));
+                    sceneObjects.add(new SpeedSign(basePosition, rotation, SpeedSign.SpeedSignType.LIMIT_10));
                     break;
                 case "data/road_signs/speed/274_52_.svg":
-                    sceneObjects.add(new SpeedSign(positionX, positionY, rotation, SpeedSign.SpeedSignType.LIMIT_20));
+                    sceneObjects.add(new SpeedSign(basePosition, rotation, SpeedSign.SpeedSignType.LIMIT_20));
                     break;
                 case "data/road_signs/speed/274_54_.svg":
-                    sceneObjects.add(new SpeedSign(positionX, positionY, rotation, SpeedSign.SpeedSignType.LIMIT_40));
+                    sceneObjects.add(new SpeedSign(basePosition, rotation, SpeedSign.SpeedSignType.LIMIT_40));
                     break;
                 case "data/road_signs/speed/274_55_.svg":
-                    sceneObjects.add(new SpeedSign(positionX, positionY, rotation, SpeedSign.SpeedSignType.LIMIT_50));
+                    sceneObjects.add(new SpeedSign(basePosition, rotation, SpeedSign.SpeedSignType.LIMIT_50));
                     break;
                 case "data/road_signs/speed/274_57_.svg":
-                    sceneObjects.add(new SpeedSign(positionX, positionY, rotation, SpeedSign.SpeedSignType.LIMIT_70));
+                    sceneObjects.add(new SpeedSign(basePosition, rotation, SpeedSign.SpeedSignType.LIMIT_70));
                     break;
                 case "data/road_signs/speed/274_59_.svg":
-                    sceneObjects.add(new SpeedSign(positionX, positionY, rotation, SpeedSign.SpeedSignType.LIMIT_90));
+                    sceneObjects.add(new SpeedSign(basePosition, rotation, SpeedSign.SpeedSignType.LIMIT_90));
                     break;
                 case "data/road_signs/speed/274_60_.svg":
-                    sceneObjects.add(new SpeedSign(positionX, positionY, rotation, SpeedSign.SpeedSignType.LIMIT_100));
+                    sceneObjects.add(new SpeedSign(basePosition, rotation, SpeedSign.SpeedSignType.LIMIT_100));
                     break;
                 case "data/road_tiles/2_lane_advanced/2_crossroads_2.tile":
-                    sceneObjects.add(new AdvancedRoad(positionX, positionY, rotation, AdvancedRoad.AdvancedRoadType.CROSSROADS));
+                    sceneObjects.add(new AdvancedRoad(basePosition, rotation, AdvancedRoad.AdvancedRoadType.CROSSROADS));
                     break;
                 case "data/road_tiles/2_lane_advanced/2_rotary.tile":
-                    sceneObjects.add(new AdvancedRoad(positionX, positionY, rotation, AdvancedRoad.AdvancedRoadType.ROTARY));
+                    sceneObjects.add(new AdvancedRoad(basePosition, rotation, AdvancedRoad.AdvancedRoadType.ROTARY));
                     break;
                 case "data/road_tiles/2_lane_advanced/2_t_junction_l.tile":
-                    sceneObjects.add(new AdvancedRoad(positionX, positionY, rotation, AdvancedRoad.AdvancedRoadType.JUNCTIONLEFT));
+                    sceneObjects.add(new AdvancedRoad(basePosition, rotation, AdvancedRoad.AdvancedRoadType.JUNCTIONLEFT));
                     break;
                 case "data/road_tiles/2_lane_advanced/2_t_junction_r.tile":
-                    sceneObjects.add(new AdvancedRoad(positionX, positionY, rotation, AdvancedRoad.AdvancedRoadType.JUNCTIONRIGHT));
+                    sceneObjects.add(new AdvancedRoad(basePosition, rotation, AdvancedRoad.AdvancedRoadType.JUNCTIONRIGHT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_45l.tile":
-                    sceneObjects.add(new SimpleRoad(positionX, positionY, rotation, SimpleRoad.SimpleRoadType.SIMPLE_45_LEFT));
+                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_45_LEFT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_45r.tile":
-                    sceneObjects.add(new SimpleRoad(positionX, positionY, rotation, SimpleRoad.SimpleRoadType.SIMPLE_45_RIGHT));
+                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_45_RIGHT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_65l.tile":
-                    sceneObjects.add(new SimpleRoad(positionX, positionY, rotation, SimpleRoad.SimpleRoadType.SIMPLE_65_LEFT));
+                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_65_LEFT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_65r.tile":
-                    sceneObjects.add(new SimpleRoad(positionX, positionY, rotation, SimpleRoad.SimpleRoadType.SIMPLE_65_RIGHT));
+                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_65_RIGHT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_90l.tile":
-                    sceneObjects.add(new SimpleRoad(positionX, positionY, rotation, SimpleRoad.SimpleRoadType.SIMPLE_90_LEFT));
+                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_90_LEFT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_90r.tile":
-                    sceneObjects.add(new SimpleRoad(positionX, positionY, rotation, SimpleRoad.SimpleRoadType.SIMPLE_90_RIGHT));
+                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_90_RIGHT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_s.tile":
-                    sceneObjects.add(new SimpleRoad(positionX, positionY, rotation, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT));
+                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT));
                     break;
             }
             logger.log("SceneObject with ID:" + id + " added.");
@@ -232,8 +232,11 @@ public class Scene {
 
                 NodeList positionList = objectElement.getElementsByTagName("Position");
                 Element positionElement = (Element) positionList.item(0);
-                int positionX = (int) Math.round(Double.parseDouble(positionElement.getAttribute("x")));
-                int positionY = (int) Math.round(Double.parseDouble(positionElement.getAttribute("y")));
+
+                ScenePoint basePosition = new ScenePoint((int) Math.round(Double.parseDouble(positionElement.getAttribute("x"))),
+                        (int) Math.round(Double.parseDouble(positionElement.getAttribute("y"))));
+                //int positionX = (int) Math.round(Double.parseDouble(positionElement.getAttribute("x")));
+                //int positionY = (int) Math.round(Double.parseDouble(positionElement.getAttribute("y")));
 
                 NodeList transformList = objectElement.getElementsByTagName("Transform");
                 Element transformElement = (Element) transformList.item(0);
@@ -246,7 +249,7 @@ public class Scene {
                     if (rotation < 0) rotation = 360 + rotation;
 
 
-                createSceneObject(id, objectName, positionX, positionY, rotation);
+                createSceneObject(id, objectName, basePosition, rotation);
             }
 
             try {

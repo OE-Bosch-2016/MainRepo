@@ -1,5 +1,7 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
@@ -16,8 +18,8 @@ public class AdvancedRoad extends Road {
 
     private AdvancedRoadType type;
 
-    public AdvancedRoad(int positionX, int positionY, int rotation, AdvancedRoadType type) throws SceneObjectException {
-        super(positionX, positionY, rotation);
+    public AdvancedRoad(ScenePoint basePosition, int rotation, AdvancedRoadType type) throws SceneObjectException {
+        super(basePosition, rotation);
         this.type = type;
     }
 

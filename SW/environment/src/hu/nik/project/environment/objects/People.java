@@ -1,5 +1,7 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
@@ -13,8 +15,8 @@ public class People extends Misc {
 
     private PeopleType type;
 
-    public People(int positionX, int positionY, int rotation, PeopleType type) throws SceneObjectException {
-        super(positionX, positionY, rotation);
+    public People(ScenePoint basePosition, int rotation, PeopleType type) throws SceneObjectException {
+        super(basePosition, rotation);
         this.type = type;
     }
 

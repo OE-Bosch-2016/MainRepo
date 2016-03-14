@@ -1,5 +1,7 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
@@ -13,8 +15,8 @@ public class CrossWalk extends Misc {
 
     private CrossWalkType type;
 
-    public CrossWalk(int positionX, int positionY, int rotation, CrossWalkType type) throws SceneObjectException {
-        super(positionX, positionY, rotation);
+    public CrossWalk(ScenePoint basePosition, int rotation, CrossWalkType type) throws SceneObjectException {
+        super(basePosition, rotation);
         this.type = type;
     }
 

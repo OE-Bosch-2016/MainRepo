@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class TreeTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        tree = new Tree(500, 88, 333, Tree.TreeType.TREE_TOP_VIEW);
+        tree = new Tree(new ScenePoint(500, 88), 333, Tree.TreeType.TREE_TOP_VIEW);
     }
 
     @Test
@@ -25,8 +26,8 @@ public class TreeTest {
 
     @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(500, tree.getPositionX());
-        Assert.assertEquals(88, tree.getPositionY());
+        Assert.assertEquals(500, tree.getBasePosition().getX());
+        Assert.assertEquals(88, tree.getBasePosition().getY());
         Assert.assertEquals(333, tree.getRotation(), 0.00001);
     }
 }

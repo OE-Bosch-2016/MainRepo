@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class PeopleTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        people = new People(300, 300, 0, People.PeopleType.MAN);
+        people = new People(new ScenePoint(300, 300), 0, People.PeopleType.MAN);
     }
 
     @Test
@@ -25,8 +26,8 @@ public class PeopleTest {
 
     @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(300, people.getPositionX());
-        Assert.assertEquals(300, people.getPositionY());
+        Assert.assertEquals(300, people.getBasePosition().getX());
+        Assert.assertEquals(300, people.getBasePosition().getY());
         Assert.assertEquals(0, people.getRotation(), 0.00001);
     }
 }

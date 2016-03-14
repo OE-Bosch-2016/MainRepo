@@ -6,10 +6,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
-
-import static org.junit.Assert.*;
-
 /**
  * Created by Róbert on 2016.02.29..
  *
@@ -41,7 +37,7 @@ public class SceneTest {
 
     @Test
     public void testGetSceneObjectByPosition() throws Exception {
-        SceneObject testObject = scene.getSceneObjectByPosition(2525, 2263);
+        SceneObject testObject = scene.getSceneObjectByPosition(new ScenePoint(2525, 2263));
         Assert.assertEquals(testObject.getClass(), AdvancedRoad.class);
     }
 

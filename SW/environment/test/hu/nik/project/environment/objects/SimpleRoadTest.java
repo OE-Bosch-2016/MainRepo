@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class SimpleRoadTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        simpleRoad = new SimpleRoad(0, 0, 0, SimpleRoad.SimpleRoadType.SIMPLE_65_LEFT);
+        simpleRoad = new SimpleRoad(new ScenePoint(0, 0), 0, SimpleRoad.SimpleRoadType.SIMPLE_65_LEFT);
     }
 
     @Test
@@ -25,8 +26,8 @@ public class SimpleRoadTest {
 
     @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(0, simpleRoad.getPositionX());
-        Assert.assertEquals(0, simpleRoad.getPositionY());
+        Assert.assertEquals(0, simpleRoad.getBasePosition().getX());
+        Assert.assertEquals(0, simpleRoad.getBasePosition().getY());
         Assert.assertEquals(0, simpleRoad.getRotation(), 0.00001);
     }
 }

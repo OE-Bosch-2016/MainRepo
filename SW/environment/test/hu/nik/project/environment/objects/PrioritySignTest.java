@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class PrioritySignTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        prioritySign = new PrioritySign(300, 300, 0, PrioritySign.PrioritySignType.STOP);
+        prioritySign = new PrioritySign(new ScenePoint(300, 300), 0, PrioritySign.PrioritySignType.STOP);
     }
 
     @Test
@@ -25,8 +26,8 @@ public class PrioritySignTest {
 
     @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(300, prioritySign.getPositionX());
-        Assert.assertEquals(300, prioritySign.getPositionY());
+        Assert.assertEquals(300, prioritySign.getBasePosition().getX());
+        Assert.assertEquals(300, prioritySign.getBasePosition().getY());
         Assert.assertEquals(0, prioritySign.getRotation(), 0.00001);
     }
 }

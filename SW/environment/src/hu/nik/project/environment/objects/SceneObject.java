@@ -1,22 +1,22 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
+
 /**
  * Created by Róbert on 2016.02.24..
  *
  * Base class for the scene objects
  */
 public abstract class SceneObject<T> {
-    private int positionX;
-    private int positionY;
+    private ScenePoint basePosition;
     private int rotation;
 
-    public SceneObject(int positionX, int positionY, int rotation) throws SceneObjectException{
+    public SceneObject(ScenePoint basePosition, int rotation) throws SceneObjectException{
 
-        if (positionX >=0 && positionY>=0) {
-            this.positionX = positionX;
-            this.positionY = positionY;
+        if (basePosition.getX() >=0 && basePosition.getY()>=0) {
+            this.basePosition = new ScenePoint(basePosition.getX(), basePosition.getY());
         } else
-            throw new SceneObjectException("The X or Y position can't be negative! Actual values are: X = " + positionX + " Y = " + positionY);
+            throw new SceneObjectException("The X or Y position can't be negative! Actual values are: X = " + basePosition.getX() + " Y = " + basePosition.getY());
 
         if ((rotation >= 0) && (rotation <= 360))
             this.rotation = rotation;
@@ -26,17 +26,12 @@ public abstract class SceneObject<T> {
 
     abstract public T getObjectType();
 
-    public int getPositionX() {
-        return positionX;
-    }
-    public int getPositionY() {
-        return positionY;
-    }
+    public ScenePoint getBasePosition() { return basePosition; }
     public double getRotation() {
         return rotation;
     }
 
     public String toString() {
-        return "ClassType: " + getClass().getSimpleName() + " -> " + " Position X: " + positionX + " Position Y: " + positionY + " Rotation: " + rotation;
+        return "ClassType: " + getClass().getSimpleName() + " -> " + " Position X: " + basePosition.getX() + " Position Y: " + basePosition.getY() + " Rotation: " + rotation;
     }
 }

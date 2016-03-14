@@ -1,5 +1,7 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
@@ -18,8 +20,8 @@ public class DirectionSign extends Sign {
 
     private DirectionType type;
 
-    public DirectionSign(int positionX, int positionY, int rotation, DirectionType type) throws SceneObjectException {
-        super(positionX, positionY, rotation);
+    public DirectionSign(ScenePoint basePosition, int rotation, DirectionType type) throws SceneObjectException {
+        super(basePosition, rotation);
         this.type = type;
     }
 

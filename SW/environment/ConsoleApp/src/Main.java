@@ -1,8 +1,6 @@
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.XMLParserException;
 
-import java.lang.reflect.Array;
-
 /**
  * Created by Róbert on 2016.02.27..
  *

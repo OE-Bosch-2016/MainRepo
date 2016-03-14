@@ -1,5 +1,7 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
@@ -15,8 +17,8 @@ public class PrioritySign extends Sign {
 
     private PrioritySignType type;
 
-    public PrioritySign(int positionX, int positionY, int rotation, PrioritySignType type) throws SceneObjectException {
-        super(positionX, positionY, rotation);
+    public PrioritySign(ScenePoint basePosition, int rotation, PrioritySignType type) throws SceneObjectException {
+        super(basePosition, rotation);
         this.type = type;
     }
 

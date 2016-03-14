@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class ParkingSignTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        parkingSign = new ParkingSign(111, 111, 40, ParkingSign.ParkingSignType.PARKING_RIGHT);
+        parkingSign = new ParkingSign(new ScenePoint(111, 111), 40, ParkingSign.ParkingSignType.PARKING_RIGHT);
     }
 
     @Test
@@ -25,8 +26,8 @@ public class ParkingSignTest {
 
     @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(111, parkingSign.getPositionX());
-        Assert.assertEquals(111, parkingSign.getPositionY());
+        Assert.assertEquals(111, parkingSign.getBasePosition().getX());
+        Assert.assertEquals(111, parkingSign.getBasePosition().getY());
         Assert.assertEquals(40, parkingSign.getRotation(), 0.00001);
     }
 }

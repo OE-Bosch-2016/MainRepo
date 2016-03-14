@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class DirectionSignTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        directionSign = new DirectionSign(222,222, 85, DirectionSign.DirectionType.FORWARD);
+        directionSign = new DirectionSign(new ScenePoint(222,222), 85, DirectionSign.DirectionType.FORWARD);
     }
 
     @Test
@@ -25,8 +26,8 @@ public class DirectionSignTest {
 
     @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(222, directionSign.getPositionX());
-        Assert.assertEquals(222, directionSign.getPositionY());
+        Assert.assertEquals(222, directionSign.getBasePosition().getX());
+        Assert.assertEquals(222, directionSign.getBasePosition().getY());
         Assert.assertEquals(85, directionSign.getRotation(), 0.00001);
     }
 }

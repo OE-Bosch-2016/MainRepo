@@ -1,4 +1,5 @@
 package hu.nik.project.environment.objects;
+import hu.nik.project.environment.ScenePoint;
 
 /**
  * Created by Róbert on 2016.02.27..
@@ -13,8 +14,8 @@ public class Tree extends Misc {
 
     private TreeType type;
 
-    public Tree(int positionX, int positionY, int rotation, TreeType type) throws SceneObjectException {
-        super(positionX, positionY, rotation);
+    public Tree(ScenePoint basePosition, int rotation, TreeType type) throws SceneObjectException {
+        super(basePosition, rotation);
         this.type = type;
     }
 

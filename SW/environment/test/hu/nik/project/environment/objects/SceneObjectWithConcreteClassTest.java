@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.ScenePoint;
 import org.junit.*;
 
 /**
@@ -13,13 +14,13 @@ public class SceneObjectWithConcreteClassTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        sceneObject = new Parking(50, 40, 20, Parking.ParkingType.PARKING_90);
+        sceneObject = new Parking(new ScenePoint(50, 40), 20, Parking.ParkingType.PARKING_90);
     }
 
     @Test(expected = SceneObjectException.class)
     public void cantBeNagative() throws Exception{
-        sceneObject = new Parking(-1, 40, 20, Parking.ParkingType.PARKING_90);
-        sceneObject = new Parking(50, -2, 20, Parking.ParkingType.PARKING_90);
+        sceneObject = new Parking(new ScenePoint(-1, 40), 20, Parking.ParkingType.PARKING_90);
+        sceneObject = new Parking(new ScenePoint(50, -2), 20, Parking.ParkingType.PARKING_90);
     }
 
     @Test
@@ -29,8 +30,8 @@ public class SceneObjectWithConcreteClassTest {
 
     @Test
     public void testGetPositionX() throws Exception {
-        Assert.assertNotEquals(90, sceneObject.getPositionX());
-        Assert.assertEquals(50, sceneObject.getPositionX());
+        Assert.assertNotEquals(90, sceneObject.getBasePosition().getX());
+        Assert.assertEquals(50, sceneObject.getBasePosition().getY());
     }
 
     @Test
@@ -41,8 +42,8 @@ public class SceneObjectWithConcreteClassTest {
 
     @Test(expected = SceneObjectException.class)
     public void testExeptionThrowWithRotation() throws SceneObjectException {
-        sceneObject = new Parking(999,999, -500, Parking.ParkingType.PARKING_BOLLARD);
-        sceneObject = new Parking(999,999, 500, Parking.ParkingType.PARKING_BOLLARD);
+        sceneObject = new Parking(new ScenePoint(999,999), -500, Parking.ParkingType.PARKING_BOLLARD);
+        sceneObject = new Parking(new ScenePoint(999,999), 500, Parking.ParkingType.PARKING_BOLLARD);
     }
 
     @Test
