@@ -2222,7 +2222,7 @@ public class Scalr {
 		 * 
 		 * NOTE: Below when the actual fraction is used to calculate the small
 		 * portion to subtract from the current dimension, this is a
-		 * progressively smaller and smaller chunk. When the code was changed to
+		 * progressively smaller and smaller chunk. When the code was mileAgeChanged to
 		 * do a linear reduction of the image of equal steps for each
 		 * incremental resize (e.g. say 50px each time) the result was
 		 * significantly worse than the progressive approach used below; even

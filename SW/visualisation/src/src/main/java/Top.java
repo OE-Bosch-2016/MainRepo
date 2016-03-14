@@ -1,4 +1,4 @@
-import HMI.Mileage;
+import HMI.Hmi;
 import Map.MapLoader;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -21,24 +21,28 @@ public class Top extends JFrame {
     private JPanel ui_panel;
     private JPanel mileAgePanel;
     private JPanel tachometerPanel;
-    private JTextArea textAreaD;
-    private JTextArea textAreaN;
-    private JTextArea textAreaR;
-    private JTextArea textAreaP;
-    private JTextArea a1TextArea;
-    private JTextArea a2TextArea;
     private JPanel gearShiftPanel;
-    private JPanel hmi;
+    private JPanel hmiPanel;
     private JLabel mapLabel;
     private JPanel mapPanel;
+    private JSlider test_slider2;
+    private JTextPane DTextPane;
+    private JTextPane nTextPane;
+    private JTextPane rTextPane;
+    private JTextPane pTextPane;
+    private JTextPane a1TextPane;
+    private JTextPane a2TextPane;
 
 
     // HMI elements
-    private Mileage mileage;
+    private Hmi hmi;
 
-    private static final int DISPLAY_MAX = 220;
-    private final DefaultValueDataset dataset = new DefaultValueDataset();
-    private final DefaultValueDataset displayDataset = new DefaultValueDataset();
+    private static final int DISPLAY_MAX_KM = 220;
+    private static final int DISPLAY_MAX_TACHO = 6000;
+    private final DefaultValueDataset mileAgeDataset = new DefaultValueDataset();
+    private final DefaultValueDataset tachoMeterDataset = new DefaultValueDataset();
+    private final DefaultValueDataset mileAgeDisplayDataset = new DefaultValueDataset();
+    private final DefaultValueDataset tachoMeterDisplayDataset = new DefaultValueDataset();
 
 
     public Top() {
@@ -48,11 +52,12 @@ public class Top extends JFrame {
 
 
     private void init() {
-        mileage = new Mileage();
-        mileage.setMileAgeListener(mileAgeListener);
-        mileAgePanel.add(buildDialPlot(0, DISPLAY_MAX, 20));
-        tachometerPanel.add(buildDialPlot(0, 6000, 1000));
-        setValue(50);
+        hmi = new Hmi();
+        hmi.setHmiListener(mileAgeListener);
+        mileAgePanel.add(buildDialPlot(0, DISPLAY_MAX_KM, 20, mileAgeDataset, mileAgeDisplayDataset));
+        tachometerPanel.add(buildDialPlot(0, DISPLAY_MAX_TACHO, 1000, tachoMeterDataset, tachoMeterDisplayDataset));
+        setMileAgeValue(0);
+        setTachometerValue(0);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -61,22 +66,35 @@ public class Top extends JFrame {
 
 
         mapLabel.setIcon(MapLoader.getImage(MapLoader.MAP1));
+
         // Test
         test_slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 int value = test_slider.getValue();
-                mileage.mileage(value);
+                hmi.mileage(value);
+            }
+        });
+
+        test_slider2.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                int value = test_slider2.getValue();
+                hmi.tachometer(value);
             }
         });
     }
 
-    private void setValue(int value) {
-        dataset.setValue(value);
-        displayDataset.setValue(Math.min(DISPLAY_MAX, value));
+    private void setMileAgeValue(int value) {
+        mileAgeDataset.setValue(value);
+        mileAgeDisplayDataset.setValue(Math.min(DISPLAY_MAX_KM, value));
+    }
+
+    private void setTachometerValue(int value) {
+        tachoMeterDataset.setValue(value);
+        tachoMeterDisplayDataset.setValue(Math.min(DISPLAY_MAX_TACHO, value));
     }
 
     private ChartPanel buildDialPlot(int minimumValue, int maximumValue,
-                                     int majorTickGap) {
+                                     int majorTickGap, DefaultValueDataset dataset, DefaultValueDataset displayDataset) {
 
         DialPlot plot = new DialPlot();
         plot.setDataset(0, dataset);
@@ -101,10 +119,13 @@ public class Top extends JFrame {
 
 
     // Listener --------------------------------------------------------------------------------------------------------
-    private Mileage.OnMileAgeListener mileAgeListener = new Mileage.OnMileAgeListener() {
-        public void changed(float mile) {
-            hmi_mileage_text_area.setText(String.valueOf(mile) + Mileage.UNIT);
-            setValue((int) mile);
+    private Hmi.OnHmiListener mileAgeListener = new Hmi.OnHmiListener() {
+        public void mileAgeChanged(float mile) {
+            setMileAgeValue((int) mile);
+        }
+
+        public void tachometerChanged(float tachometer) {
+            setTachometerValue((int)tachometer);
         }
     };
 }
