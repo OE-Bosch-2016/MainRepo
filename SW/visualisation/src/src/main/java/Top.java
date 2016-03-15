@@ -8,6 +8,9 @@ import org.jfree.data.general.DefaultValueDataset;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by haxxi on 2016.03.01..
@@ -26,12 +29,13 @@ public class Top extends JFrame {
     private JLabel mapLabel;
     private JPanel mapPanel;
     private JSlider test_slider2;
-    private JTextPane DTextPane;
+    private JTextPane dTextPane;
     private JTextPane nTextPane;
     private JTextPane rTextPane;
     private JTextPane pTextPane;
     private JTextPane a1TextPane;
     private JTextPane a2TextPane;
+    private JComboBox comboBox1;
 
 
     // HMI elements
@@ -43,12 +47,12 @@ public class Top extends JFrame {
     private final DefaultValueDataset tachoMeterDataset = new DefaultValueDataset();
     private final DefaultValueDataset mileAgeDisplayDataset = new DefaultValueDataset();
     private final DefaultValueDataset tachoMeterDisplayDataset = new DefaultValueDataset();
+    private StringBuilder builder;
 
 
     public Top() {
         init();
     }
-
 
 
     private void init() {
@@ -63,7 +67,6 @@ public class Top extends JFrame {
         setVisible(true);
         setContentPane(rootPanel);
         pack();
-
 
         mapLabel.setIcon(MapLoader.getImage(MapLoader.MAP1));
 
@@ -81,6 +84,20 @@ public class Top extends JFrame {
                 hmi.tachometer(value);
             }
         });
+
+        comboBox1.addItem("1");
+        comboBox1.addItem("2");
+        comboBox1.addItem("3");
+        comboBox1.addItem("4");
+        comboBox1.addItem("5");
+        comboBox1.addItem("6");
+
+        comboBox1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                hmi.gearshift(Integer.parseInt(comboBox1.getSelectedItem().toString()) - 1);
+            }
+        });
+        // Test end
     }
 
     private void setMileAgeValue(int value) {
@@ -91,6 +108,39 @@ public class Top extends JFrame {
     private void setTachometerValue(int value) {
         tachoMeterDataset.setValue(value);
         tachoMeterDisplayDataset.setValue(Math.min(DISPLAY_MAX_TACHO, value));
+    }
+
+    private void setGearShiftStage(int stage) {
+        pTextPane.setText(setColor("P", false));
+        dTextPane.setText(setColor("D", false));
+        nTextPane.setText(setColor("N", false));
+        rTextPane.setText(setColor("R", false));
+        a1TextPane.setText(setColor("1", false));
+        a2TextPane.setText(setColor("2", false));
+
+        if (stage == Hmi.GEAR_SHIFT_P)
+            pTextPane.setText(setColor("P", true));
+        else if (stage == Hmi.GEAR_SHIFT_1)
+            a1TextPane.setText(setColor("1", true));
+        else if (stage == Hmi.GEAR_SHIFT_2)
+            a2TextPane.setText(setColor("2", true));
+        else if (stage == Hmi.GEAR_SHIFT_D)
+            dTextPane.setText(setColor("D", true));
+        else if (stage == Hmi.GEAR_SHIFT_N)
+            nTextPane.setText(setColor("N", true));
+        else if (stage == Hmi.GEAR_SHIFT_R)
+            rTextPane.setText(setColor("R", true));
+    }
+
+    private String setColor(String text, boolean activated) {
+        builder = new StringBuilder();
+        builder.append("<html><body>");
+        if (activated)
+            builder.append("<span style=\"color:red\"><b>").append(text).append("</b></span>");
+        else
+            builder.append("<span style=\"color:black\"><b>").append(text).append("</b></span>");
+        builder.append("</body></html>");
+        return builder.toString();
     }
 
     private ChartPanel buildDialPlot(int minimumValue, int maximumValue,
@@ -125,7 +175,11 @@ public class Top extends JFrame {
         }
 
         public void tachometerChanged(float tachometer) {
-            setTachometerValue((int)tachometer);
+            setTachometerValue((int) tachometer);
+        }
+
+        public void gearshiftChanged(int gearshift) {
+            setGearShiftStage(gearshift);
         }
     };
 }

@@ -5,6 +5,13 @@ package HMI;
  */
 public class Hmi implements IHmi {
 
+    public static int GEAR_SHIFT_D = 0;
+    public static int GEAR_SHIFT_N = 1;
+    public static int GEAR_SHIFT_R = 2;
+    public static int GEAR_SHIFT_P = 3;
+    public static int GEAR_SHIFT_1 = 4;
+    public static int GEAR_SHIFT_2 = 5;
+
     OnHmiListener hmiListener;
 
     public void mileage(float mile) {
@@ -15,8 +22,15 @@ public class Hmi implements IHmi {
     }
 
     public void tachometer(float value) {
-        if(hmiListener != null)
+        if (hmiListener != null)
             hmiListener.tachometerChanged(value);
+        else
+            throw new NullPointerException("Hmi listener is missing");
+    }
+
+    public void gearshift(int stage) {
+        if (hmiListener != null)
+            hmiListener.gearshiftChanged(stage);
         else
             throw new NullPointerException("Hmi listener is missing");
     }
@@ -29,6 +43,9 @@ public class Hmi implements IHmi {
     // Listener --------------------------------------------------------------------------------------------------------
     public interface OnHmiListener {
         void mileAgeChanged(float mile);
+
         void tachometerChanged(float tachometer);
+
+        void gearshiftChanged(int gearshift);
     }
 }
