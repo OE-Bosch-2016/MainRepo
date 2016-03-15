@@ -1,5 +1,7 @@
 package HMI;
 
+import Interfaces.IHmi;
+
 /**
  * Created by haxxi on 2016.03.04..
  */
