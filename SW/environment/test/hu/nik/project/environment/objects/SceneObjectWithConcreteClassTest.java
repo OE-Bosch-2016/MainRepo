@@ -31,7 +31,7 @@ public class SceneObjectWithConcreteClassTest {
     @Test
     public void testGetPositionX() throws Exception {
         Assert.assertNotEquals(90, sceneObject.getBasePosition().getX());
-        Assert.assertEquals(50, sceneObject.getBasePosition().getY());
+        Assert.assertEquals(40, sceneObject.getBasePosition().getY());
     }
 
     @Test

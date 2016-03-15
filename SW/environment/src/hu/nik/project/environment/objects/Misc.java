@@ -8,9 +8,15 @@ import hu.nik.project.environment.ScenePoint;
  * Abstract class for Misc
  */
 abstract public class Misc<T> extends SceneObject {
+    private ScenePoint center;
+
     public Misc(ScenePoint basePosition, int rotation) throws SceneObjectException {
         super(basePosition, rotation);
     }
 
     public abstract T getObjectType();
+
+    public ScenePoint getCenter() {
+        return center;
+    }
 }

@@ -1,4 +1,5 @@
 import hu.nik.project.environment.Scene;
+import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.XMLParserException;
 
 /**
@@ -7,6 +8,7 @@ import hu.nik.project.environment.XMLParserException;
  * Main class of the ConsoleApp
  */
 public class Main {
+
     public static void main(String [ ] args) {
 
         try {

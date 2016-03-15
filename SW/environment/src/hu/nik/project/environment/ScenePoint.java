@@ -25,4 +25,22 @@ public class ScenePoint {
     public String toString() {
         return ("X: " + x + " Y: " + y);
     }
+
+    public static ScenePoint rotatePointAroundPoint(ScenePoint base, ScenePoint point, int rotation) {
+        double rotationInRadian = (-rotation) * (Math.PI/180);
+
+        double newPositionX = base.getX() + (point.getX()-base.getX())*Math.cos(rotationInRadian) - (point.getY()-base.getY())*Math.sin(rotationInRadian);
+        double newPositionY = base.getY() + (point.getX()-base.getX())*Math.sin(rotationInRadian) + (point.getY()-base.getY())*Math.cos(rotationInRadian);
+
+        return new ScenePoint((int)Math.round(newPositionX), (int)Math.round(newPositionY));
+    }
+
+    public static ScenePoint getPointByRotationAndRadius(ScenePoint reference, int rotation, int radius) {
+        double rotationInRadian = (-rotation) * (Math.PI/180);
+
+        double x = reference.getX() + radius * Math.cos(rotationInRadian);
+        double y = reference.getY() + radius * Math.sin(rotationInRadian);
+
+        return new ScenePoint((int)Math.round(x), (int)Math.round(y));
+    }
 }

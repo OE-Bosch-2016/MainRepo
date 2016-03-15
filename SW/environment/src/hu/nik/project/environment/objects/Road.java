@@ -9,9 +9,28 @@ import hu.nik.project.environment.ScenePoint;
  */
 abstract public class Road<T> extends SceneObject {
 
+    private ScenePoint topPoint;
+    private ScenePoint bottomPoint;
+
     public Road(ScenePoint basePosition, int rotation) throws SceneObjectException {
         super(basePosition, rotation);
     }
 
     public abstract T getObjectType();
+
+    protected void setTopPoint(ScenePoint point) {
+        topPoint = point;
+    }
+
+    protected void setBottomPoint(ScenePoint point) {
+        bottomPoint = point;
+    }
+
+    public ScenePoint getTopPoint() {
+        return topPoint;
+    }
+
+    public ScenePoint getBottomPoint() {
+        return bottomPoint;
+    }
 }

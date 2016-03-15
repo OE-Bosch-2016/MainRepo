@@ -9,9 +9,17 @@ import hu.nik.project.environment.ScenePoint;
  */
 abstract public class Sign<T> extends SceneObject {
 
+    private ScenePoint center;
+
     public Sign(ScenePoint basePosition, int rotation) throws SceneObjectException {
         super(basePosition, rotation);
+
+        center = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + 80 / 2, basePosition.getY() + 80 / 2), rotation);
     }
 
     public abstract T getObjectType();
+
+    public ScenePoint getCenter() {
+        return center;
+    }
 }

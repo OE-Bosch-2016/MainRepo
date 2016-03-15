@@ -9,13 +9,8 @@ import hu.nik.project.environment.ScenePoint;
  */
 public class SimpleRoad extends Road {
 
+
     public enum SimpleRoadType  {
-        SIMPLE_45_LEFT,
-        SIMPLE_45_RIGHT,
-        SIMPLE_65_LEFT,
-        SIMPLE_65_RIGHT,
-        SIMPLE_90_LEFT,
-        SIMPLE_90_RIGHT,
         SIMPLE_STRAIGHT
     }
 
@@ -24,6 +19,10 @@ public class SimpleRoad extends Road {
     public SimpleRoad(ScenePoint basePosition, int rotation, SimpleRoadType type) throws SceneObjectException {
         super(basePosition, rotation);
         this.type = type;
+
+
+        super.setTopPoint(ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + 175, basePosition.getY()), rotation));
+        super.setBottomPoint(ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + 175, basePosition.getY() + 350), rotation));
     }
 
     public SimpleRoadType getObjectType() {

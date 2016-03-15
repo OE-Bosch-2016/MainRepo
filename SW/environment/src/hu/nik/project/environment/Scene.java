@@ -57,7 +57,7 @@ public class Scene {
 
     public SceneObject getSceneObjectByPosition(ScenePoint basePosition) {
         for (SceneObject s : sceneObjects) {
-            if (s.getBasePosition().equals(basePosition))
+            if (s.getBasePosition().getX() == basePosition.getX() && s.getBasePosition().getY() == basePosition.getY())
                 return s;
         }
         return null;
@@ -153,22 +153,22 @@ public class Scene {
                     sceneObjects.add(new AdvancedRoad(basePosition, rotation, AdvancedRoad.AdvancedRoadType.JUNCTIONRIGHT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_45l.tile":
-                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_45_LEFT));
+                    sceneObjects.add(new CurvedRoad(basePosition, rotation, CurvedRoad.CurvedRoadType.SIMPLE_45_LEFT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_45r.tile":
-                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_45_RIGHT));
+                    sceneObjects.add(new CurvedRoad(basePosition, rotation, CurvedRoad.CurvedRoadType.SIMPLE_45_RIGHT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_65l.tile":
-                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_65_LEFT));
+                    sceneObjects.add(new CurvedRoad(basePosition, rotation, CurvedRoad.CurvedRoadType.SIMPLE_65_LEFT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_65r.tile":
-                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_65_RIGHT));
+                    sceneObjects.add(new CurvedRoad(basePosition, rotation, CurvedRoad.CurvedRoadType.SIMPLE_65_RIGHT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_90l.tile":
-                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_90_LEFT));
+                    sceneObjects.add(new CurvedRoad(basePosition, rotation, CurvedRoad.CurvedRoadType.SIMPLE_90_LEFT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_90r.tile":
-                    sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_90_RIGHT));
+                    sceneObjects.add(new CurvedRoad(basePosition, rotation, CurvedRoad.CurvedRoadType.SIMPLE_90_RIGHT));
                     break;
                 case "data/road_tiles/2_lane_simple/2_simple_s.tile":
                     sceneObjects.add(new SimpleRoad(basePosition, rotation, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT));

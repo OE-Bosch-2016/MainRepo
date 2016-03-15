@@ -16,18 +16,25 @@ public class SpeedSignTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        speedSign = new SpeedSign(new ScenePoint(700, 700), 270, SpeedSign.SpeedSignType.LIMIT_100);
+        // Object 57
+        speedSign = new SpeedSign(new ScenePoint(235, 3908), 270, SpeedSign.SpeedSignType.LIMIT_50);
     }
 
     @Test
     public void testGetObjectType() throws Exception {
-        Assert.assertEquals(SpeedSign.SpeedSignType.LIMIT_100, speedSign.getObjectType());
+        Assert.assertEquals(SpeedSign.SpeedSignType.LIMIT_50, speedSign.getObjectType());
     }
 
     @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(700, speedSign.getBasePosition().getX());
-        Assert.assertEquals(700, speedSign.getBasePosition().getY());
+        Assert.assertEquals(235, speedSign.getBasePosition().getX());
+        Assert.assertEquals(3908, speedSign.getBasePosition().getY());
         Assert.assertEquals(270, speedSign.getRotation(), 0.00001);
+    }
+
+    @Test
+    public void testGetCenter() throws Exception {
+        Assert.assertEquals(195, speedSign.getCenter().getX());
+        Assert.assertEquals(3948, speedSign.getCenter().getY());
     }
 }

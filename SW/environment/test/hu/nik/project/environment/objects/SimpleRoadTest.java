@@ -16,18 +16,27 @@ public class SimpleRoadTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        simpleRoad = new SimpleRoad(new ScenePoint(0, 0), 0, SimpleRoad.SimpleRoadType.SIMPLE_65_LEFT);
+        simpleRoad = new SimpleRoad(new ScenePoint(2175, 2263), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT);
     }
 
     @Test
     public void testGetObjectType() throws Exception {
-        Assert.assertEquals(SimpleRoad.SimpleRoadType.SIMPLE_65_LEFT, simpleRoad.getObjectType());
+        Assert.assertEquals(SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT, simpleRoad.getObjectType());
     }
 
     @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(0, simpleRoad.getBasePosition().getX());
-        Assert.assertEquals(0, simpleRoad.getBasePosition().getY());
-        Assert.assertEquals(0, simpleRoad.getRotation(), 0.00001);
+        Assert.assertEquals(2175, simpleRoad.getBasePosition().getX());
+        Assert.assertEquals(2263, simpleRoad.getBasePosition().getY());
+        Assert.assertEquals(90, simpleRoad.getRotation(), 0.00001);
+    }
+
+    @Test
+    public void testTopAndBottomPoints() throws Exception {
+        Assert.assertEquals(2175, simpleRoad.getTopPoint().getX());
+        Assert.assertEquals(2088, simpleRoad.getTopPoint().getY());
+
+        Assert.assertEquals(2525, simpleRoad.getBottomPoint().getX());
+        Assert.assertEquals(2088, simpleRoad.getBottomPoint().getY());
     }
 }
