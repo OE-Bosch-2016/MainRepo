@@ -2,8 +2,8 @@
  * Created by secured on 2016. 03. 06..
  */
 public class Position {
-    int _positionX;
-    int _positionY;
+    private int _positionX;
+    private int _positionY;
 
     public Position(int positionX, int positionY) {
         _positionX = positionX;

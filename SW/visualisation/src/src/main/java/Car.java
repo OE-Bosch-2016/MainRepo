@@ -4,9 +4,9 @@ import java.awt.image.BufferedImage;
  * Created by secured on 2016. 03. 06..
  */
 public abstract class Car {
-    Position _position;
-    float _degree;
-    BufferedImage _image;
+    private Position _position;
+    private float _degree;
+    private BufferedImage _image;
 
     public Car(Position position, float degree, BufferedImage image) {
         _position = position;
@@ -30,7 +30,7 @@ public abstract class Car {
         _image = image;
     }
 
-    public void RotateCar(float degree){
-        _degree+=degree;
+    public float RotateCar(float degree){
+        return _degree+=degree;
     }
 }
