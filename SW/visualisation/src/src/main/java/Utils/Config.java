@@ -9,5 +9,7 @@ public class Config {
     public static int imageSizeY = 600;
     public static String pathMap1 = "src/main/resources/maps/road_1.png";
     public static String pathMap2 = "src/main/resources/maps/road_2.png";
+    public static String pathSteeringWheel = "src/main/resources/steeringwheel.png";
+    public static String getPathSteeringWheel = "main/resources/steeringwheel.png";
 
 }

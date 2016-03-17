@@ -1,5 +1,6 @@
 import HMI.Hmi;
 import Map.MapLoader;
+import Utils.Config;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
@@ -11,11 +12,13 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * Created by haxxi on 2016.03.01..
  */
-public class Top extends JFrame {
+public class Top extends JFrame implements KeyListener{
 
     // UI elements
     private JTextArea hmi_mileage_text_area;
@@ -36,7 +39,9 @@ public class Top extends JFrame {
     private JTextPane a1TextPane;
     private JTextPane a2TextPane;
     private JComboBox comboBox1;
+    private JLabel steeringWheel;
 
+    SteeringWheel steering = new SteeringWheel();
 
     // HMI elements
     private Hmi hmi;
@@ -68,6 +73,7 @@ public class Top extends JFrame {
         setContentPane(rootPanel);
         pack();
 
+        steeringWheel.setIcon(steering.GetSteeringWheel(0));
         mapLabel.setIcon(MapLoader.getImage(MapLoader.MAP1));
 
         // Test
@@ -97,6 +103,10 @@ public class Top extends JFrame {
                 hmi.gearshift(Integer.parseInt(comboBox1.getSelectedItem().toString()) - 1);
             }
         });
+
+        addKeyListener(this);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
         // Test end
     }
 
@@ -182,4 +192,22 @@ public class Top extends JFrame {
             setGearShiftStage(gearshift);
         }
     };
+
+    public void keyTyped(KeyEvent e) {
+        System.out.println(e.paramString());
+    }
+
+    public void keyPressed(KeyEvent e) {
+    }
+
+    public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode()== KeyEvent.VK_RIGHT)
+            steeringWheel.setIcon(steering.GetSteeringWheel(20));
+        else if(e.getKeyCode()== KeyEvent.VK_LEFT)
+            steeringWheel.setIcon(steering.GetSteeringWheel(-20));
+        else if(e.getKeyCode() == KeyEvent.VK_UP)
+            steeringWheel.setIcon(steering.GetSteeringWheel(0));
+
+        steeringWheel.repaint();
+    }
 }
