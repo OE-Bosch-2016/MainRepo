@@ -10,7 +10,7 @@ public class Wheels implements IWheels {
 	double direction; 					   //given in degree 0-360
 	
 	//adjust these by testing
-    	static double turningAdjustment = 0.2;      //proportion to simulate turning realistically
+    	static double turningAdjustment = 0.01;      //proportion to simulate turning realistically
 	static double accelerationAdjustment = 0.2; //proportion to convert torque to acceleration
 	static double brakeAdjustment = 0.2;		//proportion to turn brake pedal to deceleration
 	static double natureBrake = 0.02;			//deceleration of environment
