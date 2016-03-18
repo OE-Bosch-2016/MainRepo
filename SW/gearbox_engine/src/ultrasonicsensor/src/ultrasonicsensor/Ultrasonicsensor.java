@@ -12,12 +12,12 @@ import java.util.List;
  * @author Patrik
  */
 public class Ultrasonicsensor {
-
+    private final double lov = 500; //length of view
     private final double fov = 45; //in degrees
     private double x; //sensor position ON CAR
     private double y; //sensor position ON CAR
     private double startAngle; //sensor facing ON CAR
-    private double c; //distance from center of car
+    private double r; //distance from center of car
 
     /**
      * @return the fov
@@ -52,12 +52,16 @@ public class Ultrasonicsensor {
         this.x = x;
         this.y = y;
         this.startAngle = startAngle;
-        c = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
     public double getNearestObjectDistance(double carX, double carY, double carFacing, List<Object> objects) {
         //sensor position in environment
-        double sensorX = carX + mathfügvény()  + másikmathfüggvény() * ;
+        double environmentX = Math.cos(carFacing) * x - Math.sin(carFacing) * y;
+        double environmentY = Math.cos(carFacing) * y - Math.sin(carFacing) * x;
+        double environmentFacing = this.startAngle + carFacing;
+        environmentX += carX;
+        environmentY += carY;
         return 0;
     }
 }
