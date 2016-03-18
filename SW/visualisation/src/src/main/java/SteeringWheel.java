@@ -14,6 +14,8 @@ import java.net.URL;
 public class SteeringWheel {
 
     BufferedImage scaledImage;
+    double rotation = 0;
+
 
     public SteeringWheel() {
 
@@ -22,9 +24,10 @@ public class SteeringWheel {
     public ImageIcon GetSteeringWheel(double rotate)
     {
         try {
+            rotation = rotation + rotate;
             scaledImage = ImageIO.read(new File(Config.getPathSteeringWheel));
-            scaledImage = Utils.Scalr.resize(scaledImage, 300, 300);
-            scaledImage = rotate(scaledImage, rotate);
+            scaledImage = Utils.Scalr.resize(scaledImage, 250, 250);
+            scaledImage = rotate(scaledImage, rotation);
         } catch (IOException e) {
             e.printStackTrace();
         }

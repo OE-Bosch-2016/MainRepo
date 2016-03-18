@@ -14,8 +14,30 @@ public class Hmi implements IHmi {
     public static int GEAR_SHIFT_1 = 4;
     public static int GEAR_SHIFT_2 = 5;
 
+    private int kmh = 0;
+    private int rpm = 800;
+
     OnHmiListener hmiListener;
 
+    public void setKhm(int kmh)
+    {
+        this.kmh = kmh;
+    }
+
+    public void setRpm(int rpm)
+    {
+        this.rpm = rpm;
+    }
+
+    public int getKhm()
+    {
+        return kmh;
+    }
+
+    public  int getRpm()
+    {
+        return rpm;
+    }
     public void mileage(float mile) {
         if (hmiListener != null)
             hmiListener.mileAgeChanged(mile);

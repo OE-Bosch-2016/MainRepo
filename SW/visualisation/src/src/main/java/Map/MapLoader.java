@@ -19,6 +19,7 @@ public class MapLoader {
     // Getter ----------------------------------------------------------------------------------------------------------
     public static ImageIcon getImage(int mapType) {
         ImageIcon icon = null;
+
         try {
             BufferedImage scaledImage = ImageIO.read(new File(mapType == MAP2 ? Config.pathMap2 : Config.pathMap1));
             scaledImage = Utils.Scalr.resize(scaledImage, Config.imageSizeX, Config.imageSizeY);
@@ -26,6 +27,7 @@ public class MapLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return icon;
     }
 }

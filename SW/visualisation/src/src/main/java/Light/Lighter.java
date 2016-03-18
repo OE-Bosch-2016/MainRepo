@@ -36,17 +36,14 @@ public class Lighter implements ILightable {
     }
 
 
-    @Override
     public boolean isTurned() {
         return turned;
     }
 
-    @Override
     public TypeOfLight getTypeOfLamp() {
         return TypeOfLight.Lamp;
     }
 
-    @Override
     public String bugReport(String Message) {
         return Message+" Changed:"+ new java.util.Date().toString() ;
     }

@@ -98,6 +98,7 @@ public class Top extends JFrame implements KeyListener{
         comboBox1.addItem("5");
         comboBox1.addItem("6");
 
+
         comboBox1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 hmi.gearshift(Integer.parseInt(comboBox1.getSelectedItem().toString()) - 1);
@@ -107,6 +108,8 @@ public class Top extends JFrame implements KeyListener{
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
+        comboBox1.setSelectedIndex(0);
+        steeringWheel.setHorizontalAlignment(SwingConstants.CENTER);
         // Test end
     }
 
@@ -198,15 +201,66 @@ public class Top extends JFrame implements KeyListener{
     }
 
     public void keyPressed(KeyEvent e) {
+
     }
 
     public void keyReleased(KeyEvent e) {
         if(e.getKeyCode()== KeyEvent.VK_RIGHT)
-            steeringWheel.setIcon(steering.GetSteeringWheel(20));
+            steeringWheel.setIcon(steering.GetSteeringWheel(-30));
         else if(e.getKeyCode()== KeyEvent.VK_LEFT)
-            steeringWheel.setIcon(steering.GetSteeringWheel(-20));
-        else if(e.getKeyCode() == KeyEvent.VK_UP)
-            steeringWheel.setIcon(steering.GetSteeringWheel(0));
+            steeringWheel.setIcon(steering.GetSteeringWheel(+30));
+        else if(e.getKeyCode() == KeyEvent.VK_UP) {
+            if(hmi.getKhm() < 195)
+            {
+                int rpm = hmi.getRpm() + 600;
+                hmi.setRpm(rpm);
+
+                int kmh = hmi.getKhm() + 8;
+                hmi.setKhm(kmh);
+            }
+
+            if(hmi.getRpm() > 4000)
+            {
+                int rpm = hmi.getRpm() - 2400;
+                hmi.setRpm(rpm);
+
+                int kmh = hmi.getKhm() - 1;
+                hmi.setKhm(kmh);
+            }
+
+                hmi.mileage(hmi.getKhm());
+            hmi.tachometer((float) hmi.getRpm());
+
+        }
+        else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+        {
+            if(hmi.getKhm() > 10) {
+                int rpm = hmi.getRpm() - 600;
+                hmi.setRpm(rpm);
+
+                int kmh = hmi.getKhm() - 8;
+                hmi.setKhm(kmh);
+            }
+            else
+            {
+                hmi.setRpm(600);
+            }
+
+            if(hmi.getRpm() < 600)
+            {
+                int rpm = hmi.getRpm() + 2400;
+                hmi.setRpm(rpm);
+
+                int kmh = hmi.getKhm() - 1;
+                hmi.setKhm(kmh);
+            }
+
+
+            hmi.tachometer((float) hmi.getRpm());
+            hmi.mileage(hmi.getKhm());
+
+        }
+
 
         steeringWheel.repaint();
     }
