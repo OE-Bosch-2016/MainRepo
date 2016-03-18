@@ -39,6 +39,12 @@ public class Camera implements ICamera {
 		//set lane type
 	}
 	
-	//+interface implementációk
+	//+interface implementációk via Apor:
+	public int posX(){
+		return 0;	//have to implement the calculation of position X
+	}
+	public int posY(){
+		return 0;	//have to implement the calculation of position X
+	}
 	
 }
