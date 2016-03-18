@@ -6,11 +6,6 @@ public class Camera implements ICamera {
 	double laneDistance;							//meters or pixels define which one! 
 	Object laneType;								//given in degree 0-360
 	
-	
-	
-	
-  
-	
 	private void getClosestSign(Object[] visibleObjects, Object car) 
 	{
 		//set closest sign
@@ -28,7 +23,14 @@ public class Camera implements ICamera {
 				minIndex=i;
 			}
 		}
-		closestSign=visibleObjects[minIndex];
+		if(minIndex=-1){
+			closestSign=null;
+		}
+		else
+		{
+			closestSign=visibleObjects[minIndex];
+		}
+			
 	}
 	
 	private void getLaneDistance(Object car, Object road)
