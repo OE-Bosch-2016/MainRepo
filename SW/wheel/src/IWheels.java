@@ -1,4 +1,4 @@
-package wheel;
+package wheels;
 
 public interface IWheels {
 	double Direction();		//0-360 degree
