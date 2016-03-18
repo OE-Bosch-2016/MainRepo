@@ -19,7 +19,7 @@ public class Camera implements ICamera {
 		distY =	(visibleObjects[i].yPos- car.yPos)*(visibleObjects[i].yPos- car.yPos);
 			if(Math.sqrt(distX+distY)<min)
 			{
-				min=Math.sqrt(distX+distY)<min;
+				min=Math.sqrt(distX+distY);
 				minIndex=i;
 			}
 		}
