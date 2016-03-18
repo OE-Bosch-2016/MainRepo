@@ -43,4 +43,21 @@ public class ScenePoint {
 
         return new ScenePoint((int)Math.round(x), (int)Math.round(y));
     }
+
+    public static boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance, ScenePoint point ) {
+
+        double SPx = point.getX() - observerBase.getX();
+        double SPy = point.getY() - observerBase.getY();
+        double absSP = Math.sqrt( (SPx*SPx) + (SPy*SPy) );
+        if ((viewDistance > 0) && (absSP > viewDistance)) return false; // not visible because out of view-distance
+        double viewAngleOfSP;
+        if (SPx == 0)
+            viewAngleOfSP = 0;
+        else
+            viewAngleOfSP = Math.toDegrees(Math.atan( SPy/SPx ));
+        if ( viewAngleOfSP > (observerRotation + (viewAngle/2)) ) return false; // not visible because above max-angle
+        if ( viewAngleOfSP < (observerRotation - (viewAngle/2)) ) return false; // not visible because below min-angle
+        return true;
+    }
+
 }
