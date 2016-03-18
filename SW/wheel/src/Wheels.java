@@ -34,10 +34,10 @@ public class Wheels implements IWheels {
 	}
     
 	
-	public void calcOnTick(double driverWheel,double gasPedal, double brakePedal)
+	public void calcOnTick(double driverWheel,double torque ,double RPM, double brakePedal)
 	{
 		calcDirection(driverWheel);    //calculates first because new direction is effected by last speed
-		calcSpeed(gasPedal,brakePedal);
+		calcSpeed(torque, brakePedal, RPM);
 	}
 	
 	private void calcDirection(double driverWheel) 
