@@ -50,4 +50,16 @@ public class SceneObjectWithConcreteClassTest {
     public void testConcreteType() {
         Assert.assertEquals(Parking.class, sceneObject.getClass());
     }
+
+    @Test
+    public void testSceneObject63IsVisibleFromObserver() throws Exception {
+        SceneObject sceneObject63 = new DirectionSign(new ScenePoint(1629,2300), 0, DirectionSign.DirectionType.RIGHT);
+        ScenePoint observerBase = new ScenePoint(1500, 2300);
+        int observerRotation = 45;
+        int viewAngle = 90;
+        int viewDistance = 200;
+
+        Assert.assertTrue( sceneObject63.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance) );
+        Assert.assertFalse( sceneObject.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance) );
+    }
 }

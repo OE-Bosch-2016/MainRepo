@@ -54,6 +54,7 @@ public class Scene {
         return sceneHeight;
     }
 
+    public ArrayList<SceneObject> getSceneObjects() { return sceneObjects; }
 
     public SceneObject getSceneObjectByPosition(ScenePoint basePosition) {
         for (SceneObject s : sceneObjects) {
