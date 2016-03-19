@@ -1,5 +1,5 @@
 import HMI.Hmi;
-import Map.MapLoader;
+import Utils.ImageLoader;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
@@ -8,7 +8,6 @@ import org.jfree.data.general.DefaultValueDataset;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,7 +25,6 @@ public class Top extends JFrame {
     private JPanel tachometerPanel;
     private JPanel gearShiftPanel;
     private JPanel hmiPanel;
-    private JLabel mapLabel;
     private JPanel mapPanel;
     private JSlider test_slider2;
     private JTextPane dTextPane;
@@ -37,6 +35,11 @@ public class Top extends JFrame {
     private JTextPane a2TextPane;
     private JComboBox comboBox1;
 
+    //Timer
+    private Timer timer;
+
+    //Visualization
+    public VisualizationRenderer vRenderer = null;
 
     // HMI elements
     private Hmi hmi;
@@ -48,6 +51,9 @@ public class Top extends JFrame {
     private final DefaultValueDataset mileAgeDisplayDataset = new DefaultValueDataset();
     private final DefaultValueDataset tachoMeterDisplayDataset = new DefaultValueDataset();
     private StringBuilder builder;
+
+    //Car
+    private AutonomousCar car;
 
 
     public Top() {
@@ -68,7 +74,19 @@ public class Top extends JFrame {
         setContentPane(rootPanel);
         pack();
 
-        mapLabel.setIcon(MapLoader.getImage(MapLoader.MAP1));
+        //Car setup
+        car = new AutonomousCar(new Vector2D(0,0),ImageLoader.getCarImage());
+
+        //Visualization renderer setup
+        vRenderer = new VisualizationRenderer(mapPanel, hmi, car);
+
+        //Timer setup
+        //1 sec / 24 ~= 42 ms -> 24fps
+        timer = new Timer(42, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                vRenderer.render();
+            }
+        });
 
         // Test
         test_slider.addChangeListener(new ChangeListener() {
@@ -98,6 +116,9 @@ public class Top extends JFrame {
             }
         });
         // Test end
+
+        //Start timer
+        timer.start();
     }
 
     private void setMileAgeValue(int value) {

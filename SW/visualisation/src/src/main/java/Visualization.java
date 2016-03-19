@@ -1,50 +1,58 @@
+import HMI.Hmi;
 import Interfaces.IWheelVisualization;
 import Listeners.OnVehicleListener;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.awt.*;
+import javax.swing.*;
+import javax.swing.text.Position;
 
 /**
  * Created by secured on 2016. 03. 06..
  */
 public abstract class Visualization implements IWheelVisualization {
 
-    private Canvas _mapArea;
-    private TextField _speedoMeter;  //refactor to textbox or something
+    private JPanel _drawingArea;
+    private Hmi _hmi;
     private Car _car;
+    private JLabel _carLabel;
     private OnVehicleListener _vehicleListener;
 
-
-    public Visualization(Canvas mapArea, TextField speedoMeter, Car car) {
-        _mapArea = mapArea;
-        _speedoMeter = speedoMeter;
+    public Visualization(JPanel drawingArea, Hmi hmi, Car car) {
+        _drawingArea = drawingArea;
+        _hmi = hmi;
         _car=car;
+        _carLabel = new JLabel();
     }
 
-    public Canvas getMapArea() {
-        return _mapArea;
+    public JPanel getDrawingArea() {
+        return _drawingArea;
     }
 
-    public void setMapArea(Canvas mapArea) {
-        _mapArea = mapArea;
+    public void setDrawingArea(JPanel drawingArea) {
+        _drawingArea = drawingArea;
     }
 
     public void setCar(Car car) {
         _car = car;
+        _drawingArea.add(_carLabel);
     }
 
-    //TODO: implement ME!
-    public float ModifyVehicleSpeed(float speed) {
-        throw  new NotImplementedException();
+    public void ModifyVehicleSpeed(float speed) {
+        _hmi.mileage(speed);
+        _car.move(speed);
+        _vehicleListener.PositionChanged(_car.getPosition().get_coordinateX(), _car.getPosition().get_coordinateY());
     }
 
-    public float ModifyVehicleOrientaton(float degree) {
-        return _car.RotateCar(degree);
+    public void ModifyVehicleOrientation(float degree) {
+         _car.rotate(degree);
     }
 
     public void setOnVehicleListener(OnVehicleListener listener){
         _vehicleListener=listener;
     }
 
-
+    public void render()
+    {
+        _carLabel.setIcon(new ImageIcon(_car.getImage()));
+        _carLabel.setLocation(_car.getPosition().get_coordinateX(),_car.getPosition().get_coordinateY());
+    }
 }
