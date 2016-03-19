@@ -1,6 +1,8 @@
 package Interfaces;
 
-import javax.swing.text.Position;
+
+import Utils.Position;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -11,6 +13,6 @@ import java.util.Objects;
 //this will be a mocked interface, representing the incoming data
 public interface IRadarInputData {
     Position getOurCurrentPosition();
-    Position getDetectedObjectPosition();
-    ArrayList<Objects> getViewableObjectList();
+    Double getOurCurrentSpeed();
+    ArrayList<Position> getViewableObjectList();
 }
