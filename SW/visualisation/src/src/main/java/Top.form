@@ -18,7 +18,9 @@
         <children>
           <grid id="8e0bc" binding="mapPanel" layout-manager="GridBagLayout">
             <constraints>
-              <grid row="0" column="0" row-span="6" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="6" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="825" height="650"/>
+              </grid>
             </constraints>
             <properties/>
             <border type="none"/>

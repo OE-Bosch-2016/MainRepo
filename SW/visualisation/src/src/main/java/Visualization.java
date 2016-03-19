@@ -19,8 +19,8 @@ public abstract class Visualization implements IWheelVisualization {
     public Visualization(JPanel drawingArea, Hmi hmi, Car car) {
         _drawingArea = drawingArea;
         _hmi = hmi;
-        _car=car;
         _carLabel = new JLabel();
+        setCar(car);
     }
 
     public JPanel getDrawingArea() {
