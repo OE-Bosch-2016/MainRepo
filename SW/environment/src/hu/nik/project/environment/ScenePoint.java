@@ -48,11 +48,15 @@ public class ScenePoint {
 
         double SPx = point.getX() - observerBase.getX();
         double SPy = point.getY() - observerBase.getY();
-        double absSP = Math.sqrt( (SPx*SPx) + (SPy*SPy) );
-        if ((viewDistance > 0) && (absSP > viewDistance)) return false; // not visible because out of view-distance
+        if ((viewDistance > 0) && (Math.sqrt( (SPx*SPx) + (SPy*SPy) ) > viewDistance)) return false; // not visible because out of view-distance
         double viewAngleOfSP;
-        if (SPx == 0)
-            viewAngleOfSP = 0;
+        if (SPx == 0) {
+            if (SPy == 0) return false; // observer and object on same place
+            if (SPy > 0)
+                viewAngleOfSP = 90;     // point is above the observer
+            else
+                viewAngleOfSP = 180;    // point is below the observer
+        }
         else
             viewAngleOfSP = Math.toDegrees(Math.atan( SPy/SPx ));
         if ( viewAngleOfSP > (observerRotation + (viewAngle/2)) ) return false; // not visible because above max-angle
