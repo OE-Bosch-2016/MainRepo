@@ -25,7 +25,7 @@ public class SteeringWheel {
     {
         try {
             rotation = rotation + rotate;
-            scaledImage = ImageIO.read(new File(Config.getPathSteeringWheel));
+            scaledImage = ImageIO.read(new File(Config.pathSteeringWheel));
             scaledImage = Utils.Scalr.resize(scaledImage, 250, 250);
             scaledImage = rotate(scaledImage, rotation);
         } catch (IOException e) {
