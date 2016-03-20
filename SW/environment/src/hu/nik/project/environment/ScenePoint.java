@@ -27,6 +27,9 @@ public class ScenePoint {
     }
 
     public static ScenePoint rotatePointAroundPoint(ScenePoint base, ScenePoint point, int rotation) {
+
+        if (base == null || point == null) return null;
+
         double rotationInRadian = (-rotation) * (Math.PI/180);
 
         double newPositionX = base.getX() + (point.getX()-base.getX())*Math.cos(rotationInRadian) - (point.getY()-base.getY())*Math.sin(rotationInRadian);
@@ -60,8 +63,7 @@ public class ScenePoint {
         else
             viewAngleOfSP = Math.toDegrees(Math.atan( SPy/SPx ));
         if ( viewAngleOfSP > (observerRotation + (viewAngle/2)) ) return false; // not visible because above max-angle
-        if ( viewAngleOfSP < (observerRotation - (viewAngle/2)) ) return false; // not visible because below min-angle
-        return true;
+        return viewAngleOfSP >= (observerRotation - (viewAngle / 2));
     }
 
 }

@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
 
 /**
@@ -20,12 +21,12 @@ public class CurvedRoad extends Road {
 
     private CurvedRoadType type;
     private ScenePoint referencePoint;
-    private int radius;
+    private int radius = 350;
 
     public CurvedRoad(ScenePoint basePosition, int rotation, CurvedRoadType type) throws SceneObjectException {
         super(basePosition, rotation);
         this.type = type;
-        radius = 350;
+
         ScenePoint topPoint = null;
         ScenePoint bottomPoint = null;
 
@@ -34,14 +35,14 @@ public class CurvedRoad extends Road {
             case SIMPLE_45_LEFT:
             case SIMPLE_65_LEFT:
             case SIMPLE_90_LEFT:
-                pointNewX = (basePosition.getX() - 175);
-                bottomPoint = new ScenePoint((basePosition.getX() + 175), basePosition.getY());
+                pointNewX = (basePosition.getX() - getTrackWidth());
+                bottomPoint = new ScenePoint((basePosition.getX() + getTrackWidth()), basePosition.getY());
                 break;
             case SIMPLE_45_RIGHT:
             case SIMPLE_65_RIGHT:
             case SIMPLE_90_RIGHT:
-                pointNewX = (basePosition.getX() + 175);
-                bottomPoint = new ScenePoint((basePosition.getX() - 175), basePosition.getY());
+                pointNewX = (basePosition.getX() + getTrackWidth());
+                bottomPoint = new ScenePoint((basePosition.getX() - getTrackWidth()), basePosition.getY());
                 break;
         }
         ScenePoint referenceBase = new ScenePoint(pointNewX, basePosition.getY());

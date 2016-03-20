@@ -16,18 +16,42 @@ public class AdvancedRoadTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        advancedRoad = new AdvancedRoad(new ScenePoint(200, 99), 45, AdvancedRoad.AdvancedRoadType.ROTARY);
+        advancedRoad = new AdvancedRoad(new ScenePoint(775, 1913), 90, AdvancedRoad.AdvancedRoadType.JUNCTIONLEFT);
     }
 
     @Test
     public void testGetObjectType() {
-        Assert.assertEquals(AdvancedRoad.AdvancedRoadType.ROTARY, advancedRoad.getObjectType());
+        Assert.assertEquals(AdvancedRoad.AdvancedRoadType.JUNCTIONLEFT, advancedRoad.getObjectType());
+    }
+
+    @Test
+    public void testObjectBaseClass() {
+        Assert.assertTrue(advancedRoad instanceof Road);
     }
 
     @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(200, advancedRoad.getBasePosition().getX());
-        Assert.assertEquals(99, advancedRoad.getBasePosition().getY());
-        Assert.assertEquals(45, advancedRoad.getRotation(), 0.00001);
+        Assert.assertEquals(775, advancedRoad.getBasePosition().getX());
+        Assert.assertEquals(1913, advancedRoad.getBasePosition().getY());
+        Assert.assertEquals(90, advancedRoad.getRotation(), 0.00001);
+    }
+
+    @Test
+    public void testGetTrackWidth() throws Exception {
+        Assert.assertEquals(175, Road.getTrackWidth());
+    }
+
+    @Test
+    public void testTopAndBottomPoints() throws Exception {
+        Assert.assertEquals(775, advancedRoad.getTopPoint().getX());
+        Assert.assertEquals(2088, advancedRoad.getTopPoint().getY());
+
+        Assert.assertEquals(2175, advancedRoad.getBottomPoint().getX());
+        Assert.assertEquals(2088, advancedRoad.getBottomPoint().getY());
+
+        Assert.assertEquals(1475, advancedRoad.getLeftPoint().getX());
+        Assert.assertEquals(2788, advancedRoad.getLeftPoint().getY());
+
+        Assert.assertNull(advancedRoad.getRightPoint());
     }
 }

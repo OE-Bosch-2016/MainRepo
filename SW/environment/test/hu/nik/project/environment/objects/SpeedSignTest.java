@@ -26,6 +26,11 @@ public class SpeedSignTest {
     }
 
     @Test
+    public void testObjectBaseClass() {
+        Assert.assertTrue(speedSign instanceof Sign);
+    }
+
+    @Test
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(235, speedSign.getBasePosition().getX());
         Assert.assertEquals(3908, speedSign.getBasePosition().getY());

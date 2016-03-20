@@ -25,6 +25,11 @@ public class TreeTest {
     }
 
     @Test
+    public void testObjectBaseClass() {
+        Assert.assertTrue(tree instanceof Misc);
+    }
+
+    @Test
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(500, tree.getBasePosition().getX());
         Assert.assertEquals(88, tree.getBasePosition().getY());

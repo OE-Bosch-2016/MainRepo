@@ -7,12 +7,11 @@ import hu.nik.project.environment.ScenePoint;
  *
  * Class for parking
  */
-public class Parking extends Misc {
+public class Parking extends Road {
 
     public enum ParkingType {
         PARKING_0,
         PARKING_90,
-        PARKING_BOLLARD
     }
 
     private ParkingType type;

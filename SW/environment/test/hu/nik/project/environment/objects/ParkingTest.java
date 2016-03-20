@@ -26,6 +26,11 @@ public class ParkingTest {
     }
 
     @Test
+    public void testObjectBaseClass() {
+        Assert.assertTrue(parking instanceof Road);
+    }
+
+    @Test
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(300, parking.getBasePosition().getX());
         Assert.assertEquals(300, parking.getBasePosition().getY());

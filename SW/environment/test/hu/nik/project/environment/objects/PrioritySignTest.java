@@ -25,6 +25,11 @@ public class PrioritySignTest {
     }
 
     @Test
+    public void testObjectBaseClass() {
+        Assert.assertTrue(prioritySign instanceof Sign);
+    }
+
+    @Test
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(300, prioritySign.getBasePosition().getX());
         Assert.assertEquals(300, prioritySign.getBasePosition().getY());
