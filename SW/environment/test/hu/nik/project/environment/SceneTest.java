@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 /**
  * Created by Róbert on 2016.02.29..
  *
@@ -44,5 +46,15 @@ public class SceneTest {
     @Test
     public void testToString() throws Exception {
         Assert.assertEquals("Scene Width: 5000 Height: 4000 Number of SceneObjects: 66", scene.toString());
+    }
+
+    @Test
+    public void testGetVisibleSceneObjects() throws Exception {
+        ScenePoint observerBase = new ScenePoint(1500, 2300);
+        int observerRotation = 45;
+        int viewAngle = 90;
+        int viewDistance = 200;
+        ArrayList<SceneObject> visibleSceneObjects = scene.getVisibleSceneObjects( observerBase, observerRotation, viewAngle, viewDistance );
+        Assert.assertEquals(2, visibleSceneObjects.size());
     }
 }

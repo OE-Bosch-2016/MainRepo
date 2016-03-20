@@ -16,11 +16,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * Created by Róbert on 2016.02.24..
+ * Created by Róbert on 2016.02.24.
+ *
+ * zhodvogner 2016.03.20 getVisibleSceneObjects() added
  *
  * Main worker class of the environment
  */
-public class Scene {
+public class Scene implements ISensorScene {
 
     private int sceneHeight;
     private int sceneWidth;
@@ -53,8 +55,6 @@ public class Scene {
     public int getSceneHeight() {
         return sceneHeight;
     }
-
-    public ArrayList<SceneObject> getSceneObjects() { return sceneObjects; }
 
     public SceneObject getSceneObjectByPosition(ScenePoint basePosition) {
         for (SceneObject s : sceneObjects) {
@@ -266,5 +266,21 @@ public class Scene {
 
     public String toString() {
         return getClass().getSimpleName() + " Width: " + getSceneWidth() + " Height: " + getSceneHeight() + " Number of SceneObjects: " + sceneObjects.size();
+    }
+
+    public ArrayList<SceneObject> getVisibleSceneObjects(ScenePoint observerBase, int observerRotation, int viewAngle ) {
+        return getVisibleSceneObjects( observerBase, observerRotation, viewAngle, 0 );
+    }
+
+    public ArrayList<SceneObject> getVisibleSceneObjects(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance ) {
+
+        ArrayList<SceneObject> result = new ArrayList<SceneObject>();
+        for (SceneObject sceneObject : sceneObjects) {
+
+            if (sceneObject.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance))
+                result.add( sceneObject );
+
+        }
+        return result;
     }
 }
