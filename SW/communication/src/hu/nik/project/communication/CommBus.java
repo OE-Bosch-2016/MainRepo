@@ -14,12 +14,23 @@ import java.util.List;
  */
 public class CommBus {
 
+    private static final int BUSREQUEST_WAIT_TIME_MSECS = 200;
+    private static final int BUSREQUEST_TIME_OUT_MSECS = 500;
     public static final int MAX_BUFFER_LENGTH_BYTES = 64;
     private static ByteArrayOutputStream outputStream = new ByteArrayOutputStream(MAX_BUFFER_LENGTH_BYTES);
 
-    private static List<ICommBusListener> listeners = new ArrayList<ICommBusListener>();
-    private static int acceptedUnitID = 0;
+    private static List<ICommBusListenerUnit> listeners = new ArrayList<ICommBusListenerUnit>();
+    private static ICommBusUnit acceptedUnit = null;
 
+    // busRequestTrackerThread controls the time-interval of bus-requests
+    private static Thread busRequestTrackerThread = new Thread(new Runnable() {
+        public void run()
+        {
+            busRequestTracker();
+        }
+    });
+
+    // listenerInvokerThread invokes active listeners
     private static Thread listenerInvokerThread = new Thread(new Runnable() {
         public void run()
         {
@@ -27,50 +38,70 @@ public class CommBus {
         }
     });
 
-    public static synchronized void connect(ICommBusListener listener) {
+    // it connects a unit or a listener to the bus
+    public static synchronized void connect(ICommBusListenerUnit listener) {
         listeners.add(listener);
     }
 
-    public static synchronized void disconnect(ICommBusListener listener) {
+    // id disconnects a unit or a listener
+    public static synchronized void disconnect(ICommBusListenerUnit listener) {
         listeners.remove(listener);
     }
 
-    public static synchronized OutputStream busRequest( int unitID ) throws CommBusException {
+    // busRequest gives possibility for connected CommBusUnits for requesting a unique bus-usage
+    // return-value: OutputStream if bus-request is successful or null (if bus is busy)
+    public static synchronized OutputStream busRequest( ICommBusUnit commBusUnit ) throws CommBusException {
 
-        // TODO: bus will be allocated only a given time-interval (request-time-out)
+        if (!(commBusUnit instanceof ICommBusUnit)) throw new CommBusException("Invalid unit-type.");
+        if (commBusUnit == acceptedUnit) return outputStream;   // already accepted
 
-        if (unitID <= 0) throw new CommBusException("Invalid unit-ID.");
-        if (unitID == acceptedUnitID) return outputStream;   // already accepted
-        if (acceptedUnitID != 0) return null;                // the bus is busy
+        if (acceptedUnit != null) { // the bus is busy
+            try { Thread.sleep(BUSREQUEST_WAIT_TIME_MSECS); } catch (InterruptedException ie) { return null; }
+        }
+        if (acceptedUnit != null) return null; // the bus is busy yet
 
-        // TODO: waiting for the bus (for a little time)
+        if( !listeners.contains( commBusUnit ) ) throw new CommBusException("Not connected.");
 
-        acceptedUnitID = unitID;
         outputStream.reset();
-        // successful bus-request, requester can write data into this outputStream
+        acceptedUnit = commBusUnit;
+        busRequestTrackerThread.start();
+
+        // successful bus-request:
+        // the requester can write data into the outputStream in next BUSREQUEST_TIME_OUT_MSECS milliseconds
         return outputStream;
     }
 
-    public static void busRelease( int unitID ) throws CommBusException {
+    // with busRelease the active bus-requester signals the end of bus-access
+    public static void busRelease( ICommBusUnit comBusUnit ) throws CommBusException {
 
-        if((acceptedUnitID == 0) || ( unitID != acceptedUnitID )) throw new CommBusException("Bus request is missing.");
+        if((acceptedUnit == null) || ( comBusUnit != acceptedUnit )) throw new CommBusException("Invalid operation.");
         listenerInvokerThread.start(); // listeners will be invoked asynchronously
     }
 
+    // busRequestTracker checks BUSREQUEST_TIME_OUT_MSECS, if elapsed it releases the bus
+    private static void busRequestTracker() {
+
+        long startTime = System.currentTimeMillis();
+        while ( (acceptedUnit != null) && ( (System.currentTimeMillis() - startTime) < BUSREQUEST_TIME_OUT_MSECS) )
+            try { Thread.sleep(50); } catch (InterruptedException ie) { break; }
+
+        if (acceptedUnit != null) acceptedUnit = null; // bus-request timed out -> must freeze the bus
+    }
+
+    // invokeListeners passes the bus-content to the connected listeners
     private static void invokeListeners() {
 
-        if ((acceptedUnitID > 0) && (outputStream != null)) {
-            for (ICommBusListener listener : listeners) {
+        if ((acceptedUnit != null) && (outputStream != null)) {
+            for (ICommBusListenerUnit listener : listeners) {
 
-                InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-                listener.commBusEvent(inputStream);
+                if( listener != acceptedUnit) /* written data not echoed */ {
+                    InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+                    listener.commBusEvent(inputStream);
+                }
             }
         }
         // all invoker were called
-        outputStream.reset();
-        acceptedUnitID = 0; // bus is free (bus request is cleared)
+        if (acceptedUnit != null) acceptedUnit = null; // bus is free (bus request is cleared)
     }
-
-
 
 }
