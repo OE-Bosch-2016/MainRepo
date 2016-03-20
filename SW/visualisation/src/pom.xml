@@ -6,12 +6,21 @@
 
     <groupId>hu.nik.uni-obuda.visualisation</groupId>
     <artifactId>Visualisation</artifactId>
+    <packaging>pom</packaging>
     <version>1.0</version>
+    <modules>
+        <module>../../../untitled</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.4</version>
         </dependency>
     </dependencies>
 </project>

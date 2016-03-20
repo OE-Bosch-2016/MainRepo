@@ -19,45 +19,21 @@ public class MapObjectData {
     public double getRelativeSpeed() {
         return _relativeSpeed;
     }
-
-    public void setRelativeSpeed(int relativeSpeed) {
+    public void setRelativeSpeed(double relativeSpeed) {
         _relativeSpeed = relativeSpeed;
-    }
-
-    public double getCurrentDistance() {
-        return _currentDistance;
-    }
-
-    public double get_relativeSpeed() {
-        return _relativeSpeed;
-    }
-
-    public void set_relativeSpeed(double _relativeSpeed) {
-        this._relativeSpeed = _relativeSpeed;
-    }
-
-    public double get_currentDistance() {
-        return _currentDistance;
-    }
-
-    public void set_currentDistance(double _currentDistance) {
-        this._currentDistance = _currentDistance;
-    }
-
-    public Position get_currentPosition() {
-        return _currentPosition;
-    }
-
-    public void set_currentPosition(Position _currentPosition) {
-        this._currentPosition = _currentPosition;
     }
 
     public void setCurrentDistance(double currentDistance) {
         _currentDistance = currentDistance;
     }
+    public double getCurrentDistance() {
+        return _currentDistance;
+    }
 
     public Position getCurrentPosition() {
         return _currentPosition;
     }
-
+    public void setCurrentPosition(Position currentPosition) {
+        _currentPosition = currentPosition;
+    }
 }

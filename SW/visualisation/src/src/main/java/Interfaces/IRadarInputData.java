@@ -13,6 +13,6 @@ import java.util.Objects;
 //this will be a mocked interface, representing the incoming data
 public interface IRadarInputData {
     Position getOurCurrentPosition();
-    Double getOurCurrentSpeed();
+    double getOurCurrentSpeed();
     ArrayList<Position> getViewableObjectList();
 }
