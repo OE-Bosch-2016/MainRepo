@@ -48,7 +48,7 @@ public class ScenePoint {
     }
 
     public static boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance, ScenePoint point ) {
-
+        if(observerBase==null || point==null) return false;
         double SPx = point.getX() - observerBase.getX();
         double SPy = point.getY() - observerBase.getY();
         if ((viewDistance > 0) && (Math.sqrt( (SPx*SPx) + (SPy*SPy) ) > viewDistance)) return false; // not visible because out of view-distance
