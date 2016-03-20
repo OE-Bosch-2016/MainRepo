@@ -26,7 +26,7 @@ public class CrossWalkTest {
 
     @Test
     public void testObjectBaseClass() {
-        Assert.assertTrue(crossWalk instanceof Road);
+        Assert.assertTrue(crossWalk instanceof Misc);
     }
 
     @Test
@@ -37,11 +37,8 @@ public class CrossWalkTest {
     }
 
     @Test
-    public void testTopAndBottomPoints() throws Exception {
-        Assert.assertEquals(1550, crossWalk.getTopPoint().getX());
-        Assert.assertEquals(323, crossWalk.getTopPoint().getY());
-
-        Assert.assertEquals(1740, crossWalk.getBottomPoint().getX());
-        Assert.assertEquals(323, crossWalk.getBottomPoint().getY());
+    public void testCenterPoint() throws Exception {
+        Assert.assertEquals(1590, crossWalk.getCenter().getX());
+        Assert.assertEquals(458, crossWalk.getCenter().getY());
     }
 }

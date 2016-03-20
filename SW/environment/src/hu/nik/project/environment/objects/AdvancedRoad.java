@@ -71,4 +71,12 @@ public class AdvancedRoad extends Road {
     public ScenePoint getRightPoint() {
         return rightPoint;
     }
+
+    @Override
+    public boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance ) {
+        return ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getTopPoint()) ||
+                ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getBottomPoint()) ||
+                ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getLeftPoint()) ||
+                ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getRightPoint());
+    }
 }

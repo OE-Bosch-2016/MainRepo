@@ -10,7 +10,6 @@ import hu.nik.project.environment.ScenePoint;
  */
 public class SimpleRoad extends Road {
 
-
     public enum SimpleRoadType  {
         SIMPLE_STRAIGHT
     }
@@ -20,7 +19,6 @@ public class SimpleRoad extends Road {
     public SimpleRoad(ScenePoint basePosition, int rotation, SimpleRoadType type) throws SceneObjectException {
         super(basePosition, rotation);
         this.type = type;
-
 
         super.setTopPoint(ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + getTrackWidth(), basePosition.getY()), rotation));
         super.setBottomPoint(ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + getTrackWidth(), basePosition.getY() + getTrackWidth() * 2), rotation));
@@ -32,11 +30,5 @@ public class SimpleRoad extends Road {
 
     public String toString() {
         return super.toString() + " SimpleRoadType: " + type.toString();
-    }
-
-    @Override
-    public boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance ) {
-        return ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getTopPoint()) ||
-                ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getBottomPoint() );
     }
 }

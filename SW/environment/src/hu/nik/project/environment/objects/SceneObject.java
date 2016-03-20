@@ -32,9 +32,7 @@ public abstract class SceneObject<T> {
     }
 
     // override it if another scene-points are importants
-    public boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance ) {
-        return ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, basePosition );
-    }
+    public abstract boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance );
 
     public String toString() {
         return "ClassType: " + getClass().getSimpleName() + " -> " + " Position X: " + basePosition.getX() + " Position Y: " + basePosition.getY() + " Rotation: " + rotation;

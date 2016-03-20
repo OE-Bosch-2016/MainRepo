@@ -25,4 +25,9 @@ abstract public class Misc<T> extends SceneObject {
     public static int getMiscWidthAndHeight() {
         return miscWidthAndHeight;
     }
+
+    @Override
+    public boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance ) {
+        return ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getCenter() );
+    }
 }

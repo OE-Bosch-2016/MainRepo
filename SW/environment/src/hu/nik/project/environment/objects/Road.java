@@ -38,4 +38,10 @@ abstract public class Road<T> extends SceneObject {
     public static int getTrackWidth() {
         return trackWidth;
     }
+
+    @Override
+    public boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance ) {
+        return ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getTopPoint()) ||
+                ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getBottomPoint());
+    }
 }

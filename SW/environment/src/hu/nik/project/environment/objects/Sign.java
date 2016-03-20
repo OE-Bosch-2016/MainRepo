@@ -23,4 +23,9 @@ abstract public class Sign<T> extends SceneObject {
     public ScenePoint getCenter() {
         return center;
     }
+
+    @Override
+    public boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance ) {
+        return ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getCenter());
+    }
 }

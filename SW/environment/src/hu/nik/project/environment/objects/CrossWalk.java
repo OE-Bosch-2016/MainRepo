@@ -7,7 +7,7 @@ import hu.nik.project.environment.ScenePoint;
  *
  * Class for Crosswalks
  */
-public class CrossWalk extends Road {
+public class CrossWalk extends Misc {
 
     private static final int crossWalkHeight = 190;
 
@@ -20,11 +20,6 @@ public class CrossWalk extends Road {
     public CrossWalk(ScenePoint basePosition, int rotation, CrossWalkType type) throws SceneObjectException {
         super(basePosition, rotation);
         this.type = type;
-
-        ScenePoint topPoint = new ScenePoint(basePosition.getX() + getTrackWidth(), basePosition.getY());
-
-        super.setTopPoint(ScenePoint.rotatePointAroundPoint(basePosition, topPoint, rotation));
-        super.setBottomPoint(ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(topPoint.getX(), topPoint.getY() + crossWalkHeight), rotation));
     }
 
     public CrossWalkType getObjectType() {
