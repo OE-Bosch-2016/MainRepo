@@ -44,4 +44,15 @@ public class SimpleRoadTest {
         Assert.assertEquals(2525, simpleRoad.getBottomPoint().getX());
         Assert.assertEquals(2088, simpleRoad.getBottomPoint().getY());
     }
+
+    @Test
+    public void testIsVisibleFromObserver() throws Exception {
+        ScenePoint observerBase = new ScenePoint(1790, 2030);
+        int observerRotation = 45;
+        int viewAngle = 90;
+        int viewDistance = 200;
+
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance) );
+        Assert.assertFalse( simpleRoad.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance) );
+    }
 }
