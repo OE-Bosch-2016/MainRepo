@@ -1,5 +1,6 @@
 import HMI.Hmi;
 import Utils.ImageLoader;
+import Utils.Vector2D;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
@@ -10,11 +11,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * Created by haxxi on 2016.03.01..
  */
-public class Top extends JFrame {
+public class Top extends JFrame implements KeyListener{
 
     // UI elements
     private JTextArea hmi_mileage_text_area;
@@ -34,12 +37,16 @@ public class Top extends JFrame {
     private JTextPane a1TextPane;
     private JTextPane a2TextPane;
     private JComboBox comboBox1;
+    private JLabel steeringWheel;
 
     //Timer
     private Timer timer;
 
     //Visualization
     public VisualizationRenderer vRenderer = null;
+
+    //Steering Wheel
+    SteeringWheel steering = new SteeringWheel();
 
     // HMI elements
     private Hmi hmi;
@@ -54,7 +61,6 @@ public class Top extends JFrame {
 
     //Car
     private AutonomousCar car;
-
 
     public Top() {
         init();
@@ -88,6 +94,9 @@ public class Top extends JFrame {
             }
         });
 
+        //Steering Wheel setup
+        steeringWheel.setIcon(steering.GetSteeringWheel(0));
+
         // Test
         test_slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -110,11 +119,18 @@ public class Top extends JFrame {
         comboBox1.addItem("5");
         comboBox1.addItem("6");
 
+
         comboBox1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 hmi.gearshift(Integer.parseInt(comboBox1.getSelectedItem().toString()) - 1);
             }
         });
+
+        addKeyListener(this);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+        comboBox1.setSelectedIndex(0);
+        steeringWheel.setHorizontalAlignment(SwingConstants.CENTER);
         // Test end
 
         //Start timer
@@ -203,4 +219,72 @@ public class Top extends JFrame {
             setGearShiftStage(gearshift);
         }
     };
+
+    public void keyTyped(KeyEvent e) {
+        System.out.println(e.paramString());
+    }
+
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode()== KeyEvent.VK_RIGHT)
+            steeringWheel.setIcon(steering.GetSteeringWheel(-30));
+        else if(e.getKeyCode()== KeyEvent.VK_LEFT)
+            steeringWheel.setIcon(steering.GetSteeringWheel(+30));
+        else if(e.getKeyCode() == KeyEvent.VK_UP) {
+            if(hmi.getKhm() < 195)
+            {
+                int rpm = hmi.getRpm() + 600;
+                hmi.setRpm(rpm);
+
+                int kmh = hmi.getKhm() + 8;
+                hmi.setKhm(kmh);
+            }
+
+            if(hmi.getRpm() > 4000)
+            {
+                int rpm = hmi.getRpm() - 2400;
+                hmi.setRpm(rpm);
+
+                int kmh = hmi.getKhm() - 1;
+                hmi.setKhm(kmh);
+            }
+
+                hmi.mileage(hmi.getKhm());
+            hmi.tachometer((float) hmi.getRpm());
+
+        }
+        else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+        {
+            if(hmi.getKhm() > 10) {
+                int rpm = hmi.getRpm() - 600;
+                hmi.setRpm(rpm);
+
+                int kmh = hmi.getKhm() - 8;
+                hmi.setKhm(kmh);
+            }
+            else
+            {
+                hmi.setRpm(600);
+            }
+
+            if(hmi.getRpm() < 600)
+            {
+                int rpm = hmi.getRpm() + 2400;
+                hmi.setRpm(rpm);
+
+                int kmh = hmi.getKhm() - 1;
+                hmi.setKhm(kmh);
+            }
+
+
+            hmi.tachometer((float) hmi.getRpm());
+            hmi.mileage(hmi.getKhm());
+
+        }
+
+        steeringWheel.repaint();
+    }
 }
