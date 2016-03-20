@@ -17,7 +17,7 @@ public class Main {
             if( args.length > 0)
                 xmlPath = args[0];
             else
-                xmlPath = "TestSource\\testScene.xml";
+                xmlPath = "C:\\Users\\thecy\\Documents\\Android\\MainRepoTeam1\\SW\\environment\\TestSource\\testScene.xml";
 
             Scene scene = new Scene(xmlPath);
             System.out.println("Load scene from " + xmlPath);

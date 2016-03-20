@@ -33,4 +33,10 @@ public class SimpleRoad extends Road {
     public String toString() {
         return super.toString() + " SimpleRoadType: " + type.toString();
     }
+
+    @Override
+    public boolean isVisibleFromObserver(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance ) {
+        return ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getTopPoint()) ||
+                ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getBottomPoint() );
+    }
 }

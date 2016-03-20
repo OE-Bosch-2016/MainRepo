@@ -19,5 +19,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="environment" level="project" />
+    <orderEntry type="module" module-name="Environment" />
   </component>
 </module>
