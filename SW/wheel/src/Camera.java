@@ -60,6 +60,7 @@ public class Camera implements ICamera {
 	}
 	
 	//+interface implementációk via Apor:
+	//what is X and Y? we don't have to return any poritions. ;F.Viktor
 	public int posX(){
 		return 0;	//have to implement the calculation of position X
 	}
