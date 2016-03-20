@@ -17,7 +17,7 @@ import java.awt.event.KeyListener;
 /**
  * Created by haxxi on 2016.03.01..
  */
-public class Top extends JFrame implements KeyListener{
+public class Top extends JFrame{ //implements KeyListener
 
     // UI elements
     private JTextArea hmi_mileage_text_area;
@@ -82,7 +82,6 @@ public class Top extends JFrame implements KeyListener{
 
         //Car setup
         car = new AutonomousCar(new Vector2D(510,90),ImageLoader.getCarImage());
-        //car.rotate(1);
 
         //Visualization renderer setup
         vRenderer = new VisualizationRenderer(mapPanel, hmi, car);
@@ -224,16 +223,19 @@ public class Top extends JFrame implements KeyListener{
 
     private KeyListener keyListener = new KeyListener() {
         public void keyTyped(KeyEvent e) {
-            System.out.println(e.paramString());
+            //System.out.println(e.paramString());
         }
 
         public void keyPressed(KeyEvent e) {
-            System.out.println(e.paramString());
+            //System.out.println(e.paramString());
         }
 
         public void keyReleased(KeyEvent e) {
-            if(e.getKeyCode()== KeyEvent.VK_RIGHT)
+            if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
                 steeringWheel.setIcon(steering.GetSteeringWheel(-30));
+//                car.rotate(10);
+//                vRenderer.repaint();
+            }
             else if(e.getKeyCode()== KeyEvent.VK_LEFT)
                 steeringWheel.setIcon(steering.GetSteeringWheel(+30));
             else if(e.getKeyCode() == KeyEvent.VK_UP) {
@@ -292,71 +294,71 @@ public class Top extends JFrame implements KeyListener{
         }
     };
 
-    public void keyTyped(KeyEvent e) {
-        System.out.println(e.paramString());
-    }
-
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    public void keyReleased(KeyEvent e) {
-        if(e.getKeyCode()== KeyEvent.VK_RIGHT)
-            steeringWheel.setIcon(steering.GetSteeringWheel(-30));
-        else if(e.getKeyCode()== KeyEvent.VK_LEFT)
-            steeringWheel.setIcon(steering.GetSteeringWheel(+30));
-        else if(e.getKeyCode() == KeyEvent.VK_UP) {
-            if(hmi.getKhm() < 195)
-            {
-                int rpm = hmi.getRpm() + 600;
-                hmi.setRpm(rpm);
-
-                int kmh = hmi.getKhm() + 8;
-                hmi.setKhm(kmh);
-            }
-
-            if(hmi.getRpm() > 4000)
-            {
-                int rpm = hmi.getRpm() - 2400;
-                hmi.setRpm(rpm);
-
-                int kmh = hmi.getKhm() - 1;
-                hmi.setKhm(kmh);
-            }
-
-            hmi.mileage(hmi.getKhm());
-            hmi.tachometer((float) hmi.getRpm());
-
-        }
-        else if(e.getKeyCode() == KeyEvent.VK_DOWN)
-        {
-            if(hmi.getKhm() > 10) {
-                int rpm = hmi.getRpm() - 600;
-                hmi.setRpm(rpm);
-
-                int kmh = hmi.getKhm() - 8;
-                hmi.setKhm(kmh);
-            }
-            else
-            {
-                hmi.setRpm(600);
-            }
-
-            if(hmi.getRpm() < 600)
-            {
-                int rpm = hmi.getRpm() + 2400;
-                hmi.setRpm(rpm);
-
-                int kmh = hmi.getKhm() - 1;
-                hmi.setKhm(kmh);
-            }
-
-
-            hmi.tachometer((float) hmi.getRpm());
-            hmi.mileage(hmi.getKhm());
-
-        }
-
-        steeringWheel.repaint();
-    }
+//    public void keyTyped(KeyEvent e) {
+//        System.out.println(e.paramString());
+//    }
+//
+//    public void keyPressed(KeyEvent e) {
+//
+//    }
+//
+//    public void keyReleased(KeyEvent e) {
+//        if(e.getKeyCode()== KeyEvent.VK_RIGHT)
+//            steeringWheel.setIcon(steering.GetSteeringWheel(-30));
+//        else if(e.getKeyCode()== KeyEvent.VK_LEFT)
+//            steeringWheel.setIcon(steering.GetSteeringWheel(+30));
+//        else if(e.getKeyCode() == KeyEvent.VK_UP) {
+//            if(hmi.getKhm() < 195)
+//            {
+//                int rpm = hmi.getRpm() + 600;
+//                hmi.setRpm(rpm);
+//
+//                int kmh = hmi.getKhm() + 8;
+//                hmi.setKhm(kmh);
+//            }
+//
+//            if(hmi.getRpm() > 4000)
+//            {
+//                int rpm = hmi.getRpm() - 2400;
+//                hmi.setRpm(rpm);
+//
+//                int kmh = hmi.getKhm() - 1;
+//                hmi.setKhm(kmh);
+//            }
+//
+//            hmi.mileage(hmi.getKhm());
+//            hmi.tachometer((float) hmi.getRpm());
+//
+//        }
+//        else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+//        {
+//            if(hmi.getKhm() > 10) {
+//                int rpm = hmi.getRpm() - 600;
+//                hmi.setRpm(rpm);
+//
+//                int kmh = hmi.getKhm() - 8;
+//                hmi.setKhm(kmh);
+//            }
+//            else
+//            {
+//                hmi.setRpm(600);
+//            }
+//
+//            if(hmi.getRpm() < 600)
+//            {
+//                int rpm = hmi.getRpm() + 2400;
+//                hmi.setRpm(rpm);
+//
+//                int kmh = hmi.getKhm() - 1;
+//                hmi.setKhm(kmh);
+//            }
+//
+//
+//            hmi.tachometer((float) hmi.getRpm());
+//            hmi.mileage(hmi.getKhm());
+//
+//        }
+//
+//        steeringWheel.repaint();
+//    }
 }
