@@ -79,7 +79,7 @@ public class Scene {
                     sceneObjects.add(new Parking(basePosition, rotation, Parking.ParkingType.PARKING_90));
                     break;
                 case "data/misc/parking/parking_bollard.pix":
-                    sceneObjects.add(new Parking(basePosition, rotation, Parking.ParkingType.PARKING_BOLLARD));
+                    sceneObjects.add(new ParkingSign(basePosition, rotation, ParkingSign.ParkingSignType.PARKING_BOLLARD));
                     break;
                 case "data/misc/people/man03.pix":
                     sceneObjects.add(new People(basePosition, rotation, People.PeopleType.MAN));

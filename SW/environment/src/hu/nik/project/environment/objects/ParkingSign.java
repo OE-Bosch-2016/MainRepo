@@ -10,7 +10,8 @@ public class ParkingSign extends Sign {
 
     public enum ParkingSignType  {
         PARKING_LEFT,
-        PARKING_RIGHT
+        PARKING_RIGHT,
+        PARKING_BOLLARD
     }
 
     private ParkingSignType type;

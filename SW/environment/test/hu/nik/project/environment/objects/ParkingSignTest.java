@@ -16,7 +16,7 @@ public class ParkingSignTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        parkingSign = new ParkingSign(new ScenePoint(111, 111), 40, ParkingSign.ParkingSignType.PARKING_RIGHT);
+        parkingSign = new ParkingSign(new ScenePoint(4546, 1906), 90, ParkingSign.ParkingSignType.PARKING_RIGHT);
     }
 
     @Test
@@ -25,9 +25,20 @@ public class ParkingSignTest {
     }
 
     @Test
+    public void testObjectBaseClass() {
+        Assert.assertTrue(parkingSign instanceof Sign);
+    }
+
+    @Test
     public void testPositionsAndRotationGetters() throws Exception{
-        Assert.assertEquals(111, parkingSign.getBasePosition().getX());
-        Assert.assertEquals(111, parkingSign.getBasePosition().getY());
-        Assert.assertEquals(40, parkingSign.getRotation(), 0.00001);
+        Assert.assertEquals(4546, parkingSign.getBasePosition().getX());
+        Assert.assertEquals(1906, parkingSign.getBasePosition().getY());
+        Assert.assertEquals(90, parkingSign.getRotation(), 0.00001);
+    }
+
+    @Test
+    public void testGetCenter() throws Exception {
+        Assert.assertEquals(4586, parkingSign.getCenter().getX());
+        Assert.assertEquals(1866, parkingSign.getCenter().getY());
     }
 }

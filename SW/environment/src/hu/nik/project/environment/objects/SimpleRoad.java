@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
 
 /**
@@ -21,8 +22,8 @@ public class SimpleRoad extends Road {
         this.type = type;
 
 
-        super.setTopPoint(ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + 175, basePosition.getY()), rotation));
-        super.setBottomPoint(ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + 175, basePosition.getY() + 350), rotation));
+        super.setTopPoint(ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + getTrackWidth(), basePosition.getY()), rotation));
+        super.setBottomPoint(ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + getTrackWidth(), basePosition.getY() + getTrackWidth() * 2), rotation));
     }
 
     public SimpleRoadType getObjectType() {

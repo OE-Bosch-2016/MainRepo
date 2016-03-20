@@ -42,8 +42,8 @@ public class SceneObjectWithConcreteClassTest {
 
     @Test(expected = SceneObjectException.class)
     public void testExeptionThrowWithRotation() throws SceneObjectException {
-        sceneObject = new Parking(new ScenePoint(999,999), -500, Parking.ParkingType.PARKING_BOLLARD);
-        sceneObject = new Parking(new ScenePoint(999,999), 500, Parking.ParkingType.PARKING_BOLLARD);
+        sceneObject = new Parking(new ScenePoint(999,999), -500, Parking.ParkingType.PARKING_0);
+        sceneObject = new Parking(new ScenePoint(999,999), 500, Parking.ParkingType.PARKING_90);
     }
 
     @Test

@@ -9,14 +9,20 @@ import hu.nik.project.environment.ScenePoint;
  */
 abstract public class Misc<T> extends SceneObject {
     private ScenePoint center;
+    private static final int miscWidthAndHeight = 80;
 
     public Misc(ScenePoint basePosition, int rotation) throws SceneObjectException {
         super(basePosition, rotation);
+        center = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + miscWidthAndHeight / 2, basePosition.getY() + miscWidthAndHeight / 2), rotation);
     }
 
     public abstract T getObjectType();
 
     public ScenePoint getCenter() {
         return center;
+    }
+
+    public static int getMiscWidthAndHeight() {
+        return miscWidthAndHeight;
     }
 }

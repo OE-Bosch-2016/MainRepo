@@ -11,6 +11,7 @@ abstract public class Road<T> extends SceneObject {
 
     private ScenePoint topPoint;
     private ScenePoint bottomPoint;
+    private static final int trackWidth = 175;
 
     public Road(ScenePoint basePosition, int rotation) throws SceneObjectException {
         super(basePosition, rotation);
@@ -32,5 +33,9 @@ abstract public class Road<T> extends SceneObject {
 
     public ScenePoint getBottomPoint() {
         return bottomPoint;
+    }
+
+    public static int getTrackWidth() {
+        return trackWidth;
     }
 }

@@ -28,6 +28,16 @@ public class CurvedRoadTest {
     }
 
     @Test
+    public void testGetObjectType() throws Exception {
+        Assert.assertEquals(CurvedRoad.CurvedRoadType.SIMPLE_90_LEFT, curvedRoad90Left.getObjectType());
+    }
+
+    @Test
+    public void testObjectBaseClass() {
+        Assert.assertTrue(curvedRoad90Left instanceof Road);
+    }
+
+    @Test
     public void testReferencePointSetup() throws Exception {
         Assert.assertEquals(2875, curvedRoad90Left.getReferencePoint().getX());
         Assert.assertEquals(688, curvedRoad90Left.getReferencePoint().getY());

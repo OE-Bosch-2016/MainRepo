@@ -25,6 +25,11 @@ public class SimpleRoadTest {
     }
 
     @Test
+    public void testObjectBaseClass() {
+        Assert.assertTrue(simpleRoad instanceof Road);
+    }
+
+    @Test
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(2175, simpleRoad.getBasePosition().getX());
         Assert.assertEquals(2263, simpleRoad.getBasePosition().getY());
