@@ -1,3 +1,5 @@
+import Utils.Vector2D;
+
 import java.awt.image.BufferedImage;
 
 public class AutonomousCar extends Car{
