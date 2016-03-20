@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 
 /**
  * Created by secured on 2016. 03. 06..
@@ -60,11 +59,20 @@ public abstract class Car {
                 Math.pow(_position.get_coordinateY() - origo.get_coordinateY(),2)
         );
 
-        _rotationVector = new Vector2D((int)(r * Math.cos(degree)),(int)(r * Math.sin(degree)));
+
+        //Eigenvector
+        _rotationVector = new Vector2D(
+                (int)((r * Math.cos(degree)) / Math.abs(r * Math.cos(degree))),
+                (int)((r * Math.sin(degree)) /  Math.abs(r * Math.sin(degree)))
+        );
     }
 
     public void move(float speed)
     {
+        //TODO: We need to clarify this
+        // speed is in km/h
+        // 1km/h = 1px/render phase
+
         _position = new Vector2D(
                 (int)(_position.get_coordinateX() + speed *  _rotationVector.get_coordinateX()),
                 (int)(_position.get_coordinateY() + speed * _rotationVector.get_coordinateY())
