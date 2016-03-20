@@ -54,5 +54,6 @@ public abstract class Visualization implements IWheelVisualization {
     {
         _carLabel.setIcon(new ImageIcon(_car.getImage()));
         _carLabel.setLocation(_car.getPosition().get_coordinateX(),_car.getPosition().get_coordinateY());
+        _carLabel.setFocusable(false); //TODO:may be yes
     }
 }
