@@ -1,6 +1,6 @@
 import HMI.Hmi;
-import Utils.ImageLoader;
-import Utils.Vector2D;
+import Map.MapLoader;
+import Utils.Config;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
@@ -9,6 +9,7 @@ import org.jfree.data.general.DefaultValueDataset;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -17,7 +18,7 @@ import java.awt.event.KeyListener;
 /**
  * Created by haxxi on 2016.03.01..
  */
-public class Top extends JFrame{ //implements KeyListener
+public class Top extends JFrame implements KeyListener{
 
     // UI elements
     private JTextArea hmi_mileage_text_area;
@@ -28,6 +29,7 @@ public class Top extends JFrame{ //implements KeyListener
     private JPanel tachometerPanel;
     private JPanel gearShiftPanel;
     private JPanel hmiPanel;
+    private JLabel mapLabel;
     private JPanel mapPanel;
     private JSlider test_slider2;
     private JTextPane dTextPane;
@@ -37,7 +39,8 @@ public class Top extends JFrame{ //implements KeyListener
     private JTextPane a1TextPane;
     private JTextPane a2TextPane;
     private JComboBox comboBox1;
-    private JLabel steeringWheel;
+    private JLabel steeringWheelLabel;
+    private SteeringWheel steeringWheel;
 
     //Timer
     private Timer timer;
@@ -79,6 +82,9 @@ public class Top extends JFrame{ //implements KeyListener
         setVisible(true);
         setContentPane(rootPanel);
         pack();
+        steeringWheel = new SteeringWheel(hmi,steeringWheelLabel);
+        steeringWheelLabel.setIcon(steeringWheel.GetSteeringWheel(0));
+        mapLabel.setIcon(MapLoader.getImage(MapLoader.MAP1));
 
         //Car setup
         car = new AutonomousCar(new Vector2D(510,90),ImageLoader.getCarImage());
@@ -131,7 +137,8 @@ public class Top extends JFrame{ //implements KeyListener
         steeringWheel.setFocusTraversalKeysEnabled(false);
         steeringWheel.requestFocus();
         comboBox1.setSelectedIndex(0);
-        steeringWheel.setHorizontalAlignment(SwingConstants.CENTER);
+        steeringWheelLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         // Test end
 
         //Start timer
@@ -231,66 +238,7 @@ public class Top extends JFrame{ //implements KeyListener
         }
 
         public void keyReleased(KeyEvent e) {
-            if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
-                steeringWheel.setIcon(steering.GetSteeringWheel(-30));
-//                car.rotate(10);
-//                vRenderer.repaint();
-            }
-            else if(e.getKeyCode()== KeyEvent.VK_LEFT)
-                steeringWheel.setIcon(steering.GetSteeringWheel(+30));
-            else if(e.getKeyCode() == KeyEvent.VK_UP) {
-                if(hmi.getKhm() < 195)
-                {
-                    int rpm = hmi.getRpm() + 600;
-                    hmi.setRpm(rpm);
-
-                    int kmh = hmi.getKhm() + 8;
-                    hmi.setKhm(kmh);
-                }
-
-                if(hmi.getRpm() > 4000)
-                {
-                    int rpm = hmi.getRpm() - 2400;
-                    hmi.setRpm(rpm);
-
-                    int kmh = hmi.getKhm() - 1;
-                    hmi.setKhm(kmh);
-                }
-
-                hmi.mileage(hmi.getKhm());
-                hmi.tachometer((float) hmi.getRpm());
-
-            }
-            else if(e.getKeyCode() == KeyEvent.VK_DOWN)
-            {
-                if(hmi.getKhm() > 10) {
-                    int rpm = hmi.getRpm() - 600;
-                    hmi.setRpm(rpm);
-
-                    int kmh = hmi.getKhm() - 8;
-                    hmi.setKhm(kmh);
-                }
-                else
-                {
-                    hmi.setRpm(600);
-                }
-
-                if(hmi.getRpm() < 600)
-                {
-                    int rpm = hmi.getRpm() + 2400;
-                    hmi.setRpm(rpm);
-
-                    int kmh = hmi.getKhm() - 1;
-                    hmi.setKhm(kmh);
-                }
-
-
-                hmi.tachometer((float) hmi.getRpm());
-                hmi.mileage(hmi.getKhm());
-
-            }
-
-            steeringWheel.repaint();
+            steeringWheel.control(e);
         }
     };
 
