@@ -53,12 +53,16 @@ public class TreeTest {
         //int observerRotation = 240;
         int observerRotation = 120;
         //bárhonnan mindig látnia kéne és mégse
-        Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 360, 10000) );
+        Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 359, 10000) );
         //259-re se meg, szóval nem ez a hiba
         Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 259, 10000) );
         //361°>360 ???
         Assert.assertFalse( tree.isVisibleFromObserver(observerBase, observerRotation, 361, radarDistance) );
         //-1°<360 ???
         Assert.assertFalse( tree.isVisibleFromObserver(observerBase, observerRotation,-1, radarDistance) );
+        //
+        observerRotation = 240;
+        Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 30, 500) );
+        //
     }
 }

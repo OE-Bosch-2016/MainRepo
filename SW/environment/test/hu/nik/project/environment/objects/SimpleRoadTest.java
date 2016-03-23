@@ -65,7 +65,7 @@ public class SimpleRoadTest {
          */
         ScenePoint observerBase = new ScenePoint(2112, 2152);
         ScenePoint observerBase2 = new ScenePoint(2048, 2000);
-        ScenePoint observerBase3 = new ScenePoint(1875, 2088);
+        ScenePoint observerBase3 = new ScenePoint(2048, 2088);
         ScenePoint observerBase4 = new ScenePoint(1874, 2088);
         int observerRotation = 0; //0° is horizontal, direction is right, but anticlockwise (coz we view from above)
         int observerRotation2 = 180;

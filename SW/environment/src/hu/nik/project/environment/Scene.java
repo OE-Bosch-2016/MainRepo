@@ -274,10 +274,14 @@ public class Scene implements ISensorScene {
 
     public ArrayList<SceneObject> getVisibleSceneObjects(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance ) {
 
+        int distance = viewDistance;
+        if (distance > sceneWidth) distance = sceneWidth;
+        if (distance > sceneHeight) distance = sceneHeight;
+
         ArrayList<SceneObject> result = new ArrayList<SceneObject>();
         for (SceneObject sceneObject : sceneObjects) {
 
-            if (sceneObject.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance))
+            if (sceneObject.isVisibleFromObserver( observerBase, observerRotation, viewAngle, distance))
                 result.add( sceneObject );
 
         }

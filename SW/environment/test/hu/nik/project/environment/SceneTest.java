@@ -50,10 +50,10 @@ public class SceneTest {
 
     @Test
     public void testGetVisibleSceneObjects() throws Exception {
-        ScenePoint observerBase = new ScenePoint(1500, 2300);
+        ScenePoint observerBase = new ScenePoint(500, 1400);
         int observerRotation = 45;
-        int viewAngle = 90;
-        int viewDistance = 200;
+        int viewAngle = 60;
+        int viewDistance = 500;
         ArrayList<SceneObject> visibleSceneObjects = scene.getVisibleSceneObjects( observerBase, observerRotation, viewAngle, viewDistance );
         Assert.assertEquals(2, visibleSceneObjects.size());
     }

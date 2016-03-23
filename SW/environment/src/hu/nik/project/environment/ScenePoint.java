@@ -56,14 +56,25 @@ public class ScenePoint {
         if (SPx == 0) {
             if (SPy == 0) return false; // observer and object on same place
             if (SPy > 0)
-                viewAngleOfSP = 90;     // point is above the observer
+                viewAngleOfSP = 270;     // point is above the observer
             else
-                viewAngleOfSP = 180;    // point is below the observer
+                viewAngleOfSP = 90;    // point is below the observer
         }
-        else
-            viewAngleOfSP = Math.toDegrees(Math.atan( SPy/SPx ));
-        if ( viewAngleOfSP > (observerRotation + (viewAngle/2)) ) return false; // not visible because above max-angle
-        return viewAngleOfSP >= (observerRotation - (viewAngle / 2));
+        else {
+            if (SPx > 0 && SPy < 0) // in t1 (+,-)
+                viewAngleOfSP = Math.toDegrees(Math.atan(-SPy / SPx));
+            else if (SPx < 0 && SPy < 0) // in t2 (-,-)
+                viewAngleOfSP = 180 - Math.toDegrees(Math.atan(-SPy / -SPx));
+            else if (SPx < 0 && SPy > 0) // in t3 (-,+)
+                viewAngleOfSP = 180 + Math.toDegrees(Math.atan(SPy / -SPx));
+            else // in t4 (+,+)
+                viewAngleOfSP = 360 - Math.toDegrees(Math.atan(SPy / SPx));
+        }
+        if (viewAngleOfSP == 360) viewAngleOfSP = 0;
+        double halfViewAngle = viewAngle / 2;
+        if (viewAngle > 360) halfViewAngle = (viewAngle % 360) / 2;
+        if ( viewAngleOfSP > (observerRotation + halfViewAngle) ) return false; // not visible because above max-angle
+        return viewAngleOfSP >= (observerRotation - halfViewAngle);
     }
 
 }

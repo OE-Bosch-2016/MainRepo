@@ -76,11 +76,18 @@ public class ScenePointTest {
     public void testScenePoint63IsVisibleFromObserver() throws Exception {
         ScenePoint scenePoint63 = new ScenePoint(1629, 2406);
         ScenePoint observerBase = new ScenePoint(1500, 2300);
-        int observerRotation = 45;
-        int viewAngle = 90;
+        int observerRotation = 300;
+        int viewAngle = 30;
         int viewDistance = 200;
 
+        Assert.assertFalse( ScenePoint.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance, scenePoint63 ));
+        observerRotation = 310;
         Assert.assertTrue( ScenePoint.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance, scenePoint63 ));
+        viewDistance = 168;
+        Assert.assertTrue( ScenePoint.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance, scenePoint63 ));
+        viewDistance = 165;
+        Assert.assertFalse( ScenePoint.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance, scenePoint63 ));
+
         Assert.assertFalse( ScenePoint.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance, scenePoint ));
     }
 }
