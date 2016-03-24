@@ -11,8 +11,8 @@ import java.util.stream.Stream;
  * Interface of communication bus listener.
  * This unit can connect to CommBus, will get CommBusEvents and can read data from the bus.
  */
-public interface ICommBusListenerUnit {
+public interface ICommBusDevice {
 
-    public void commBusEvent( InputStream inputStream );
+    public void commBusEvent( int dataType );
 
 }

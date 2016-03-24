@@ -1,9 +1,6 @@
 package hu.nik.project.communication;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+//import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,97 +8,110 @@ import java.util.List;
  * Created by zhodvogner on 2016.03.19.
  *
  * Main class of communication
+ *
+ * usage:
+ *
+ * Must creating device-classes which are implementing the ICommBusDevice interface.
+ * These devices will be attachable to the communication bus with the createConnector() method.
+ * With the returned CommBusConnector object we can write and/or read data.
+ *
+ * 0. Initialization of ComBus:
+ *
+ * ComBus comBus = new ComBus();
+ *
+ * 1. Instantiating connector(s):
+ *
+ * device = (a class which implements ICommBusDevice interface)
+ * CommBusConnector connector = createConnector( device, CommBusConnectorType.ReadWrite );
+ *
+ * 2. Writing to the bus:
+ *
+ * connector.write( dataType, data ); // int dataType, byte[] data // return: boolean
+ *
+ * 3. ICommBusDevice get notification when commBusEvent is fired:
+ *
+ * public void commBusEvent( int dataType ) {
+ *     if (dataType is an interesting dataType) ...
+ * }
+ *
+ * 4. Reading from the bus:
+ *
+ * byte[] data = connector.read();
+ *
+ *
  */
 public class CommBus {
 
     private static final int BUSREQUEST_WAIT_TIME_MSECS = 200;
-    private static final int BUSREQUEST_TIME_OUT_MSECS = 500;
     public static final int MAX_BUFFER_LENGTH_BYTES = 64;
-    private static ByteArrayOutputStream outputStream = new ByteArrayOutputStream(MAX_BUFFER_LENGTH_BYTES);
 
-    private static List<ICommBusListenerUnit> listeners = new ArrayList<ICommBusListenerUnit>();
-    private static ICommBusUnit acceptedUnit = null;
+    //private ByteArrayOutputStream outputStream = new ByteArrayOutputStream(MAX_BUFFER_LENGTH_BYTES);
+    private byte[] dataBuffer;
+    private int dataType;
 
-    // busRequestTrackerThread controls the time-interval of bus-requests
-    private static Thread busRequestTrackerThread = new Thread(new Runnable() {
-        public void run()
-        {
-            busRequestTracker();
-        }
-    });
+    private List<CommBusConnector> connectors = new ArrayList<CommBusConnector>();
+    private CommBusConnector acceptedConnector = null;
 
     // listenerInvokerThread invokes active listeners
-    private static Thread listenerInvokerThread = new Thread(new Runnable() {
+    private Thread listenerInvokerThread = new Thread(new Runnable() {
         public void run()
         {
             invokeListeners();
         }
     });
 
-    // it connects a unit or a listener to the bus
-    public static synchronized void connect(ICommBusListenerUnit listener) {
-        listeners.add(listener);
+    // create new connector and connect the device
+    public synchronized CommBusConnector createConnector(ICommBusDevice device, CommBusConnectorType connectorType) {
+        CommBusConnector connector = new CommBusConnector(this, device, connectorType);
+        connectors.add(connector);
+        return connector;
     }
 
-    // id disconnects a unit or a listener
-    public static synchronized void disconnect(ICommBusListenerUnit listener) {
-        listeners.remove(listener);
+    // disconnects a device and remove a connector
+    public synchronized void removeConnector(CommBusConnector connector) {
+        connectors.remove(connector);
+        connector = null;
     }
 
-    // busRequest gives possibility for connected CommBusUnits for requesting a unique bus-usage
-    // return-value: OutputStream if bus-request is successful or null (if bus is busy)
-    public static synchronized OutputStream busRequest( ICommBusUnit commBusUnit ) throws CommBusException {
-
-        if (!(commBusUnit instanceof ICommBusUnit)) throw new CommBusException("Invalid unit-type.");
-        if (commBusUnit == acceptedUnit) return outputStream;   // already accepted
-
-        if (acceptedUnit != null) { // the bus is busy
-            try { Thread.sleep(BUSREQUEST_WAIT_TIME_MSECS); } catch (InterruptedException ie) { return null; }
+    // writes data to bus and sends notifications to the connectors
+    public synchronized boolean write(CommBusConnector connector, int dataType, byte[] data ) throws CommBusException {
+        // validity checks
+        if (connector.getConnectorType() == CommBusConnectorType.ReadOnly) throw new CommBusException("Connector is read-only.");
+        if (data.length > MAX_BUFFER_LENGTH_BYTES) throw new CommBusException("Data-record too long.");
+        if (!connectors.contains( connector )) throw new CommBusException("Unknown connector.");
+        if (connector == acceptedConnector) return true;   // already accepted
+        // bus-allocation
+        if (acceptedConnector != null) { // the bus is busy, must wait...
+            try { Thread.sleep(BUSREQUEST_WAIT_TIME_MSECS); } catch (InterruptedException ie) { return false; }
         }
-        if (acceptedUnit != null) return null; // the bus is busy yet
-
-        if( !listeners.contains( commBusUnit ) ) throw new CommBusException("Not connected.");
-
-        outputStream.reset();
-        acceptedUnit = commBusUnit;
-        busRequestTrackerThread.start();
-
-        // successful bus-request:
-        // the requester can write data into the outputStream in next BUSREQUEST_TIME_OUT_MSECS milliseconds
-        return outputStream;
-    }
-
-    // with busRelease the active bus-requester signals the end of bus-access
-    public static void busRelease( ICommBusUnit comBusUnit ) throws CommBusException {
-
-        if((acceptedUnit == null) || ( comBusUnit != acceptedUnit )) throw new CommBusException("Invalid operation.");
+        if (acceptedConnector != null) return false; // the bus is busy yet, sorry...
+        // memorize the sender
+        acceptedConnector = connector;  // OK - this will be the connector which is enabled for write-operation
+        // copy and store data into buffer
+        dataBuffer = data.clone();
+        // send notifications
         listenerInvokerThread.start(); // listeners will be invoked asynchronously
-    }
-
-    // busRequestTracker checks BUSREQUEST_TIME_OUT_MSECS, if elapsed it releases the bus
-    private static void busRequestTracker() {
-
-        long startTime = System.currentTimeMillis();
-        while ( (acceptedUnit != null) && ( (System.currentTimeMillis() - startTime) < BUSREQUEST_TIME_OUT_MSECS) )
-            try { Thread.sleep(50); } catch (InterruptedException ie) { break; }
-
-        if (acceptedUnit != null) acceptedUnit = null; // bus-request timed out -> must freeze the bus
+        return true;
     }
 
     // invokeListeners passes the bus-content to the connected listeners
-    private static void invokeListeners() {
+    private void invokeListeners() {
 
-        if ((acceptedUnit != null) && (outputStream != null)) {
-            for (ICommBusListenerUnit listener : listeners) {
-
-                if( listener != acceptedUnit) /* written data not echoed */ {
-                    InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-                    listener.commBusEvent(inputStream);
+        if ((acceptedConnector != null) && (dataBuffer != null)) {
+            for (CommBusConnector connector : connectors) {
+                if( (connector != acceptedConnector) && (connector.getConnectorType() != CommBusConnectorType.WriteOnly)) {
+                                                                    //
+                    connector.setDataBuffer(dataBuffer.clone());    // data will be passed to the connector in own local buffer
+                    connector.setDataType(dataType);                // dataType can describe the type of data-package or sender
+                                                                    //
+                    connector.getDevice().commBusEvent( dataType ); // the dataType will be passed as an argument of the event
+                                                                    // so the connector can decide want to deal with it or not
                 }
             }
         }
-        // all invoker were called
-        if (acceptedUnit != null) acceptedUnit = null; // bus is free (bus request is cleared)
+        // all listener were notified
+        dataBuffer = null; // dataBuffer is empty
+        if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
     }
 
 }
