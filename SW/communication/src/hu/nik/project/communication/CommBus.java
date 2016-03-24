@@ -64,6 +64,7 @@ public class CommBus {
     public synchronized CommBusConnector createConnector(ICommBusDevice device, CommBusConnectorType connectorType) {
         CommBusConnector connector = new CommBusConnector(this, device, connectorType);
         connectors.add(connector);
+        if (connectors.size() == 1) listenerInvokerThread.start(); // listeners will be invoked asynchronously
         return connector;
     }
 
@@ -71,6 +72,14 @@ public class CommBus {
     public synchronized void removeConnector(CommBusConnector connector) {
         connectors.remove(connector);
         connector = null;
+    }
+
+    public synchronized int getConnectorCount() {
+        return connectors.size();
+    }
+
+    public synchronized boolean isBusFree() {
+        return (acceptedConnector == null);
     }
 
     // writes data to bus and sends notifications to the connectors
@@ -85,33 +94,44 @@ public class CommBus {
             try { Thread.sleep(BUSREQUEST_WAIT_TIME_MSECS); } catch (InterruptedException ie) { return false; }
         }
         if (acceptedConnector != null) return false; // the bus is busy yet, sorry...
-        // memorize the sender
-        acceptedConnector = connector;  // OK - this will be the connector which is enabled for write-operation
         // copy and store data into buffer
-        dataBuffer = data.clone();
-        // send notifications
-        listenerInvokerThread.start(); // listeners will be invoked asynchronously
+        this.dataBuffer = data.clone();
+        this.dataType = dataType;
+        // set the sender
+        acceptedConnector = connector;  // OK - this will be the connector which is enabled for write-operation
+        // notifications will be sended by the background thread (in invokeListeners)
         return true;
     }
 
     // invokeListeners passes the bus-content to the connected listeners
     private void invokeListeners() {
+        boolean interrupted = false;
+        while (!interrupted && (connectors.size() > 0)) {
+            // transmission handling
+            if ((acceptedConnector != null) && (dataBuffer != null)) {
+                for (CommBusConnector connector : connectors) {
+                    if ((connector != acceptedConnector) && (connector.getConnectorType() != CommBusConnectorType.WriteOnly)) {
 
-        if ((acceptedConnector != null) && (dataBuffer != null)) {
-            for (CommBusConnector connector : connectors) {
-                if( (connector != acceptedConnector) && (connector.getConnectorType() != CommBusConnectorType.WriteOnly)) {
-                                                                    //
-                    connector.setDataBuffer(dataBuffer.clone());    // data will be passed to the connector in own local buffer
-                    connector.setDataType(dataType);                // dataType can describe the type of data-package or sender
-                                                                    //
-                    connector.getDevice().commBusEvent( dataType ); // the dataType will be passed as an argument of the event
-                                                                    // so the connector can decide want to deal with it or not
+                        connector.setExceptionThrown(null);
+                        connector.setDataBuffer(dataBuffer.clone());    // data will be passed to the connector in own local buffer
+                        connector.setDataType(dataType);                // dataType can describe the type of data-package or sender
+
+                        try {                                                                    //
+                            connector.getDevice().commBusEvent(connector); // the dataType will be passed as an argument of the event
+                            // so the connector can decide want to deal with it or not
+                        } catch (CommBusException e) {
+                            connector.read(); // connector reset
+                            connector.setExceptionThrown(e);
+                        }
+                    }
                 }
+                // all listener were notified
+                dataBuffer = null; // dataBuffer is empty
+                if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
             }
+            // waiting for requests
+            try { Thread.sleep(BUSREQUEST_WAIT_TIME_MSECS); } catch (InterruptedException ie) { interrupted = true; }
         }
-        // all listener were notified
-        dataBuffer = null; // dataBuffer is empty
-        if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
     }
 
 }

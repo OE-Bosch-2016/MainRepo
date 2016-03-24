@@ -13,6 +13,6 @@ import java.util.stream.Stream;
  */
 public interface ICommBusDevice {
 
-    public void commBusEvent( int dataType );
+    public void commBusEvent( CommBusConnector connector ) throws CommBusException;
 
 }

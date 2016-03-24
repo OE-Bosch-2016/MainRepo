@@ -16,6 +16,8 @@ public class CommBusConnector {
     private byte[] dataBuffer;                  // data on bus
     private boolean isDataInBuffer = false;     // data available for read
 
+    private Exception exceptionThrown = null;   // last exception on this connector
+
     //--------------------- getters and setters
 
     public ICommBusDevice getDevice() {
@@ -40,6 +42,10 @@ public class CommBusConnector {
         this.isDataInBuffer = true;
     }
 
+    public void setExceptionThrown(Exception exceptionThrown) {
+        this.exceptionThrown = exceptionThrown;
+    }
+
     //--------------------- constructor
 
     public CommBusConnector(CommBus commBus, ICommBusDevice device, CommBusConnectorType connectorType) {
@@ -59,13 +65,15 @@ public class CommBusConnector {
     //--------------------- write
 
     public boolean write( int dataType, byte[] data ) throws CommBusException {
-        return commBus.write(this, dataType, data);
+        boolean result = commBus.write(this, dataType, data);
+        if (result && (connectorType == CommBusConnectorType.WriteOnly)) isDataInBuffer = false;
+        return result;
     }
 
     //--------------------- read
 
-    public byte[] read() throws CommBusException {
-        if (!isDataInBuffer) return new byte[0]; // the buffer already is empty
+    public byte[] read() /*throws CommBusException*/ {
+        if ((!isDataInBuffer) || (connectorType == CommBusConnectorType.WriteOnly)) return new byte[0]; // the buffer already is empty or it's a write-only connector
         isDataInBuffer = false; // read empties the buffer
         dataType = 0;
         return dataBuffer; // result of read
