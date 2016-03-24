@@ -11,13 +11,13 @@ import java.util.List;
  *
  * usage:
  *
- * Must creating device-classes which are implementing the ICommBusDevice interface.
+ * Must create device-classes which are implementing the ICommBusDevice interface.
  * These devices will be attachable to the communication bus with the createConnector() method.
  * With the returned CommBusConnector object we can write and/or read data.
  *
- * 0. Initialization of ComBus:
+ * 0. Initialization of CommBus:
  *
- * ComBus comBus = new ComBus();
+ * CommBus commBus = new CommBus();
  *
  * 1. Instantiating connector(s):
  *
