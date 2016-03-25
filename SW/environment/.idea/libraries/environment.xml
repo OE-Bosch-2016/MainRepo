@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="environment">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+      <root url="file://$PROJECT_DIR$/test" />
+      <root url="file://$PROJECT_DIR$/ConsoleApp/src" />
+    </SOURCES>
+  </library>
+</component>

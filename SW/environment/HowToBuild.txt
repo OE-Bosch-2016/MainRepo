@@ -1,0 +1,8 @@
+In order to build the project you need to do the following:
+
+1. Download and install the latest IntelliJ
+2. Download and install JDK
+3. Set up JDK root path to the "Project Structure -> Project -> Project SDK" field
+5. Make the JAR artifact!!! (Build -> Make project) The ConsoleApp module needs the JAR to run the environment!
+6. Add a live scene XML to the Main class in the ConsoleApp module
+7. Run Main!
