@@ -1,5 +1,14 @@
 package hu.nik.project.communication;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectInput;
+
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectOutput;
+
+import java.io.IOException;
 /**
  *
  * Created by zhodvogner on 2016.03.23.
@@ -12,8 +21,8 @@ public class CommBusConnector {
     private ICommBusDevice device;              // embedded (connected) comm-bus device
     private CommBusConnectorType connectorType; // type of connection
 
-    private int dataType = 0;                   // type of data in the dataBuffer
-    private byte[] dataBuffer;                  // data on bus
+    private Class dataType;                   // type of data in the dataBuffer
+    private byte[] byteDataBuffer;                  // data on bus
     private boolean isDataInBuffer = false;     // data available for read
 
     private Exception exceptionThrown = null;   // last exception on this connector
@@ -28,17 +37,17 @@ public class CommBusConnector {
         return connectorType;
     }
 
-    public void setDataType(int dataType) {
+    public void setDataType(Class dataType) {
         this.dataType = dataType;
     }
 
-    public int getDataType() {
-        if (!isDataInBuffer) return 0;
+    public Class getDataType() {
+        if (!isDataInBuffer) return null;
         return dataType;
     }
 
     public void setDataBuffer(byte[] dataBuffer) {
-        this.dataBuffer = dataBuffer;
+        this.byteDataBuffer = dataBuffer;
         this.isDataInBuffer = true;
     }
 
@@ -62,21 +71,51 @@ public class CommBusConnector {
         super.finalize();
     }
 
-    //--------------------- write
+    //--------------------- send data
 
-    public boolean write( int dataType, byte[] data ) throws CommBusException {
-        boolean result = commBus.write(this, dataType, data);
+    public boolean send( Class dataType, Object dataObject ) throws CommBusException {
+
+        // Make commbus compatible data (microcontroller model)
+        byte[] byteData = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            ObjectOutput out = new ObjectOutputStream(baos);
+            out.writeObject(dataObject);
+            byteData = baos.toByteArray();
+            if (byteData.length > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException("Error in CommBusController: Data-record too long.");
+        }
+        catch (IOException e) {
+            throw new CommBusException("Error in CommBusController send: " + e.getMessage());
+        }
+
+        boolean result = commBus.write(this, dataType, byteData);
         if (result && (connectorType == CommBusConnectorType.WriteOnly)) isDataInBuffer = false;
         return result;
     }
 
-    //--------------------- read
+    //--------------------- receive data
 
-    public byte[] read() /*throws CommBusException*/ {
-        if ((!isDataInBuffer) || (connectorType == CommBusConnectorType.WriteOnly)) return new byte[0]; // the buffer already is empty or it's a write-only connector
+    public Object receive() throws CommBusException {
+        if ((!isDataInBuffer) || (connectorType == CommBusConnectorType.WriteOnly)) return null; // the buffer already is empty or it's a write-only connector
+
+        // Convert object from commbus bytes
+        try {
+            ObjectInput in = new ObjectInputStream(new ByteArrayInputStream(byteDataBuffer));
+            Object object = in.readObject();
+            reset();
+            return object;
+        }
+        catch (IOException e) {
+            throw new CommBusException("Error in CommBusController receive: " + e.getMessage());
+        }
+        catch (ClassNotFoundException e) {
+            throw new CommBusException("Error in CommBusController receive: " + e.getMessage());
+        }
+    }
+
+    public void reset() {
         isDataInBuffer = false; // read empties the buffer
-        dataType = 0;
-        return dataBuffer; // result of read
+        dataType = null;
     }
 
 }
