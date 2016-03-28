@@ -70,9 +70,10 @@ public class TreeTest {
         observerRotation = 245;
         Assert.assertFalse( tree.isVisibleFromObserver(observerBase, observerRotation, 0, 10000) );
 
+        // NOT A PROBLEM THE TOO BIG VIEW-ANGLE - the value 361° will work as 1° !!! (HodvognerZ)
         //too big view parameter
-        Assert.assertFalse( tree.isVisibleFromObserver(observerBase, observerRotation, 361, 1000) );
-        //negative view parameter
+        Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 361, 10000) );
+        //but the negative view parameter is wrong
         Assert.assertFalse( tree.isVisibleFromObserver(observerBase, observerRotation, -361 , 10000) );
 
         observerRotation = 245; //it's important; and view least 1
