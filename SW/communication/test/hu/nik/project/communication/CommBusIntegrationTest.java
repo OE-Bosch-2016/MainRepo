@@ -57,8 +57,6 @@ public class CommBusIntegrationTest {
         testDevice1.getCommBusConnector().setDataBuffer(testIntByteData);
         testDevice1.getCommBusConnector().setDataType(Integer.class);
         Assert.assertEquals(Integer.class, testDevice1.getCommBusConnector().getDataType());
-        // reset
-        testDevice1.getCommBusConnector().reset();
     }
 
     @Test
@@ -72,12 +70,11 @@ public class CommBusIntegrationTest {
     public void testSendAndReceive() throws Exception {
         // Send testdata to device2
         testDevice1.getCommBusConnector().send(String.class, "DataArrived");
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-
-        }
+        // Wait for data arrival
+        Thread.sleep(50);
         // Check the data arrived
         Assert.assertEquals("DataArrived", testDevice2.getStringData());
+        // Try to receive again, when there is no data on bus
+        Assert.assertNull(testDevice2.getCommBusConnector().receive());
     }
 }

@@ -29,15 +29,15 @@ public class CommBusConnector {
 
     //--------------------- getters and setters
 
-    public ICommBusDevice getDevice() {
+    protected ICommBusDevice getDevice() {
         return device;
     }
 
-    public CommBusConnectorType getConnectorType() {
+    protected CommBusConnectorType getConnectorType() {
         return connectorType;
     }
 
-    public void setDataType(Class dataType) {
+    protected void setDataType(Class dataType) {
         this.dataType = dataType;
     }
 
@@ -46,18 +46,18 @@ public class CommBusConnector {
         return dataType;
     }
 
-    public void setDataBuffer(byte[] dataBuffer) {
+    protected void setDataBuffer(byte[] dataBuffer) {
         this.byteDataBuffer = dataBuffer;
         this.isDataInBuffer = true;
     }
 
-    public void setExceptionThrown(Exception exceptionThrown) {
+    protected void setExceptionThrown(Exception exceptionThrown) {
         this.exceptionThrown = exceptionThrown;
     }
 
     //--------------------- constructor
 
-    public CommBusConnector(CommBus commBus, ICommBusDevice device, CommBusConnectorType connectorType) {
+    protected CommBusConnector(CommBus commBus, ICommBusDevice device, CommBusConnectorType connectorType) {
         this.commBus = commBus;
         this.device = device;
         this.connectorType = connectorType;
@@ -75,8 +75,10 @@ public class CommBusConnector {
 
     public boolean send( Class dataType, Object dataObject ) throws CommBusException {
 
+        if (dataObject == null) {throw  new CommBusException("Error in CommBusController send: " + "sent object connot be null"); }
+
         // Make commbus compatible data (microcontroller model)
-        byte[] byteData = null;
+        byte[] byteData;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             ObjectOutput out = new ObjectOutputStream(baos);
@@ -105,15 +107,12 @@ public class CommBusConnector {
             reset();
             return object;
         }
-        catch (IOException e) {
-            throw new CommBusException("Error in CommBusController receive: " + e.getMessage());
-        }
-        catch (ClassNotFoundException e) {
+        catch (IOException|ClassNotFoundException e) {
             throw new CommBusException("Error in CommBusController receive: " + e.getMessage());
         }
     }
 
-    public void reset() {
+    private void reset() {
         isDataInBuffer = false; // read empties the buffer
         dataType = null;
     }
