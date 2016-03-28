@@ -1,6 +1,5 @@
 package hu.nik.project.communication;
 
-import hu.nik.project.environment.objects.SimpleRoad;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
