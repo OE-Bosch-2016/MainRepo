@@ -36,13 +36,13 @@ public class PPManager {
 
         if(senderListener != null) {
             // only test
-            List<Light.Point> list1 = new ArrayList();
-            List<Light.Point> list2 = new ArrayList();
-            list1.add(new Light.Point(1,1,0, Color.AQUA));
-            list1.add(new Light.Point(2,1,0, Color.AQUA));
+            List<Point> list1 = new ArrayList();
+            List<Point> list2 = new ArrayList();
+            list1.add(new Point(1,1));
+            list1.add(new Point(2,1));
 
-            list2.add(new Light.Point(1,6,0, Color.AQUA));
-            list2.add(new Light.Point(2,6,0, Color.AQUA));
+            list2.add(new Point(1,6));
+            list2.add(new Point(2,6));
             parking = new Parking(list1, list2, 3.5f);
             //
 
@@ -50,6 +50,10 @@ public class PPManager {
         }
     }
 
+    // Setter ----------------------------------------------------------------------------------------------------------
+    public void setSenderListener(ParkinPilotListener senderListener) {
+        this.senderListener = senderListener;
+    }
 
     // Interface -------------------------------------------------------------------------------------------------------
     public interface ParkinPilotListener{
