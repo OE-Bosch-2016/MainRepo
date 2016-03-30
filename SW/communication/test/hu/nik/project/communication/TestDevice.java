@@ -1,5 +1,8 @@
 package hu.nik.project.communication;
 
+import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.environment.objects.SimpleRoad;
+
 /**
  * Created by hodvogner.zoltan on 2016.03.24.
  *
@@ -8,35 +11,52 @@ package hu.nik.project.communication;
 class TestDevice implements ICommBusDevice {
 
     private Class dataType = null;
-    private int intData = 0;
     private CommBusConnector commBusConnector;
+    private Class neededDataType;
+
+    private int intData = 0;
     private String stringData = "";
+    private ScenePoint scenePointData;
+    private SimpleRoad simpleRoadData;
 
     public TestDevice(CommBus commBus, Class whatKindOfObjectIsNeededToTest, CommBusConnectorType commBusConnectorType) {
         commBusConnector = commBus.createConnector(this, commBusConnectorType);
-        dataType = whatKindOfObjectIsNeededToTest;
+        neededDataType = whatKindOfObjectIsNeededToTest;
     }
 
     @Override
     public void commBusDataArrived() {
-        if (commBusConnector.getDataType() == Integer.class) {
-            dataType = commBusConnector.getDataType();
-            try {
-                intData = (Integer)commBusConnector.receive();
-            }
-            catch (CommBusException e) {
-                throw new RuntimeException();
-                //intData = 555;
-            }
 
-        }
-        if (commBusConnector.getDataType() == String.class) {
-            dataType = commBusConnector.getDataType();
-            try {
-                stringData = (String)commBusConnector.receive();
-            }
-            catch (CommBusException e) {
+        if (commBusConnector.getDataType() == neededDataType) {
 
+            dataType = commBusConnector.getDataType();
+            if (commBusConnector.getDataType() == Integer.class) {
+                try {
+                    intData = (Integer) commBusConnector.receive();
+                } catch (CommBusException e) {
+
+                }
+            }
+            if (commBusConnector.getDataType() == String.class) {
+                try {
+                    stringData = (String) commBusConnector.receive();
+                } catch (CommBusException e) {
+
+                }
+            }
+            if (commBusConnector.getDataType() == ScenePoint.class) {
+                try {
+                    scenePointData = (ScenePoint) commBusConnector.receive();
+                } catch (CommBusException e) {
+
+                }
+            }
+            if (commBusConnector.getDataType() == SimpleRoad.class) {
+                try {
+                    simpleRoadData = (SimpleRoad) commBusConnector.receive();
+                } catch (CommBusException e) {
+
+                }
             }
         }
     }
@@ -44,11 +64,15 @@ class TestDevice implements ICommBusDevice {
     public Class DataType() {
         return dataType;
     }
+
     public int getIntData() {
         return intData;
     }
     public String getStringData() {
         return stringData;
     }
-    public  CommBusConnector getCommBusConnector() { return commBusConnector;}
+    public ScenePoint getScenePointData() { return scenePointData; }
+    public SimpleRoad getSimpleRoadData() { return simpleRoadData; }
+
+    public CommBusConnector getCommBusConnector() { return commBusConnector;}
 }

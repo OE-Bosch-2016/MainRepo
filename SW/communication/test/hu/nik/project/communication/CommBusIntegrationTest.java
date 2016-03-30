@@ -5,7 +5,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
+import hu.nik.project.environment.objects.SimpleRoad;
+import hu.nik.project.environment.ScenePoint;
 
 /**
  * Created by hodvogner.zoltan on 2016.03.24.
@@ -17,9 +18,7 @@ public class CommBusIntegrationTest {
     private static CommBus commBus;
     private static TestDevice testDevice1;
     private static TestDevice testDevice2;
-    private static TestDevice testDevice3;
 
-    private static int testIntData = 22222;
     private static byte[] testIntByteData;
 
     private static String testStringData = "TESTDATA";
@@ -70,11 +69,29 @@ public class CommBusIntegrationTest {
     public void testSendAndReceive() throws Exception {
         // Send testdata to device2
         testDevice1.getCommBusConnector().send(String.class, "DataArrived");
-        // Wait for data arrival
-        Thread.sleep(50);
-        // Check the data arrived
+
+        // Send new object, and make sure that the sending is failed, because there is in progress sending on the bus
+        Assert.assertFalse(testDevice1.getCommBusConnector().send(String.class, "NewDataArrived"));
+        // Check the first send arrives data arrived
         Assert.assertEquals("DataArrived", testDevice2.getStringData());
         // Try to receive again, when there is no data on bus
+        Assert.assertNull(testDevice2.getCommBusConnector().getDataType());
         Assert.assertNull(testDevice2.getCommBusConnector().receive());
+    }
+
+    @Test
+    public void testStressCommunication() throws Exception{
+        // Add new devices to the bus
+        TestDevice deviceWithSimpleRoad = new TestDevice(commBus, SimpleRoad.class, CommBusConnectorType.ReadWrite);
+        TestDevice deviceWithInteger = new TestDevice(commBus, Integer.class, CommBusConnectorType.ReadWrite);
+        TestDevice deviceWithScenePoint = new TestDevice(commBus, ScenePoint.class, CommBusConnectorType.ReadWrite);
+
+        deviceWithInteger.getCommBusConnector().send(ScenePoint.class, new ScenePoint(120, 110));
+        deviceWithScenePoint.getCommBusConnector().send(Integer.class, 52125);
+        deviceWithScenePoint.getCommBusConnector().send(SimpleRoad.class, new SimpleRoad(new ScenePoint(222,111), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT ));
+
+        Assert.assertEquals(120, deviceWithScenePoint.getScenePointData().getX());
+        Assert.assertEquals(51125, deviceWithInteger.getIntData());
+        Assert.assertEquals(SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT, deviceWithSimpleRoad.getSimpleRoadData().getObjectType());
     }
 }

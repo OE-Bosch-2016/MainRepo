@@ -41,8 +41,8 @@ import java.util.List;
  */
 public class CommBus {
 
-    private static final int BUSREQUEST_WAIT_TIME_MSECS = 200;
-    public static final int MAX_BUFFER_LENGTH_IN_BYTES = 256;
+    protected static final int BUSREQUEST_WAIT_TIME_MSECS = 200;
+    protected static final int MAX_BUFFER_LENGTH_IN_BYTES = 128;
 
     //private ByteArrayOutputStream outputStream = new ByteArrayOutputStream(MAX_BUFFER_LENGTH_BYTES);
     private byte[] byteDataBuffer;  // represents the bytes on the bus
@@ -51,43 +51,24 @@ public class CommBus {
     private List<CommBusConnector> connectors = new ArrayList<CommBusConnector>();
     private CommBusConnector acceptedConnector = null;
 
-    // listenerInvokerThread invokes active listeners
-    private InvokerThread invokerThread = new InvokerThread();
-    private Thread listenerInvokerThread = new Thread(invokerThread);
-
-    private class InvokerThread implements Runnable {
-        private volatile boolean alive = true;
-
-        public void run() {
-            while (alive) invokeListeners();
-        }
-
-        public void shutdown() {
-            alive = false;
-        }
-    }
-
     // create new connector and connect the device
-    public synchronized CommBusConnector createConnector(ICommBusDevice device, CommBusConnectorType connectorType) {
+    public CommBusConnector createConnector(ICommBusDevice device, CommBusConnectorType connectorType) {
         CommBusConnector connector = new CommBusConnector(this, device, connectorType);
         connectors.add(connector);
-        if (connectors.size() == 1) {
-            listenerInvokerThread.start(); // listeners will be invoked asynchronously (started once)
-        }
         return connector;
     }
 
     // disconnects a device and remove a connector
-    public synchronized void removeConnector(CommBusConnector connector) {
+    public void removeConnector(CommBusConnector connector) {
         connectors.remove(connector);
         connector = null;
     }
 
-    public synchronized int getConnectorCount() {
+    public int getConnectorCount() {
         return connectors.size();
     }
 
-    public synchronized boolean isBusFree() {
+    public boolean isBusFree() {
         return (acceptedConnector == null);
     }
 
@@ -107,13 +88,14 @@ public class CommBus {
         this.dataType = dataType;
         // set the sender
         acceptedConnector = connector;  // OK - this will be the connector which is enabled for write-operation
-        // notifications will be sended by the background thread (in invokeListeners)
+        invokeListeners();
         return true;
     }
 
     // invokeListeners passes the bus-content to the connected listeners
+
+    // !!!!!!!!!!! When write occours THIS should invoke without THREAD !!!!!!!!!!!!!!!!!!
     private void invokeListeners() {
-        if ((acceptedConnector != null) && (byteDataBuffer != null)) {
             // transmission handling
                 for (CommBusConnector connector : connectors) {
                     if ((connector != acceptedConnector) && (connector.getConnectorType() != CommBusConnectorType.WriteOnly)) {
@@ -131,16 +113,9 @@ public class CommBus {
                 byteDataBuffer = null; // dataBuffer is empty
                 if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
 
-                // waiting for requests
-                try {
-                    Thread.sleep(BUSREQUEST_WAIT_TIME_MSECS);
-                } catch (InterruptedException ie){
-
-                }
-        }
     }
 
-    public void shutdown() {
+    /*public void shutdown() {
         invokerThread.shutdown();
-    }
+    }*/
 }

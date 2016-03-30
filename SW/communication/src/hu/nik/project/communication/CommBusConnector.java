@@ -24,6 +24,23 @@ public class CommBusConnector {
     private Class dataType;                   // type of data in the dataBuffer
     private byte[] byteDataBuffer;                  // data on bus
     private boolean isDataInBuffer = false;     // data available for read
+    private CommBusConnector connector = this;
+
+    // listenerInvokerThread invokes active listeners
+    private WriterThreadBase writerThreadBase;
+    protected Thread writerThread;
+
+    private class WriterThreadBase implements Runnable {
+        private volatile boolean alive = true;
+
+        public void run() {
+            while (alive) writeToCommBus();
+        }
+
+        public void shutdown() {
+            alive = false;
+        }
+    }
 
     private Exception exceptionThrown = null;   // last exception on this connector
 
@@ -76,23 +93,45 @@ public class CommBusConnector {
     public boolean send( Class dataType, Object dataObject ) throws CommBusException {
 
         if (dataObject == null) {throw  new CommBusException("Error in CommBusController send: " + "sent object connot be null"); }
+        if (isDataInBuffer) return false;
 
         // Make commbus compatible data (microcontroller model)
-        byte[] byteData;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             ObjectOutput out = new ObjectOutputStream(baos);
             out.writeObject(dataObject);
-            byteData = baos.toByteArray();
-            if (byteData.length > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException("Error in CommBusController: Data-record too long.");
+            this.byteDataBuffer = baos.toByteArray();
+            this.isDataInBuffer = true;
+            this.dataType = dataType;
+            if (byteDataBuffer.length > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException("Error in CommBusController: Data-record too long.");
         }
         catch (IOException e) {
             throw new CommBusException("Error in CommBusController send: " + e.getMessage());
         }
 
-        boolean result = commBus.write(this, dataType, byteData);
-        if (result && (connectorType == CommBusConnectorType.WriteOnly)) isDataInBuffer = false;
-        return result;
+        writerThreadBase = new WriterThreadBase();
+        writerThread = new Thread(writerThreadBase);
+        writerThread.start();
+
+        // Wait for the send to finish
+        try {
+            Thread.sleep(CommBus.BUSREQUEST_WAIT_TIME_MSECS);
+        } catch (InterruptedException e) {}
+        return true;
+    }
+
+    private void writeToCommBus() {
+        try {
+            if (commBus.write(connector, dataType, byteDataBuffer)) {
+                if ((connectorType == CommBusConnectorType.WriteOnly)) isDataInBuffer = false;
+                writerThreadBase.shutdown();
+            }
+        }
+        catch (CommBusException e) {
+            exceptionThrown = e;
+            isDataInBuffer = false;
+            writerThreadBase.shutdown();
+        }
     }
 
     //--------------------- receive data

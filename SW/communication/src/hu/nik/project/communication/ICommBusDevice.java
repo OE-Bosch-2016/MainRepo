@@ -12,5 +12,6 @@ import java.util.stream.Stream;
  * This unit can connect to CommBus, will get CommBusEvents and can read data from the bus.
  */
 public interface ICommBusDevice {
+    // The devices have to handle the arrived exceptions, so the InvokeListeners don't need to deal with them
     void commBusDataArrived();
 }
