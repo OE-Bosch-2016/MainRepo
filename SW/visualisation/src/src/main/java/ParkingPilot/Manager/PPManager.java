@@ -1,10 +1,6 @@
 package ParkingPilot.Manager;
 
 import ParkingPilot.Model.Parking;
-import javafx.scene.effect.Light;
-import javafx.scene.paint.*;
-import javafx.scene.paint.Color;
-
 import java.util.List;
 
 import java.awt.*;
@@ -36,14 +32,14 @@ public class PPManager {
 
         if(senderListener != null) {
             // only test
-            List<Point> list1 = new ArrayList();
-            List<Point> list2 = new ArrayList();
-            list1.add(new Point(1,1));
-            list1.add(new Point(2,1));
+            Point[] car1 = new Point[4];
+            Point[] car2 = new Point[4];
+            car1[0] = (new Point(1,1));
+            car1[1] = (new Point(2,1));
 
-            list2.add(new Point(1,6));
-            list2.add(new Point(2,6));
-            parking = new Parking(list1, list2, 3.5f);
+            car2[2] = (new Point(1,6));
+            car2[3] = (new Point(2,6));
+            parking = new Parking(car1, car2, 3.5f);
             //
 
             senderListener.onDataChanged();

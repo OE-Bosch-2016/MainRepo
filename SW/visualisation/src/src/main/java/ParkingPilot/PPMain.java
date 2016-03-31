@@ -2,6 +2,8 @@ package ParkingPilot;
 
 import ParkingPilot.Manager.PPManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 
 /**
@@ -19,6 +21,12 @@ public class PPMain {
 
     public void parkingPilotActivate(){
         manager.sendPPData(4, 160f, new Point(0,1));
+    }
+
+    private List<Point> calculateOptimalPath(){
+        List<Point> path = new ArrayList<Point>();
+
+        return path;
     }
 
     // Listener --------------------------------------------------------------------------------------------------------
