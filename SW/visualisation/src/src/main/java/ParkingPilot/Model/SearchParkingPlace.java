@@ -1,7 +1,6 @@
 package ParkingPilot.Model;
 
-import javafx.scene.effect.Light;
-
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -14,7 +13,7 @@ public class SearchParkingPlace extends Parking {
 
     private int typeOfParkingPlace;
 
-    public SearchParkingPlace(List<Light.Point> car1, List<Light.Point> car2, float edgeOfStreet) {
+    public SearchParkingPlace(List<Point> car1, List<Point> car2, float edgeOfStreet) {
         super(car1, car2, edgeOfStreet);
     }
 
