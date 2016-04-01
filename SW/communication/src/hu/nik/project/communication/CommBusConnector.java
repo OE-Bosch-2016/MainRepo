@@ -80,6 +80,9 @@ public class CommBusConnector {
         this.commBus = commBus;
         this.device = device;
         this.connectorType = connectorType;
+
+        writerThreadBase = new WriterThreadBase();
+        writerThread = new Thread(writerThreadBase);
     }
 
     //--------------------- finalizer
@@ -115,8 +118,6 @@ public class CommBusConnector {
         }
 
         // asynchronous write operation
-        writerThreadBase = new WriterThreadBase();
-        writerThread = new Thread(writerThreadBase);
         writerThread.start();
 
         //??? this "sleep" is unneccessary - HZ
@@ -139,6 +140,7 @@ public class CommBusConnector {
         catch (CommBusException e) {
             isDataInBuffer = false;
             exceptionThrown = e;
+            writerThreadBase.shutdown();
         }
     }
 

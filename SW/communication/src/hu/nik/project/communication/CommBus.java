@@ -73,7 +73,7 @@ public class CommBus {
     }
 
     // writes data to bus and sends notifications to the connectors
-    protected synchronized boolean write(CommBusConnector connector, Class dataType, byte[] data ) throws CommBusException {
+    protected boolean write(CommBusConnector connector, Class dataType, byte[] data ) throws CommBusException {
         // validity checks
         if (connector.getConnectorType() == CommBusConnectorType.ReadOnly) throw new CommBusException("CommBus.write error: Connector is read-only.");
         if (!connectors.contains( connector )) throw new CommBusException("CommBus.write error: Unknown connector.");
