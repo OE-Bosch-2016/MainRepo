@@ -2,12 +2,14 @@ package hu.nik.project.environment.objects;
 
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.02.24..
  *
  * Base class for the scene objects
  */
-public abstract class SceneObject<T> {
+public abstract class SceneObject<T> implements Serializable {
     private ScenePoint basePosition;
     private int rotation;
 

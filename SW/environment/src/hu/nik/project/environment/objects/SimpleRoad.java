@@ -3,12 +3,14 @@ package hu.nik.project.environment.objects;
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
  * Class for Roads
  */
-public class SimpleRoad extends Road {
+public class SimpleRoad extends Road implements Serializable {
 
     public enum SimpleRoadType  {
         SIMPLE_STRAIGHT

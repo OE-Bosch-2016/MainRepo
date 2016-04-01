@@ -17,6 +17,8 @@ import java.io.IOException;
 
 public class CommBusConnector {
 
+    protected static final int WRITE_TIME_OUT_MSECS = 1000;
+
     private CommBus commBus;                    // the owner communication-bus object
     private ICommBusDevice device;              // embedded (connected) comm-bus device
     private CommBusConnectorType connectorType; // type of connection
@@ -100,35 +102,43 @@ public class CommBusConnector {
         try {
             ObjectOutput out = new ObjectOutputStream(baos);
             out.writeObject(dataObject);
+            //??? baos.size() check instead of later byteDataBuffer.length check
+            if (baos.size() > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException("Error in CommBusController: Data-record too long = " + baos.size());
             this.byteDataBuffer = baos.toByteArray();
+            //if (byteDataBuffer.length > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException("Error in CommBusController: Data-record too long = " + byteDataBuffer.length);
             this.isDataInBuffer = true;
             this.dataType = dataType;
-            if (byteDataBuffer.length > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException("Error in CommBusController: Data-record too long.");
         }
         catch (IOException e) {
             throw new CommBusException("Error in CommBusController send: " + e.getMessage());
         }
 
+        // asynchronous write operation
         writerThreadBase = new WriterThreadBase();
         writerThread = new Thread(writerThreadBase);
         writerThread.start();
 
+        //??? this "sleep" is unneccessary - HZ
         // Wait for the send to finish
+        /*
         try {
             Thread.sleep(CommBus.BUSREQUEST_WAIT_TIME_MSECS);
         } catch (InterruptedException e) {}
+        */
         return true;
     }
 
     private void writeToCommBus() {
         try {
-            if (commBus.write(connector, dataType, byteDataBuffer)) {
-                if ((connectorType == CommBusConnectorType.WriteOnly)) isDataInBuffer = false;
-                writerThreadBase.shutdown();
+            if (!commBus.write(connector, dataType, byteDataBuffer)) {
+                throw new CommBusException("Error in CommBusController: bus-write operation timed out.");
             }
+            //if (connectorType == CommBusConnectorType.WriteOnly) isDataInBuffer = false;
         }
         catch (CommBusException e) {
             exceptionThrown = e;
+        }
+        finally {
             isDataInBuffer = false;
             writerThreadBase.shutdown();
         }

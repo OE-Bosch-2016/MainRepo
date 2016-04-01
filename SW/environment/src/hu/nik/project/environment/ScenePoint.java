@@ -1,11 +1,13 @@
 package hu.nik.project.environment;
 
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.03.14..
  *
  * Base point class for positions
  */
-public class ScenePoint {
+public class ScenePoint implements Serializable {
     private int x;
     private int y;
 

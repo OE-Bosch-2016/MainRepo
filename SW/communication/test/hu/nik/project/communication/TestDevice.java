@@ -27,35 +27,39 @@ class TestDevice implements ICommBusDevice {
     @Override
     public void commBusDataArrived() {
 
+        //stringData = "---"; // for testability only
+
         if (commBusConnector.getDataType() == neededDataType) {
+
+            stringData = "???"; // for testability only
 
             dataType = commBusConnector.getDataType();
             if (commBusConnector.getDataType() == Integer.class) {
                 try {
                     intData = (Integer) commBusConnector.receive();
                 } catch (CommBusException e) {
-
+                    stringData = e.getMessage();
                 }
             }
             if (commBusConnector.getDataType() == String.class) {
                 try {
                     stringData = (String) commBusConnector.receive();
                 } catch (CommBusException e) {
-
+                    stringData = e.getMessage();
                 }
             }
             if (commBusConnector.getDataType() == ScenePoint.class) {
                 try {
                     scenePointData = (ScenePoint) commBusConnector.receive();
                 } catch (CommBusException e) {
-
+                    stringData = e.getMessage();
                 }
             }
             if (commBusConnector.getDataType() == SimpleRoad.class) {
                 try {
                     simpleRoadData = (SimpleRoad) commBusConnector.receive();
                 } catch (CommBusException e) {
-
+                    stringData = e.getMessage();
                 }
             }
         }

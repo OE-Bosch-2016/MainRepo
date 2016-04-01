@@ -2,12 +2,14 @@ package hu.nik.project.environment.objects;
 
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
  * Abstract class for Road
  */
-abstract public class Road<T> extends SceneObject {
+abstract public class Road<T> extends SceneObject implements Serializable {
 
     private ScenePoint topPoint;
     private ScenePoint bottomPoint;
