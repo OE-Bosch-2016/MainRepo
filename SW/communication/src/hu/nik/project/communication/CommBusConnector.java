@@ -118,15 +118,10 @@ public class CommBusConnector {
         }
 
         // asynchronous write operation
-        writerThread.start();
+        if (writerThread.getState() == Thread.State.NEW || writerThread.getState() == Thread.State.RUNNABLE) {
+            writerThread.start();
+        }
 
-        //??? this "sleep" is unneccessary - HZ
-        // Wait for the send to finish
-        /*
-        try {
-            Thread.sleep(CommBus.BUSREQUEST_WAIT_TIME_MSECS);
-        } catch (InterruptedException e) {}
-        */
         return true;
     }
 
