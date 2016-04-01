@@ -94,7 +94,8 @@ public class CommBusConnector {
 
     public boolean send( Class dataType, Object dataObject ) throws CommBusException {
 
-        if (dataObject == null) {throw  new CommBusException("Error in CommBusController send: " + "sent object connot be null"); }
+        if (dataType == null) {throw  new CommBusException("Error in CommBusController send: " + "sent object type cannot be null"); }
+        if (dataObject == null) {throw  new CommBusException("Error in CommBusController send: " + "sent object cannot be null"); }
         if (isDataInBuffer) return false;
 
         // Make commbus compatible data (microcontroller model)
@@ -130,17 +131,14 @@ public class CommBusConnector {
 
     private void writeToCommBus() {
         try {
-            if (!commBus.write(connector, dataType, byteDataBuffer)) {
-                throw new CommBusException("Error in CommBusController: bus-write operation timed out.");
+            if (commBus.write(connector, dataType, byteDataBuffer)) {
+                isDataInBuffer = false;
+                writerThreadBase.shutdown();
             }
-            //if (connectorType == CommBusConnectorType.WriteOnly) isDataInBuffer = false;
         }
         catch (CommBusException e) {
-            exceptionThrown = e;
-        }
-        finally {
             isDataInBuffer = false;
-            writerThreadBase.shutdown();
+            exceptionThrown = e;
         }
     }
 
