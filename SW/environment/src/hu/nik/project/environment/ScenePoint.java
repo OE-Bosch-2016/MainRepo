@@ -103,28 +103,27 @@ public class ScenePoint implements Serializable {
 
     // implementation of Serializable interface //////////////////////////////////////////////////////////////
 
-    private static final long serialVersionUID = 4610859544908152108L;
+    //private static final long serialVersionUID = 4610859544908152108L;
 
-    private void validateState() {
+    //private void validateState() {
         //  throw new IllegalArgumentException("...") if dome of data-format error occurs
-    }
+    //}
 
-    private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
-        publicReadObject(aInputStream);
-        validateState();
-    }
+    //private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+    //    publicReadObject(aInputStream);
+    //}
 
     public void publicReadObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
         //always perform the default de-serialization first
         x = aInputStream.readInt();
         y = aInputStream.readInt();
         //ensure that object state has not been corrupted or tampered with maliciously
-        validateState();
+        //validateState();
     }
 
-    private void writeObject(ObjectOutputStream aOutputStream) throws IOException {
-        publicWriteObject(aOutputStream);
-    }
+    //private void writeObject(ObjectOutputStream aOutputStream) throws IOException {
+    //    publicWriteObject(aOutputStream);
+    //}
 
     public void publicWriteObject(ObjectOutputStream aOutputStream) throws IOException {
         //perform the default serialization for all non-transient, non-static fields

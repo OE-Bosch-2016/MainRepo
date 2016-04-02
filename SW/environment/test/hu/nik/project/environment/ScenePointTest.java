@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.*;
+
 
 /**
  * Created by Róbert on 2016.03.15..
@@ -89,5 +91,20 @@ public class ScenePointTest {
         Assert.assertFalse( ScenePoint.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance, scenePoint63 ));
 
         Assert.assertFalse( ScenePoint.isVisibleFromObserver(observerBase, observerRotation, viewAngle, viewDistance, scenePoint ));
+    }
+
+    @Test
+    public void testReadWriteSerializedObject() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutput out = new ObjectOutputStream(baos);
+        out.writeObject(scenePoint);
+        //
+        byte[] byteDataBuffer = baos.toByteArray();
+        //
+        ByteArrayInputStream bais = new ByteArrayInputStream(byteDataBuffer);
+        ObjectInput in = new ObjectInputStream(bais);
+        Object clonedScenePoint = in.readObject();
+        //
+        Assert.assertEquals(scenePoint.toString(), clonedScenePoint.toString());
     }
 }

@@ -42,7 +42,7 @@ import java.util.List;
 public class CommBus {
 
     protected static final int BUSREQUEST_WAIT_TIME_MSECS = 200;
-    protected static final int MAX_BUFFER_LENGTH_IN_BYTES = 512;
+    protected static final int MAX_BUFFER_LENGTH_IN_BYTES = 600;
 
     //private ByteArrayOutputStream outputStream = new ByteArrayOutputStream(MAX_BUFFER_LENGTH_BYTES);
     private byte[] byteDataBuffer;  // represents the bytes on the bus

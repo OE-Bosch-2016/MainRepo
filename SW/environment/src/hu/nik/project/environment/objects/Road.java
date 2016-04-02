@@ -55,15 +55,17 @@ abstract public class Road<T> extends SceneObject implements Serializable {
     private static final long serialVersionUID = 1536627736237490631L;
 
     private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
-        publicreadObject(aInputStream);
+        publicReadObject(aInputStream);
         super.publicReadObject(aInputStream);
     }
 
-    public void publicreadObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
-        topPoint = new ScenePoint(0,0);
-        topPoint.publicReadObject(aInputStream);
-        bottomPoint = new ScenePoint(0,0);
-        bottomPoint.publicReadObject(aInputStream);
+    public void publicReadObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+        topPoint = (ScenePoint)aInputStream.readObject();
+        bottomPoint = (ScenePoint)aInputStream.readObject();
+        //topPoint = new ScenePoint(0,0);
+        //topPoint.publicReadObject(aInputStream);
+        //bottomPoint = new ScenePoint(0,0);
+        //bottomPoint.publicReadObject(aInputStream);
         super.publicReadObject(aInputStream);
     }
 
@@ -73,8 +75,10 @@ abstract public class Road<T> extends SceneObject implements Serializable {
     }
 
     public void publicWriteObject(ObjectOutputStream aOutputStream) throws IOException {
-        topPoint.publicWriteObject(aOutputStream);
-        bottomPoint.publicWriteObject(aOutputStream);
+        aOutputStream.writeObject(topPoint);
+        aOutputStream.writeObject(bottomPoint);
+        //topPoint.publicWriteObject(aOutputStream);
+        //bottomPoint.publicWriteObject(aOutputStream);
         super.publicWriteObject(aOutputStream);
     }
 

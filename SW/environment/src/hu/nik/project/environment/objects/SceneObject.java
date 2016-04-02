@@ -53,8 +53,9 @@ public abstract class SceneObject<T> implements Serializable {
     }
 
     public void publicReadObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
-        basePosition = new ScenePoint(0,0);
-        basePosition.publicReadObject(aInputStream);
+        basePosition = (ScenePoint)aInputStream.readObject();
+        //basePosition = new ScenePoint(0,0);
+        //basePosition.publicReadObject(aInputStream);
         rotation = aInputStream.readInt();
     }
 
@@ -63,7 +64,8 @@ public abstract class SceneObject<T> implements Serializable {
     }
 
     public void publicWriteObject(ObjectOutputStream aOutputStream) throws IOException {
-        basePosition.publicWriteObject(aOutputStream);
+        aOutputStream.writeObject(basePosition);
+        //basePosition.publicWriteObject(aOutputStream);
         aOutputStream.writeInt(rotation);
     }
 
