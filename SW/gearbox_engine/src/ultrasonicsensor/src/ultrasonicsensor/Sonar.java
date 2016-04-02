@@ -13,11 +13,13 @@ import java.util.ArrayList;
  */
 public class Sonar implements IUltrasonic{
 
-    
+    private int carWidth = 10;
+    private int carHeight = 24;
     private int viewDis = 5;
     private double fov;
     private int startAngle;
     private Pos currPosition;
+    private Pos sonarPosition;
     ArrayList<Pos> viewableObjs;
     public Sonar(double fov,int startAngle, Pos currCarPos)
     {
@@ -34,7 +36,14 @@ public class Sonar implements IUltrasonic{
         return currPosition;
     }
     public Pos getSonarPos() {
-        return currPosition;
+        if(startAngle < 180){
+            sonarPosition = new Pos(currPosition.getPosX() + (carWidth/2), currPosition.getPosY()); //front bumper
+            return sonarPosition;
+        }
+        else{
+            sonarPosition = new Pos(currPosition.getPosX() + (carWidth/2), currPosition.getPosY() - carHeight); //rear bumper
+            return sonarPosition;
+        }
     }
     public int getSonarViewDis() {
         return viewDis;
@@ -50,9 +59,9 @@ public class Sonar implements IUltrasonic{
         double closestObjDistance = -1;
         if(viewableObjs != null && viewableObjs.size() > 0){
             closestObj = viewableObjs.get(0);
-            closestObjDistance = getDistance(currPosition, viewableObjs.get(0));
+            closestObjDistance = getDistance(getSonarPos(), viewableObjs.get(0));
             for (int i = 1; i < viewableObjs.size() ; i++) {
-                double dis = getDistance(currPosition, viewableObjs.get(i));
+                double dis = getDistance(getSonarPos(), viewableObjs.get(i));
                 if(dis < closestObjDistance)
                 {
                     closestObj = viewableObjs.get(i);
@@ -65,9 +74,9 @@ public class Sonar implements IUltrasonic{
             return closestObjDistance;
         }
     }
-    private double getDistance(Pos ourPos,Pos objPos){
-        double x = Math.pow(ourPos.getPosX() - objPos.getPosX(),2);
-        double y = Math.pow(ourPos.getPosY() - objPos.getPosY(),2);
+    private double getDistance(Pos sonPos,Pos objPos){
+        double x = Math.pow(sonPos.getPosX() - objPos.getPosX(),2);
+        double y = Math.pow(sonPos.getPosY() - objPos.getPosY(),2);
         double distance = Math.sqrt(x+y);
         return distance;
     }
