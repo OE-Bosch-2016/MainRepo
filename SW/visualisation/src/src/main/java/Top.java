@@ -1,6 +1,8 @@
 import HMI.Hmi;
 
 //import ParkingPilot.PPMain;
+import ParkingPilot.PPMain;
+import ParkingPilot.Util.ParkingCalculator;
 import Utils.ImageLoader;
 import Utils.Vector2D;
 import org.jfree.chart.ChartPanel;
@@ -54,7 +56,8 @@ public class Top extends JFrame { // implements KeyListener
 
     // Parking pilot
     private Timer moveTimer;
-    //private PPMain parkingPilot;
+    private PPMain parkingPilot;
+    private Timer parkingTimer;
 
     private static final int DISPLAY_MAX_KM = 220;
     private static final int DISPLAY_MAX_TACHO = 6000;
@@ -73,7 +76,8 @@ public class Top extends JFrame { // implements KeyListener
 
 
     private void init() {
-        //parkingPilot = new PPMain();
+        parkingTimer = new Timer(42, parkingTimerListener);
+        parkingPilot = new PPMain();
         moveTimer = new Timer(42, moveListener);
         hmi = new Hmi();
         hmi.setHmiListener(mileAgeListener);
@@ -88,7 +92,7 @@ public class Top extends JFrame { // implements KeyListener
         pack();
 
         //Car setup
-        car = new AutonomousCar(new Vector2D(510, 90), ImageLoader.getCarImage());
+        car = new AutonomousCar(new Vector2D(501, 90), ImageLoader.getCarImage());
 
         //Visualization renderer setup
         vRenderer = new VisualizationRenderer(mapPanel, hmi, car);
@@ -237,7 +241,7 @@ public class Top extends JFrame { // implements KeyListener
 
         public void keyPressed(KeyEvent e) {
             if (e.getKeyChar() == 'p')
-                simulateMoveing();
+                simulateMoving();
             //parkingPilot.parkingPilotActivate();
             //System.out.println(e.paramString());
         }
@@ -247,19 +251,19 @@ public class Top extends JFrame { // implements KeyListener
         }
     };
 
-    private void simulateMoveing() {
+    private void simulateMoving() {
         moveTimer.start();
+        //car.rotation(Math.toRadians(-45));
     }
 
     private void simulateParking(){
-
+        parkingPilot.parkingPilotActivate(car.getPosition(), car.getImage().getHeight(), car.getImage().getWidth(), parkingListener);
     }
 
     // Listener --------------------------------------------------------------------------------------------------------
     private ActionListener moveListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             car.move(-1);
-            mapPanel.revalidate();
             mapPanel.repaint();
 
             if (car.getPosition().get_coordinateY() < -156) {
@@ -267,6 +271,22 @@ public class Top extends JFrame { // implements KeyListener
                 simulateParking();
             }
 
+        }
+    };
+
+    private ActionListener parkingTimerListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            vRenderer.get_carLabel().revalidate();
+            parkingTimer.stop();
+            parkingPilot.doParking();
+        }
+    };
+
+    private ParkingCalculator.OnParkingListener parkingListener = new ParkingCalculator.OnParkingListener() {
+        public void changePosition(float front, float side, float rotate) {
+            car.setPosition(new Vector2D((int)(car.getPosition().get_coordinateX() + side), (int)(car.getPosition().get_coordinateY() + front)));
+            car.rotation(rotate);
+            parkingTimer.start();
         }
     };
 }

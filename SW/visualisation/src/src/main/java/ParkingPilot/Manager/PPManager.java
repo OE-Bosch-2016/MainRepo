@@ -1,6 +1,7 @@
 package ParkingPilot.Manager;
 
 import ParkingPilot.Model.Parking;
+import Utils.Vector2D;
 
 import java.awt.*;
 
@@ -25,19 +26,19 @@ public class PPManager {
             return mInstance = new PPManager();
     }
 
-    public void sendPPData(float distance, float angle, Point coordinate){
+    public void sendPPData(float distance, float angle, Vector2D coordinate){
         //call Environment, using Bus
 
         if(senderListener != null) {
             // only test
             Point[] car1 = new Point[4];
             Point[] car2 = new Point[4];
-            car1[0] = (new Point(100,100));
-            car1[1] = (new Point(100,200));
+            car1[0] = (new Point(coordinate.get_coordinateX() + 10, coordinate.get_coordinateY()));
+            car1[1] = (new Point(coordinate.get_coordinateX() + 34, coordinate.get_coordinateY()));
 
-            car2[2] = (new Point(100,600));
-            car2[3] = (new Point(100,800));
-            parking = new Parking(car1, car2, 150f);
+            car2[2] = (new Point(coordinate.get_coordinateX() + 10, coordinate.get_coordinateY() + 30));
+            car2[3] = (new Point(coordinate.get_coordinateX() + 34, coordinate.get_coordinateY() + 30));
+            parking = new Parking(car1, car2, 48);
             //
 
             senderListener.onDataChanged();

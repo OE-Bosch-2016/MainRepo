@@ -53,6 +53,10 @@ public abstract class Visualization implements IWheelVisualization {
     public void render()
     {
         _carLabel.setIcon(new ImageIcon(_car.getImage()));
-        _carLabel.setLocation(_car.getPosition().get_coordinateX(),_car.getPosition().get_coordinateY());
+        _carLabel.setLocation(_car.getPosition().get_coordinateX(), _car.getPosition().get_coordinateY());
+    }
+
+    public JLabel get_carLabel() {
+        return _carLabel;
     }
 }

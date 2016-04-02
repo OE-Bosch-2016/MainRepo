@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by haxxi on 2016.03.31..
  */
-public class Calculator {
+public class ParkingCalculator {
 
     private Point[] carPosition; //Front-left, Front-right, Bottom-left, Bottom-right
     private Point[] environment1Position; // behind
@@ -23,6 +23,7 @@ public class Calculator {
     private float bottomFrontDistance;
     private float leftRightDistance;
     int freeDistance;
+    private int state;
 
     private int HORIZONTAL_WIDTH = 100;
 
@@ -30,11 +31,13 @@ public class Calculator {
     public int MODIFY_VERTICAL_LEFT = 1;
     public int MODIFY_VERTICAL_RIGHT = 2;
 
-    public Calculator() {
+    private OnParkingListener parkingListener;
 
+    public ParkingCalculator() {
+        state = 0;
     }
 
-    private void init(Point[] carPosition, Point[] environment1Position, Point[] environment2Position, int parkingPlaceType, float edgeOfStreet) {
+    public void init(Point[] carPosition, Point[] environment1Position, Point[] environment2Position, float edgeOfStreet, int parkingPlaceType) {
         // New data
         this.carPosition = carPosition;
         this.environment1Position = environment1Position;
@@ -52,39 +55,31 @@ public class Calculator {
         carAngle = 0;
     }
 
-    public void parking(Point[] carPosition, Point[] environment1Position, Point[] environment2Position, float edgeOfStreet, int parkingPlaceType) {
-        init(carPosition, environment1Position, environment2Position, parkingPlaceType, edgeOfStreet);
-
-        degreeOf45(45, 1);
-        goBottom();
-        degreeOf45(0, -1);
-        preparePosition();
+    public void parking() {
+        if(state == 0)
+            degreeOf45(-45);
+//        goBottom();
+//        degreeOf45(360);
+//        preparePosition();
     }
 
-    private void degreeOf45(int degree, int value) {
-        while (carAngle != degree) {
-            if (carAngle == 0) {
-                carAngle += 5 * value;
-                modifyCarPosition(-2 * value, -0.5f * value, MODIFY_HORIZONTAL);
-            } else if (carAngle == 15) {
-                carAngle += 5 * value;
-                modifyCarPosition(-1 * value, -1f * value, MODIFY_HORIZONTAL);
-            } else if (carAngle == 30) {
-                carAngle += 5 * value;
-                modifyCarPosition(-0.5f * value, -2f * value, MODIFY_HORIZONTAL);
-            }
-        }
+    private void degreeOf45(int degree) {
+        carAngle -= 1;
+        if(carAngle == degree)
+            state++;
+        if (parkingListener != null)
+            parkingListener.changePosition(0.5f, 0.5f, -3);
     }
 
     private void goBottom() {
-        while(carPosition[2].y - parkingPlace[2].y < 30){
+        while (carPosition[2].y - parkingPlace[2].y < 30) {
             modifyCarPosition(-0.5f, 0, MODIFY_HORIZONTAL);
         }
     }
 
-    private void preparePosition(){
-        while (environment1Position[0].x < carPosition[2].y - freeDistance){
-            modifyCarPosition(+1,0,MODIFY_HORIZONTAL);
+    private void preparePosition() {
+        while (environment1Position[0].x < carPosition[2].y - freeDistance) {
+            modifyCarPosition(+1, 0, MODIFY_HORIZONTAL);
         }
     }
 
@@ -101,5 +96,15 @@ public class Calculator {
         } else if (type == MODIFY_VERTICAL_LEFT) {
         } else if (type == MODIFY_VERTICAL_RIGHT) {
         }
+    }
+
+    // Setter ----------------------------------------------------------------------------------------------------------
+    public void setParkingListener(OnParkingListener parkingListener) {
+        this.parkingListener = parkingListener;
+    }
+
+    // Interface -------------------------------------------------------------------------------------------------------
+    public interface OnParkingListener {
+        void changePosition(float front, float side, float rotate);
     }
 }

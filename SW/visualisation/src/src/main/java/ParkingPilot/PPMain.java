@@ -2,7 +2,9 @@ package ParkingPilot;
 
 import ParkingPilot.Manager.PPManager;
 import ParkingPilot.Model.Parking;
-import ParkingPilot.Util.Calculator;
+import ParkingPilot.Util.ParkingCalculator;
+import Utils.Vector2D;
+
 import java.awt.*;
 
 /**
@@ -11,28 +13,39 @@ import java.awt.*;
 public class PPMain {
 
     private PPManager manager;
-    private Calculator calculator;
+    private ParkingCalculator parkingCalculator;
+    private Point[] car;
 
     public PPMain() {
         manager = PPManager.newInstance();
         manager.setSenderListener(parkingListener);
-        calculator = new Calculator();
+        parkingCalculator = new ParkingCalculator();
     }
 
-    public void parkingPilotActivate(){
-        manager.sendPPData(300, 180f, new Point(100,50));
+    public void parkingPilotActivate(Vector2D point, int height, int width, ParkingCalculator.OnParkingListener parkingListener){
+        calculateCorners(point, height, width);
+        parkingCalculator.setParkingListener(parkingListener);
+        manager.sendPPData(40, 0f, point);
+    }
+
+    private void calculateCorners(Vector2D point, int height, int width){
+        car = new Point[4];
+        car[0] = new Point(point.get_coordinateX() - width / 2, point.get_coordinateY() + height / 2);
+        car[1] = new Point(point.get_coordinateX() + width / 2, point.get_coordinateY() + height / 2);
+        car[2] = new Point(point.get_coordinateX() - width / 2, point.get_coordinateY() - height / 2);
+        car[3] = new Point(point.get_coordinateX() + width / 2, point.get_coordinateY() + height / 2);
+    }
+
+    public void doParking(){
+        parkingCalculator.parking();
     }
 
     // Listener --------------------------------------------------------------------------------------------------------
     private PPManager.ParkingPilotListener parkingListener = new PPManager.ParkingPilotListener() {
         public void onDataChanged() {
             Parking parking = manager.getParking();
-            Point[] car = new Point[4];
-            car[0] = new Point(300, 150);
-            car[1] = new Point(300, 50);
-            car[2] = new Point(100, 150);
-            car[3] = new Point(100, 50);
-            calculator.parking(car, parking.getCar1(), parking.getCar2(), parking.getEdgeOfStreet(), calculator.MODIFY_HORIZONTAL);
+            parkingCalculator.init(car, parking.getCar1(), parking.getCar2(), parking.getEdgeOfStreet(), parkingCalculator.MODIFY_HORIZONTAL);
+            doParking();
         }
     };
 

@@ -36,7 +36,9 @@ public abstract class Car {
         _image = image;
     }
 
-    public void rotate(float degree){
+    public void rotate(double degree){
+
+        degree = Math.toDegrees(degree);
         //Origo
         Vector2D origo = new Vector2D(
                 _position.get_coordinateX() + _image.getWidth() / 2,
@@ -45,13 +47,13 @@ public abstract class Car {
 
         //Rotate image
         //http://stackoverflow.com/questions/2257141/problems-rotating-bufferedimage
-        BufferedImage copyImage = new BufferedImage(_image.getWidth(), _image.getHeight(), BufferedImage.TYPE_INT_RGB);
-        AffineTransform xform = AffineTransform.getRotateInstance(degree,origo.get_coordinateX(), origo.get_coordinateY());
-        Graphics2D g = (Graphics2D) copyImage.createGraphics();
-        g.drawImage(_image, xform, null);
-        g.dispose();
-        _image = copyImage;
-        copyImage.flush();
+//        BufferedImage copyImage = new BufferedImage(_image.getWidth(), _image.getHeight(), BufferedImage.TYPE_INT_RGB);
+//        AffineTransform xform = AffineTransform.getRotateInstance(Math.toRadians(degree),origo.get_coordinateX(), origo.get_coordinateY());
+//        Graphics2D g = (Graphics2D) copyImage.createGraphics();
+//        g.drawRenderedImage(_image, xform);
+//        g.dispose();
+//        _image = copyImage;
+//        copyImage.flush();
 
         _degree+=degree;
 
@@ -67,6 +69,39 @@ public abstract class Car {
                 (int)((r * Math.cos(degree)) / Math.abs(r * Math.cos(degree))),
                 (int)((r * Math.sin(degree)) /  Math.abs(r * Math.sin(degree)))
         );
+
+        double sin = Math.abs(Math.sin(degree)), cos = Math.abs(Math.cos(degree));
+        int w = _image.getWidth(), h = _image.getHeight();
+        int neww = (int)Math.floor(w*cos+h*sin), newh = (int)Math.floor(h*cos+w*sin);
+        GraphicsConfiguration gc = getDefaultConfiguration();
+        BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
+        Graphics2D g = result.createGraphics();
+        g.translate((neww-w)/2, (newh-h)/2);
+        g.rotate(degree, w/2, h/2);
+        g.drawRenderedImage(_image, null);
+        g.dispose();
+
+        _image = result;
+    }
+
+    public void rotation(double degree){
+        degree = Math.toRadians(degree);
+        int w = _image.getWidth(), h = _image.getHeight();
+        GraphicsConfiguration gc = getDefaultConfiguration();
+        BufferedImage result = gc.createCompatibleImage(_image.getWidth(), _image.getHeight(), Transparency.TRANSLUCENT);
+        Graphics2D g = result.createGraphics();
+        g.translate((_image.getWidth()-w)/2, (_image.getHeight()-h)/2);
+        g.rotate(degree, w/2, h/2);
+        g.drawRenderedImage(_image, null);
+        g.dispose();
+
+        _image = result;
+    }
+
+    private GraphicsConfiguration getDefaultConfiguration() {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        return gd.getDefaultConfiguration();
     }
 
     public void move(float speed)
