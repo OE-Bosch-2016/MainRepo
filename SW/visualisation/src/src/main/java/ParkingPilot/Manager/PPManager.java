@@ -1,10 +1,8 @@
 package ParkingPilot.Manager;
 
 import ParkingPilot.Model.Parking;
-import java.util.List;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Created by haxxi on 2016.03.30..
@@ -15,7 +13,7 @@ public class PPManager {
     private static PPManager mInstance;
 
     // listener
-    private ParkinPilotListener senderListener;
+    private ParkingPilotListener senderListener;
 
     // local
     private Parking parking;
@@ -34,25 +32,30 @@ public class PPManager {
             // only test
             Point[] car1 = new Point[4];
             Point[] car2 = new Point[4];
-            car1[0] = (new Point(1,1));
-            car1[1] = (new Point(2,1));
+            car1[0] = (new Point(100,100));
+            car1[1] = (new Point(100,200));
 
-            car2[2] = (new Point(1,6));
-            car2[3] = (new Point(2,6));
-            parking = new Parking(car1, car2, 3.5f);
+            car2[2] = (new Point(100,600));
+            car2[3] = (new Point(100,800));
+            parking = new Parking(car1, car2, 150f);
             //
 
             senderListener.onDataChanged();
         }
     }
 
+    // Getter ----------------------------------------------------------------------------------------------------------
+    public Parking getParking() {
+        return parking;
+    }
+
     // Setter ----------------------------------------------------------------------------------------------------------
-    public void setSenderListener(ParkinPilotListener senderListener) {
+    public void setSenderListener(ParkingPilotListener senderListener) {
         this.senderListener = senderListener;
     }
 
     // Interface -------------------------------------------------------------------------------------------------------
-    public interface ParkinPilotListener{
+    public interface ParkingPilotListener {
         void onDataChanged();
     }
 }
