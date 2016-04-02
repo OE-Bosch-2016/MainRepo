@@ -27,11 +27,7 @@ class TestDevice implements ICommBusDevice {
     @Override
     public void commBusDataArrived() {
 
-        stringData = "---"; // for testability only
-
         if (commBusConnector.getDataType() == neededDataType) {
-
-            stringData = "???"; // for testability only
 
             dataType = commBusConnector.getDataType();
             if (commBusConnector.getDataType() == Integer.class) {
@@ -63,8 +59,6 @@ class TestDevice implements ICommBusDevice {
                 }
             }
         }
-        else
-            stringData = "Not a needed dataType:" + commBusConnector.getDataType();
     }
 
     public Class DataType() {

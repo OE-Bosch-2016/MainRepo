@@ -1,14 +1,7 @@
 package hu.nik.project.communication;
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectInput;
+import java.io.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectOutput;
-
-import java.io.IOException;
 /**
  *
  * Created by zhodvogner on 2016.03.23.
@@ -17,15 +10,17 @@ import java.io.IOException;
 
 public class CommBusConnector {
 
-    protected static final int WRITE_TIME_OUT_MSECS = 1000;
+    protected static final int WRITE_CHECK_WAIT_LOOP_MSECS = 50;
+    protected static final int WAIT_TIME_AFTER_SEND_MSECS = 100;
 
     private CommBus commBus;                    // the owner communication-bus object
     private ICommBusDevice device;              // embedded (connected) comm-bus device
     private CommBusConnectorType connectorType; // type of connection
 
     private Class dataType;                   // type of data in the dataBuffer
-    private byte[] byteDataBuffer;                  // data on bus
+    private byte[] byteDataBuffer;              // data on bus
     private boolean isDataInBuffer = false;     // data available for read
+    private boolean isDataOutBuffer = false;    // data available for write
     private CommBusConnector connector = this;
 
     // listenerInvokerThread invokes active listeners
@@ -36,12 +31,13 @@ public class CommBusConnector {
         private volatile boolean alive = true;
 
         public void run() {
-            while (alive) writeToCommBus();
-        }
+            while (alive) {
+                writeToCommBus();
+                try { Thread.sleep(WRITE_CHECK_WAIT_LOOP_MSECS); } catch (InterruptedException ie) { alive = false; }
+            }
+        } // Write-Check-Wait-Loop
 
-        public void shutdown() {
-            alive = false;
-        }
+        //public void shutdown() { alive = false; }
     }
 
     private Exception exceptionThrown = null;   // last exception on this connector
@@ -67,7 +63,7 @@ public class CommBusConnector {
 
     protected void setDataBuffer(byte[] dataBuffer) {
         this.byteDataBuffer = dataBuffer;
-        this.isDataInBuffer = true;
+        this.isDataInBuffer = (dataBuffer != null);
     }
 
     protected void setExceptionThrown(Exception exceptionThrown) {
@@ -89,6 +85,7 @@ public class CommBusConnector {
 
     @Override
     protected void finalize() throws Throwable {
+        writerThread.interrupt();
         commBus.removeConnector(this);
         super.finalize();
     }
@@ -96,53 +93,65 @@ public class CommBusConnector {
     //--------------------- send data
 
     public boolean send( Class dataType, Object dataObject ) throws CommBusException {
-
-        if (dataType == null) {throw  new CommBusException("Error in CommBusController send: " + "sent object type cannot be null"); }
-        if (dataObject == null) {throw  new CommBusException("Error in CommBusController send: " + "sent object cannot be null"); }
-        if (isDataInBuffer) return false;
+        String exceptionMessagePrefix = "Error in CommBusController send: ";
+        if (dataType == null) {throw  new CommBusException(exceptionMessagePrefix + "sent object type cannot be null"); }
+        if (dataObject == null) {throw  new CommBusException(exceptionMessagePrefix + "sent object cannot be null"); }
+        if (isDataInBuffer) return false; // unreaded data in the buffer
+        if (isDataOutBuffer) return false; // unwritten data in the buffer
+        //if ((String)dataObject=="NewestDataArrived") {
+        //    exceptionMessagePrefix = "send():";
+        //}
 
         // Make commbus compatible data (microcontroller model)
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             ObjectOutput out = new ObjectOutputStream(baos);
             out.writeObject(dataObject);
-            //??? baos.size() check instead of later byteDataBuffer.length check
-            if (baos.size() > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException("Error in CommBusController: Data-record too long = " + baos.size());
+            if (baos.size() > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException(exceptionMessagePrefix + "data-record is too long (size=" + baos.size() + " bytes)");
             this.byteDataBuffer = baos.toByteArray();
-            //if (byteDataBuffer.length > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException("Error in CommBusController: Data-record too long = " + byteDataBuffer.length);
-            this.isDataInBuffer = true;
             this.dataType = dataType;
+            this.isDataOutBuffer = true; // data-block for write is in the buffer (writer thread will be submit it)
         }
         catch (IOException e) {
-            throw new CommBusException("Error in CommBusController send: " + e.getMessage());
+            throw new CommBusException(exceptionMessagePrefix + e.getMessage());
         }
 
-        // asynchronous write operation
-        if (writerThread.getState() == Thread.State.NEW || writerThread.getState() == Thread.State.RUNNABLE) {
+        // start worker thread if not in RUNNABLE state
+        if (writerThread.getState() == Thread.State.NEW) {
             writerThread.start();
         }
-
+        else if ((writerThread.getState() != Thread.State.RUNNABLE) && (writerThread.getState() != Thread.State.TIMED_WAITING) && (writerThread.getState() != Thread.State.WAITING))
+        {
+            writerThread = new Thread(writerThreadBase);
+            writerThread.start();
+        }
+        try { Thread.sleep(WAIT_TIME_AFTER_SEND_MSECS); } catch (InterruptedException ie) { return false; }
         return true;
     }
 
     private void writeToCommBus() {
+        if (isDataOutBuffer)
         try {
             if (commBus.write(connector, dataType, byteDataBuffer)) {
-                isDataInBuffer = false;
-                writerThreadBase.shutdown();
+                isDataOutBuffer = false;
+                exceptionThrown = null;
             }
         }
         catch (CommBusException e) {
-            isDataInBuffer = false;
+            isDataOutBuffer = false;
             exceptionThrown = e;
-            writerThreadBase.shutdown();
         }
     }
 
     //--------------------- receive data
 
     public Object receive() throws CommBusException {
-        if ((!isDataInBuffer) || (connectorType == CommBusConnectorType.WriteOnly)) return null; // the buffer already is empty or it's a write-only connector
+        if (!isDataInBuffer) return null;
+
+        if (connectorType == CommBusConnectorType.WriteOnly) {
+            reset();
+            return null; // the buffer already is empty or it's a write-only connector
+        }
 
         // Convert object from commbus bytes
         try {

@@ -68,22 +68,17 @@ public class CommBusIntegrationTest {
     @Test
     public void testSendAndReceive() throws Exception {
         // Send testdata to device2
-        testDevice1.getCommBusConnector().send(String.class, "DataArrived");
-        // Send new object, and make sure that the sending is failed, because there is in progress sending on the bus
-        Assert.assertFalse(testDevice1.getCommBusConnector().send(String.class, "NewDataArrived"));
-        // Send new object, and make sure that the sending is not failed, because there was enough time for ending previous sending
-        Thread.sleep(100);
+        Assert.assertTrue(testDevice1.getCommBusConnector().send(String.class, "DataArrived"));
+        Assert.assertTrue(testDevice2.getCommBusConnector().send(String.class, "NewDataArrived1"));
+        //
         // Check the first send arrives data arrived
         Assert.assertEquals("DataArrived", testDevice2.getStringData());
         //
-        Thread.sleep(300);
-        Assert.assertTrue(testDevice1.getCommBusConnector().send(String.class, "NewDataArrived"));
-        Thread.sleep(300);
+        Assert.assertTrue(testDevice1.getCommBusConnector().send(String.class, "NewDataArrived2"));
         Assert.assertTrue(testDevice1.getCommBusConnector().send(String.class, "NewestDataArrived"));
         // Check the second send arrives data arrived
-        Thread.sleep(500);
-        Assert.assertNotEquals("NewDataArrived", testDevice2.getStringData());
-        Assert.assertEquals("NewestDataArrived", testDevice2.getStringData()); // the data is overwritten
+        Assert.assertNotEquals("NewDataArrived2", testDevice2.getStringData()); // it was overwritten with ...
+        Assert.assertEquals("NewestDataArrived", testDevice2.getStringData()); // ... this one
         // Try to receive again, when there is no data on bus
         Assert.assertNull(testDevice2.getCommBusConnector().getDataType());
         Assert.assertNull(testDevice2.getCommBusConnector().receive());
@@ -97,19 +92,15 @@ public class CommBusIntegrationTest {
         TestDevice deviceWithScenePoint = new TestDevice(commBus, ScenePoint.class, CommBusConnectorType.ReadWrite);
 
         deviceWithInteger.getCommBusConnector().send(ScenePoint.class, new ScenePoint(120, 110));
-        int szam = 52125;
-        deviceWithScenePoint.getCommBusConnector().send(Integer.class, szam);
-        //deviceWithScenePoint.getCommBusConnector().send(SimpleRoad.class, new SimpleRoad(new ScenePoint(222,111), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT ));
 
-        Thread.sleep(300);
+        deviceWithScenePoint.getCommBusConnector().send(Integer.class, (int)52125);
 
-        //Assert.assertEquals("???", deviceWithScenePoint.getStringData());          // if exception occured, the error-message appeared in the stringData
+        deviceWithScenePoint.getCommBusConnector().send(SimpleRoad.class, new SimpleRoad(new ScenePoint(222,111), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT ));
+
         Assert.assertEquals(120, deviceWithScenePoint.getScenePointData().getX());
 
-        //Assert.assertEquals("???", deviceWithInteger.getStringData());
         Assert.assertEquals(52125, deviceWithInteger.getIntData());
 
-        //Assert.assertEquals("???", deviceWithSimpleRoad.getStringData());
-        //Assert.assertEquals(SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT, deviceWithSimpleRoad.getSimpleRoadData().getObjectType());
+        Assert.assertEquals(SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT, deviceWithSimpleRoad.getSimpleRoadData().getObjectType());
     }
 }

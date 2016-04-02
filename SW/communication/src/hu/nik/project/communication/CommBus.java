@@ -42,7 +42,7 @@ import java.util.List;
 public class CommBus {
 
     protected static final int BUSREQUEST_WAIT_TIME_MSECS = 200;
-    protected static final int MAX_BUFFER_LENGTH_IN_BYTES = 1024;
+    protected static final int MAX_BUFFER_LENGTH_IN_BYTES = 512;
 
     //private ByteArrayOutputStream outputStream = new ByteArrayOutputStream(MAX_BUFFER_LENGTH_BYTES);
     private byte[] byteDataBuffer;  // represents the bytes on the bus
@@ -97,11 +97,16 @@ public class CommBus {
 
     // !!!!!!!!!!! When write occours THIS should invoke without THREAD !!!!!!!!!!!!!!!!!!
     private void invokeListeners() {
+
+            // HACK!!
+            // acceptedConnector.setDataBuffer(null);
+            // acceptedConnector.setDataType(null);
+
             // transmission handling
                 for (CommBusConnector connector : connectors) {
                     if ((connector != acceptedConnector) && (connector.getConnectorType() != CommBusConnectorType.WriteOnly)) {
 
-                        connector.setExceptionThrown(null);
+                        //connector.setExceptionThrown(null);
                         connector.setDataBuffer(byteDataBuffer.clone());    // data will be passed to the connector in own local buffer
                         connector.setDataType(dataType);                // dataType can describe the type of data-package or sender
 

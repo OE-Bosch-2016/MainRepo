@@ -2,6 +2,9 @@ package hu.nik.project.environment.objects;
 
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -46,4 +49,35 @@ abstract public class Road<T> extends SceneObject implements Serializable {
         return ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getTopPoint()) ||
                 ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getBottomPoint());
     }
+
+    // implementation of Serializable interface //////////////////////////////////////////////////////////////
+
+    private static final long serialVersionUID = 1536627736237490631L;
+
+    private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+        publicreadObject(aInputStream);
+        super.publicReadObject(aInputStream);
+    }
+
+    public void publicreadObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+        topPoint = new ScenePoint(0,0);
+        topPoint.publicReadObject(aInputStream);
+        bottomPoint = new ScenePoint(0,0);
+        bottomPoint.publicReadObject(aInputStream);
+        super.publicReadObject(aInputStream);
+    }
+
+    private void writeObject(ObjectOutputStream aOutputStream) throws IOException {
+        publicWriteObject(aOutputStream);
+        super.publicWriteObject(aOutputStream);
+    }
+
+    public void publicWriteObject(ObjectOutputStream aOutputStream) throws IOException {
+        topPoint.publicWriteObject(aOutputStream);
+        bottomPoint.publicWriteObject(aOutputStream);
+        super.publicWriteObject(aOutputStream);
+    }
+
+
+
 }
