@@ -18,8 +18,12 @@ public class RadarModul implements IRadarData {
     private float _angelOfSight;
     private int _sampingTime;
     private ArrayList<SpeedAndDistanceObj> _speedAndDistanceObjs;
-
+    private Boolean _isRadarEnabled;
     private Timer _timer; //for sampling
+
+    private ArrayList<Vector2D> _previousVectors;
+    private ArrayList<Vector2D> _currentVectors;
+
 
     public RadarModul(IRadarInputData radarInputData, float angelOfSight, int samplingTime) {
         _radarInputData = radarInputData;
@@ -27,8 +31,12 @@ public class RadarModul implements IRadarData {
         _sampingTime=samplingTime;
 
         _speedAndDistanceObjs = new ArrayList<SpeedAndDistanceObj>();
-
+        _isRadarEnabled =false;
+        _previousVectors = new ArrayList<Vector2D>();
+        _currentVectors = new ArrayList<Vector2D>();
     }
+
+    //<editor-fold desc="Properties of Radar Modul">
 
     public double getOurCurrentSpeed(){
         return _radarInputData.getOurCurrentSpeed();
@@ -44,7 +52,6 @@ public class RadarModul implements IRadarData {
         return _speedAndDistanceObjs;
     }
 
-
     public Vector2D getRadarPosition() {  //change here, if the camera position is not the same as our current pos.
         return _radarInputData.getOurCurrentPosition();
     }
@@ -56,6 +63,16 @@ public class RadarModul implements IRadarData {
     public Float getAngelOfSight() {
         return _angelOfSight;
     }
+
+    public Boolean isRadarEnabled() {
+        return _isRadarEnabled;
+    }
+
+    public void setIsRadarEnabled(Boolean isRadarEnabled) {
+        this._isRadarEnabled = isRadarEnabled;
+    }
+
+    //</editor-fold>
 
     public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance() {
 
@@ -143,5 +160,41 @@ public class RadarModul implements IRadarData {
         return  firstSpeedValue+
                 seconedSpeedValue/1+
                 firstSpeedValue*seconedSpeedValue;
+    }
+
+    public  ArrayList<Vector2D> getMostRecentVectorsFromDataBus(ArrayList<Vector2D> incomingVectorDataList){
+        ArrayList<Vector2D> recentVectorsList=_previousVectors;
+
+        if(!_previousVectors.isEmpty()){
+            for (int i = 0; i < incomingVectorDataList.size(); i++) {
+                    Vector2D item = incomingVectorDataList.get(i);
+                    if(item!=null && isItemInList(_previousVectors,item)){
+                        int itemIndex = _previousVectors.indexOf(item);
+                        recentVectorsList.get(itemIndex).set_coordinateX(item.get_coordinateX());
+                        recentVectorsList.get(itemIndex).set_coordinateY(item.get_coordinateY());
+                    }
+                    else if(item==null && _previousVectors.get(i)!=null){
+                        recentVectorsList.remove(_previousVectors.get(i));
+                    }
+                    else{
+                        recentVectorsList.add(item);
+                    }
+            }
+        }
+        else{
+            for (int i = 0; i < incomingVectorDataList.size(); i++) {
+                Vector2D item = incomingVectorDataList.get(i);
+                SpeedAndDistanceObj speedAndDistObj = new SpeedAndDistanceObj(0,0,item);
+                _speedAndDistanceObjs.add(speedAndDistObj);
+                _previousVectors.add(item);
+            }
+            recentVectorsList=incomingVectorDataList;
+        }
+
+        return recentVectorsList;
+    }
+
+    private boolean isItemInList(ArrayList<Vector2D> list, Vector2D item){
+        return list.contains(item);
     }
 }

@@ -28,7 +28,6 @@ public class RadarModulTest extends TestCase {
 
     }
 
-
     public void testGetRadarPosition() throws Exception {
         Vector2D mockedPos= new Vector2D(10,10);
         expect(_radarDataInputMOCK.getOurCurrentPosition()).andReturn(mockedPos);
@@ -114,7 +113,62 @@ public class RadarModulTest extends TestCase {
         assertTrue(isTrue2);
     }
 
-    public void Equelsttest(){
 
+    public void testGetMostRecentVectorsFromDataBus() throws Exception {
+        inputPositions = new ArrayList<Vector2D>();
+        Vector2D first = new Vector2D(2,2);
+        Vector2D second =new Vector2D(4,4);
+        inputPositions.add(first);
+        inputPositions.add(second);
+
+        //<editor-fold desc="First call, when previous list is empty">
+        ArrayList<Vector2D> recents = _radarModul.getMostRecentVectorsFromDataBus(inputPositions);
+
+        int expectedCount=2;
+        int actualCount=recents.size();
+        int actualObjCount= _radarModul.get_speedAndDistanceObjs().size();
+
+        assertEquals(expectedCount,actualObjCount);
+        assertEquals(expectedCount,actualCount);
+        assertNotNull(recents);
+
+        //</editor-fold >
+
+        //<editor-fold desc="Second call, when previous list is NOT empty, modification, new item added">
+        inputPositions= new ArrayList<Vector2D>();
+        first.set_coordinateX(10);
+        first.set_coordinateY(10);
+        inputPositions.add(first);
+        inputPositions.add(second);
+        inputPositions.add(new Vector2D(3,3));
+        inputPositions.add(new Vector2D(4,3));
+        inputPositions.add(new Vector2D(5,3));
+
+
+        recents = _radarModul.getMostRecentVectorsFromDataBus(inputPositions);
+        actualCount=recents.size();
+
+        int expectedX=10;
+        int actualX= recents.get(0).get_coordinateX();
+        assertEquals(expectedX,actualX);
+        assertEquals(5,actualCount);
+
+        // </editor-fold>
+
+        //</editor-fold desc="Third call, when previous list is NOT empty, removing is needed, modification">
+
+        ArrayList<Vector2D> asd=new ArrayList<Vector2D>();
+        first.set_coordinateX(11);
+        first.set_coordinateY(11);
+        asd.add(first);
+        asd.add(second);
+
+        recents = _radarModul.getMostRecentVectorsFromDataBus(asd);
+        actualCount=recents.size();
+
+        expectedX=11;
+        actualX = recents.get(0).get_coordinateX();
+        assertEquals(expectedX,actualX);
+        assertEquals(2,actualCount);
     }
 }
