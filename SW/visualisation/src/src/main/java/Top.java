@@ -1,5 +1,6 @@
 import HMI.Hmi;
 
+//import ParkingPilot.PPMain;
 import Utils.ImageLoader;
 import Utils.Vector2D;
 import org.jfree.chart.ChartPanel;
@@ -18,7 +19,7 @@ import java.awt.event.KeyListener;
 /**
  * Created by haxxi on 2016.03.01..
  */
-public class Top extends JFrame{ // implements KeyListener
+public class Top extends JFrame { // implements KeyListener
 
     // UI elements
     private JTextArea hmi_mileage_text_area;
@@ -51,6 +52,10 @@ public class Top extends JFrame{ // implements KeyListener
     // HMI elements
     private Hmi hmi;
 
+    // Parking pilot
+    private Timer moveTimer;
+    //private PPMain parkingPilot;
+
     private static final int DISPLAY_MAX_KM = 220;
     private static final int DISPLAY_MAX_TACHO = 6000;
     private final DefaultValueDataset mileAgeDataset = new DefaultValueDataset();
@@ -68,6 +73,8 @@ public class Top extends JFrame{ // implements KeyListener
 
 
     private void init() {
+        //parkingPilot = new PPMain();
+        moveTimer = new Timer(42, moveListener);
         hmi = new Hmi();
         hmi.setHmiListener(mileAgeListener);
         mileAgePanel.add(buildDialPlot(0, DISPLAY_MAX_KM, 20, mileAgeDataset, mileAgeDisplayDataset));
@@ -81,7 +88,7 @@ public class Top extends JFrame{ // implements KeyListener
         pack();
 
         //Car setup
-        car = new AutonomousCar(new Vector2D(510,90), ImageLoader.getCarImage());
+        car = new AutonomousCar(new Vector2D(510, 90), ImageLoader.getCarImage());
 
         //Visualization renderer setup
         vRenderer = new VisualizationRenderer(mapPanel, hmi, car);
@@ -95,7 +102,7 @@ public class Top extends JFrame{ // implements KeyListener
         });
 
         //Steering Wheel setup
-        steeringWheel = new SteeringWheel(hmi,steeringWheelLabel);
+        steeringWheel = new SteeringWheel(hmi, steeringWheelLabel);
         steeringWheelLabel.setIcon(steeringWheel.GetSteeringWheel(0));
 
         // Test
@@ -229,11 +236,37 @@ public class Top extends JFrame{ // implements KeyListener
         }
 
         public void keyPressed(KeyEvent e) {
+            if (e.getKeyChar() == 'p')
+                simulateMoveing();
+            //parkingPilot.parkingPilotActivate();
             //System.out.println(e.paramString());
         }
 
         public void keyReleased(KeyEvent e) {
             steeringWheel.control(e);
+        }
+    };
+
+    private void simulateMoveing() {
+        moveTimer.start();
+    }
+
+    private void simulateParking(){
+
+    }
+
+    // Listener --------------------------------------------------------------------------------------------------------
+    private ActionListener moveListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            car.move(-1);
+            mapPanel.revalidate();
+            mapPanel.repaint();
+
+            if (car.getPosition().get_coordinateY() < -156) {
+                moveTimer.stop();
+                simulateParking();
+            }
+
         }
     };
 }
