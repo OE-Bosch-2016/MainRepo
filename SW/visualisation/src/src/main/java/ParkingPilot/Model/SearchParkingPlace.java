@@ -13,7 +13,7 @@ public class SearchParkingPlace extends Parking {
 
     private int typeOfParkingPlace;
 
-    public SearchParkingPlace(List<Point> car1, List<Point> car2, float edgeOfStreet) {
+    public SearchParkingPlace(Point[] car1, Point[] car2, float edgeOfStreet) {
         super(car1, car2, edgeOfStreet);
     }
 
