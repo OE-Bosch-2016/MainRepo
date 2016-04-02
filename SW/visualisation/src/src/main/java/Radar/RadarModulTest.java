@@ -1,15 +1,11 @@
 package Radar;
 
 import Interfaces.IRadarInputData;
-import Utils.Position;
-import javafx.geometry.Pos;
+import Utils.Vector2D;
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 
@@ -23,7 +19,7 @@ public class RadarModulTest extends TestCase {
     private int _samplingTime=2;
     private int _angle =30;
 
-    private ArrayList<Position> inputPositions;
+    private ArrayList<Vector2D> inputPositions;
 
     @Override
     public void setUp()  {
@@ -34,15 +30,15 @@ public class RadarModulTest extends TestCase {
 
 
     public void testGetRadarPosition() throws Exception {
-        Position mockedPos= new Position(10,10);
+        Vector2D mockedPos= new Vector2D(10,10);
         expect(_radarDataInputMOCK.getOurCurrentPosition()).andReturn(mockedPos);
         replay(_radarDataInputMOCK);  //replay ->"Done with setting up mocked object, do your work!"
 
-        Position expectedCameraPos= mockedPos;
-        Position actualCameraPos= _radarModul.getRadarPosition();
+        Vector2D expectedCameraPos= mockedPos;
+        Vector2D actualCameraPos= _radarModul.getRadarPosition();
 
-        assertEquals(expectedCameraPos.get_positionX(),actualCameraPos.get_positionX());
-        assertEquals(expectedCameraPos.get_positionY(), actualCameraPos.get_positionY());
+        assertEquals(expectedCameraPos.get_coordinateX(),actualCameraPos.get_coordinateX());
+        assertEquals(expectedCameraPos.get_coordinateY(), actualCameraPos.get_coordinateY());
         assertEquals(expectedCameraPos,mockedPos);
     }
 
@@ -71,9 +67,9 @@ public class RadarModulTest extends TestCase {
     }
 
     public void testGetIncomingPositionList() throws Exception {
-        inputPositions = new ArrayList<Position>();
-        inputPositions.add(new Position(2,2));
-        inputPositions.add(new Position(4,4));
+        inputPositions = new ArrayList<Vector2D>();
+        inputPositions.add(new Vector2D(2,2));
+        inputPositions.add(new Vector2D(4,4));
         expect(_radarDataInputMOCK.getViewableObjectList()).andReturn(inputPositions);
         replay(_radarDataInputMOCK);
 
@@ -84,31 +80,31 @@ public class RadarModulTest extends TestCase {
     }
 
     public void testGetDetectedObjsRelativeSpeedDistance() throws Exception {
-        inputPositions = new ArrayList<Position>();
-        inputPositions.add(new Position(2,2));
-        inputPositions.add(new Position(4, 4));
+        inputPositions = new ArrayList<Vector2D>();
+        inputPositions.add(new Vector2D(2,2));
+        inputPositions.add(new Vector2D(4, 4));
 
         double currentSpeed=20;
-        Position mockedPos = new Position(5,5);
+        Vector2D mockedPos = new Vector2D(5,5);
 
         int expectedSize=2;
-        ArrayList<MapObjectData> res = _radarModul.getDetectedObjsRelativeSpeedDistance(inputPositions, mockedPos, currentSpeed);
+        ArrayList<SpeedAndDistanceObj> res = _radarModul.getDetectedObjsRelativeSpeedDistance(inputPositions, mockedPos, currentSpeed);
         int actualSize = res.size();
-        MapObjectData valueObj=res.get(0);
-        MapObjectData valueObj2 = res.get(1);
+        SpeedAndDistanceObj valueObj=res.get(0);
+        SpeedAndDistanceObj valueObj2 = res.get(1);
 
         assertEquals(expectedSize,actualSize);
 
         double changedCurrentSpeed=30;
-        Position changedPos = new Position(7,7);
-        inputPositions = new ArrayList<Position>();
-        inputPositions.add(new Position(5,5));
-        inputPositions.add(new Position(10, 10));
+        Vector2D changedPos = new Vector2D(7,7);
+        inputPositions = new ArrayList<Vector2D>();
+        inputPositions.add(new Vector2D(5,5));
+        inputPositions.add(new Vector2D(10, 10));
 
         int changedExpSize=2;
-        ArrayList<MapObjectData> result2=_radarModul.getDetectedObjsRelativeSpeedDistance(inputPositions,changedPos,changedCurrentSpeed);
-        MapObjectData firstObj= result2.get(0);
-        MapObjectData secondObj= result2.get(1);
+        ArrayList<SpeedAndDistanceObj> result2=_radarModul.getDetectedObjsRelativeSpeedDistance(inputPositions,changedPos,changedCurrentSpeed);
+        SpeedAndDistanceObj firstObj= result2.get(0);
+        SpeedAndDistanceObj secondObj= result2.get(1);
 
         boolean isTrue= firstObj.getRelativeSpeed()>0;
         boolean isTrue2= secondObj.getRelativeSpeed()>0;
@@ -116,5 +112,9 @@ public class RadarModulTest extends TestCase {
         assertEquals(changedExpSize,result2.size());
         assertTrue(isTrue);
         assertTrue(isTrue2);
+    }
+
+    public void Equelsttest(){
+
     }
 }
