@@ -62,7 +62,6 @@ public class ParkingCalculator {
             goBottom();
         if (state == 2)
             degreeOf0(0);
-//        preparePosition();
     }
 
     private void degreeOf45(int degree) {
@@ -89,28 +88,6 @@ public class ParkingCalculator {
         if (parkingListener != null)
             parkingListener.changePosition(0.7f, 0.5f, carAngle * -1);
     }
-
-    private void preparePosition() {
-        while (environment1Position[0].x < carPosition[2].y - freeDistance) {
-            modifyCarPosition(+1, 0, MODIFY_HORIZONTAL);
-        }
-    }
-
-    private void modifyCarPosition(float value, float value2, int type) {
-        if (type == MODIFY_HORIZONTAL) {
-            for (int i = 0; i < carPosition.length; i++) {
-                if (i < 2)
-                    carPosition[i].x += -value2;
-                else
-                    carPosition[i].x += value2;
-
-                carPosition[i].y += value;
-            }
-        } else if (type == MODIFY_VERTICAL_LEFT) {
-        } else if (type == MODIFY_VERTICAL_RIGHT) {
-        }
-    }
-
     // Setter ----------------------------------------------------------------------------------------------------------
     public void setParkingListener(OnParkingListener parkingListener) {
         this.parkingListener = parkingListener;
