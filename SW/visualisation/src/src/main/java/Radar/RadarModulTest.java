@@ -113,6 +113,7 @@ public class RadarModulTest extends TestCase {
         assertTrue(isTrue2);
     }
 
+    //<editor-fold desc="Private method unit tests; can be deleted later">
 
     public void testGetMostRecentVectorsFromDataBus() throws Exception {
         inputPositions = new ArrayList<Vector2D>();
@@ -126,9 +127,7 @@ public class RadarModulTest extends TestCase {
 
         int expectedCount=2;
         int actualCount=recents.size();
-        int actualObjCount= _radarModul.get_speedAndDistanceObjs().size();
 
-        assertEquals(expectedCount,actualObjCount);
         assertEquals(expectedCount,actualCount);
         assertNotNull(recents);
 
@@ -155,7 +154,7 @@ public class RadarModulTest extends TestCase {
 
         // </editor-fold>
 
-        //</editor-fold desc="Third call, when previous list is NOT empty, removing is needed, modification">
+        //<editor-fold desc="Third call, when previous list is NOT empty, removing is needed, modification">
 
         ArrayList<Vector2D> asd=new ArrayList<Vector2D>();
         first.set_coordinateX(11);
@@ -170,5 +169,34 @@ public class RadarModulTest extends TestCase {
         actualX = recents.get(0).get_coordinateX();
         assertEquals(expectedX,actualX);
         assertEquals(2,actualCount);
+
+        //</editor-fold>
     }
+
+    public void testGetMostRecentVectorsDeletingItems() throws Exception{
+        inputPositions = new ArrayList<Vector2D>();
+        inputPositions.add(new Vector2D(2,2));
+        inputPositions.add(new Vector2D(3,3));
+        inputPositions.add(new Vector2D(4,3));
+        inputPositions.add(new Vector2D(5,3));
+        inputPositions.add(new Vector2D(6, 3));
+        ArrayList<Vector2D>test = _radarModul.getMostRecentVectorsFromDataBus(inputPositions);
+
+        int expectedCount= 5;
+        int actual =test.size();
+        assertEquals(expectedCount,actual);
+
+        inputPositions= new ArrayList<Vector2D>();
+        inputPositions.add(new Vector2D(11,11));
+        inputPositions.add(new Vector2D(10,10));
+
+        test = _radarModul.getMostRecentVectorsFromDataBus(inputPositions);
+        expectedCount=2;
+        actual=test.size();
+
+        assertEquals(expectedCount,actual);
+
+    }
+
+    //</editor-fold>
 }
