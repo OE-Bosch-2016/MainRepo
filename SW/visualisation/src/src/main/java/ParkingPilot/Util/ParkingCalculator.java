@@ -68,7 +68,7 @@ public class ParkingCalculator {
         if(carAngle == degree)
             state++;
         if (parkingListener != null)
-            parkingListener.changePosition(0.5f, 0.5f, -3);
+            parkingListener.changePosition(0.5f, 0.5f, -3f);
     }
 
     private void goBottom() {
