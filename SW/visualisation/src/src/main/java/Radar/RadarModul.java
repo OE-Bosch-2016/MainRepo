@@ -166,19 +166,21 @@ public class RadarModul implements IRadarData {
         ArrayList<Vector2D> recentVectorsList=_previousVectors;
 
         if(!_previousVectors.isEmpty()){
-            for (int i = 0; i < incomingVectorDataList.size(); i++) {
-                    Vector2D item = incomingVectorDataList.get(i);
-                    if(item!=null && isItemInList(_previousVectors,item)){
-                        int itemIndex = _previousVectors.indexOf(item);
-                        recentVectorsList.get(itemIndex).set_coordinateX(item.get_coordinateX());
-                        recentVectorsList.get(itemIndex).set_coordinateY(item.get_coordinateY());
-                    }
-                    else if(item==null && _previousVectors.get(i)!=null){
-                        recentVectorsList.remove(_previousVectors.get(i));
-                    }
-                    else{
-                        recentVectorsList.add(item);
-                    }
+            int index=0;
+            while(index!=incomingVectorDataList.size()) {
+                Vector2D item = incomingVectorDataList.get(index);
+                if (item != null && isItemInList(_previousVectors, item)) {
+                    int itemIndex = _previousVectors.indexOf(item);
+                    recentVectorsList.get(itemIndex).set_coordinateX(item.get_coordinateX());
+                    recentVectorsList.get(itemIndex).set_coordinateY(item.get_coordinateY());
+                }
+                else {
+                    recentVectorsList.add(item);
+                }
+                index++;
+            }
+            while (index != recentVectorsList.size()) {
+                recentVectorsList.remove(index);
             }
         }
         else{
@@ -190,7 +192,6 @@ public class RadarModul implements IRadarData {
             }
             recentVectorsList=incomingVectorDataList;
         }
-
         return recentVectorsList;
     }
 
