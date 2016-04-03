@@ -78,39 +78,65 @@ public class RadarModulTest extends TestCase {
         assertEquals(expected, actualSize);
     }
 
-    public void testGetDetectedObjsRelativeSpeedDistance() throws Exception {
-        inputPositions = new ArrayList<Vector2D>();
-        inputPositions.add(new Vector2D(2,2));
-        inputPositions.add(new Vector2D(4, 4));
+    public void testSpeedAndDistanceListWithSingleIteration() throws Exception{
+        inputPositions=new ArrayList<Vector2D>();
+        Vector2D first = new Vector2D(2,2);
+        Vector2D second =new Vector2D(4,4);
+        inputPositions.add(first);
+        inputPositions.add(second);
 
-        double currentSpeed=20;
-        Vector2D mockedPos = new Vector2D(5,5);
+        ArrayList<SpeedAndDistanceObj> speedAndDistanceObjArrayList = _radarModul.getDetectedObjsRelativeSpeedDistance(inputPositions,new Vector2D(7,7),10);
 
         int expectedSize=2;
-        ArrayList<SpeedAndDistanceObj> res = _radarModul.getDetectedObjsRelativeSpeedDistance(inputPositions, mockedPos, currentSpeed);
-        int actualSize = res.size();
-        SpeedAndDistanceObj valueObj=res.get(0);
-        SpeedAndDistanceObj valueObj2 = res.get(1);
+        int actualSize=speedAndDistanceObjArrayList.size();
 
+        double expectedRelativeSpeed=0;
+        double actualRealtiveSpeed=speedAndDistanceObjArrayList.get(0).getRelativeSpeed();
+
+        assertNotNull(speedAndDistanceObjArrayList);
         assertEquals(expectedSize,actualSize);
+        assertEquals(expectedRelativeSpeed,actualRealtiveSpeed);
 
-        double changedCurrentSpeed=30;
-        Vector2D changedPos = new Vector2D(7,7);
-        inputPositions = new ArrayList<Vector2D>();
-        inputPositions.add(new Vector2D(5,5));
-        inputPositions.add(new Vector2D(10, 10));
+    }
 
-        int changedExpSize=2;
-        ArrayList<SpeedAndDistanceObj> result2=_radarModul.getDetectedObjsRelativeSpeedDistance(inputPositions,changedPos,changedCurrentSpeed);
-        SpeedAndDistanceObj firstObj= result2.get(0);
-        SpeedAndDistanceObj secondObj= result2.get(1);
+    public void testSpeedAndDistanceListWithTwoIteration() throws Exception{
+        inputPositions=new ArrayList<Vector2D>();
+        Vector2D first = new Vector2D(2,2);
+        Vector2D second =new Vector2D(4,4);
+        inputPositions.add(first);
+        inputPositions.add(second);
 
-        boolean isTrue= firstObj.getRelativeSpeed()>0;
-        boolean isTrue2= secondObj.getRelativeSpeed()>0;
+        ArrayList<SpeedAndDistanceObj> speedAndDistanceObjArrayList = _radarModul.getDetectedObjsRelativeSpeedDistance(inputPositions,new Vector2D(7,7),10);
 
-        assertEquals(changedExpSize,result2.size());
-        assertTrue(isTrue);
-        assertTrue(isTrue2);
+        //2. iteration, like 2 seconds later
+
+        first.set_coordinateX(11);
+        first.set_coordinateY(12);
+        second.set_coordinateX(15);
+        Vector2D third = new Vector2D(5,5);
+
+        ArrayList<Vector2D> asd = new ArrayList<Vector2D>();
+        asd.add(first);
+        asd.add(second);
+        asd.add(third);
+
+        ArrayList<Vector2D> recent = _radarModul.getMostRecentVectorsFromDataBus(asd);
+        speedAndDistanceObjArrayList= _radarModul.getDetectedObjsRelativeSpeedDistance(recent, new Vector2D(4, 4), 11);
+
+        int expectedSize=3;
+        int actualSize=speedAndDistanceObjArrayList.size();
+
+        double expectedRelativeSpeed=0;
+        double actualRealtiveSpeed=speedAndDistanceObjArrayList.get(0).getRelativeSpeed();
+
+        int expectedXValue=15;
+        int actualXValue=speedAndDistanceObjArrayList.get(1).getCurrentPosition().get_coordinateX();
+
+        assertNotNull(speedAndDistanceObjArrayList);
+        assertEquals(expectedSize, actualSize);
+        assertTrue(expectedRelativeSpeed > actualRealtiveSpeed);
+        assertEquals(expectedXValue,actualXValue);
+
     }
 
     //<editor-fold desc="Private method unit tests; can be deleted later">

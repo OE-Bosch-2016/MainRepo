@@ -30,7 +30,7 @@ public class RadarModul implements IRadarData {
         _angelOfSight=angelOfSight;
         _sampingTime=samplingTime;
 
-        _speedAndDistanceObjs = new ArrayList<SpeedAndDistanceObj>();
+        _speedAndDistanceObjs = null;
         _isRadarEnabled =false;
         _previousVectors = new ArrayList<Vector2D>();
         _currentVectors = new ArrayList<Vector2D>();
@@ -74,6 +74,7 @@ public class RadarModul implements IRadarData {
 
     //</editor-fold>
 
+    @Deprecated
     public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance() {
 
         ArrayList<Vector2D> viewableObjectList = _radarInputData.getViewableObjectList();
@@ -99,51 +100,57 @@ public class RadarModul implements IRadarData {
                     previous.setCurrentPosition(currentPos);
                     previous.setRelativeSpeed(relativeSpeed);
                 }
-
             }
         }
 
         return _speedAndDistanceObjs;
     }
 
-    //.equels()
-    public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedDistance(ArrayList<Vector2D> inPositions, Vector2D currentPosition, double ourInputSpeed){
-
-        ArrayList<Vector2D> viewableObjectList = inPositions;
-        Vector2D ourCurrentPos= currentPosition;
-        double ourCurrentSpeed= ourInputSpeed;
-
-        ArrayList<SpeedAndDistanceObj> tempObjData = new ArrayList<SpeedAndDistanceObj>();
-
-        if(viewableObjectList!=null && viewableObjectList.size()!=0 ){
-            for (int i = 0; i < viewableObjectList.size(); i++) {
-                double distance = getDistance(viewableObjectList.get(i),ourCurrentPos);
-
-                if(_speedAndDistanceObjs.isEmpty()){
-                    //if previous values are empty, we create them
-                    SpeedAndDistanceObj mapObjData = new SpeedAndDistanceObj(0,distance,viewableObjectList.get(i));
-                    tempObjData.add(mapObjData);
-                }else{
-                    SpeedAndDistanceObj previous = _speedAndDistanceObjs.get(i);
-                    Vector2D currentPos = viewableObjectList.get(i);
-
-                    double currentSpeed= getCurrentSpeedOfSpecificObj(previous,currentPos);
-                    double relativeSpeed=calculateRelativeSpeed(ourCurrentSpeed,currentSpeed);
-
-                    _speedAndDistanceObjs.get(i).setCurrentDistance(distance);
-                    _speedAndDistanceObjs.get(i).setCurrentPosition(currentPos);
-                    _speedAndDistanceObjs.get(i).setRelativeSpeed(relativeSpeed);
+    //gives back speed and distance objects in terms of current vector values
+    public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedDistance(ArrayList<Vector2D> inputVectors, Vector2D ourCurrentPosition, double ourSpeed){
+        if(_speedAndDistanceObjs!=null && _speedAndDistanceObjs.size()!=0){
+            if(inputVectors.size()!=0){
+                int itemIndex=0;
+                while(itemIndex!=inputVectors.size()){
+                    Vector2D currentVector = inputVectors.get(itemIndex);
+                    SpeedAndDistanceObj speedAndDistanceObj = IsVectorInSpeedandDistObjList(currentVector);
+                    if(speedAndDistanceObj!=null){
+                        double distance = getDistance(ourCurrentPosition,currentVector);
+                        if(speedAndDistanceObj.getCurrentPosition()!=currentVector) { //case of a moving object
+                            double itemSpeed = getCurrentSpeedOfSpecificObj(speedAndDistanceObj, currentVector);
+                            double relativeSpeed = calculateRelativeSpeed(ourSpeed, itemSpeed);
+                            speedAndDistanceObj.setRelativeSpeed(relativeSpeed);
+                            speedAndDistanceObj.setCurrentPosition(currentVector);
+                        }
+                        speedAndDistanceObj.setCurrentDistance(distance);
+                    }
+                    else{
+                        SpeedAndDistanceObj newSpeedDistObj = new SpeedAndDistanceObj(0,0,currentVector);
+                        _speedAndDistanceObjs.add(newSpeedDistObj);
+                    }
+                    itemIndex++;
+                }
+                //REFACTOR THIS -> into another method, like: RemovingRemainingItems(int index)
+                while (itemIndex < _speedAndDistanceObjs.size()) {
+                    _speedAndDistanceObjs.remove(itemIndex);
+                    itemIndex++;
+                }
+            }else{
+                _speedAndDistanceObjs=new ArrayList<SpeedAndDistanceObj>();
+                return _speedAndDistanceObjs;
+            }
+        }
+        else{
+            if(inputVectors.size()!=0) {
+                _speedAndDistanceObjs = new ArrayList<SpeedAndDistanceObj>();
+                for (int i = 0; i < inputVectors.size(); i++) {
+                    Vector2D item = inputVectors.get(i);
+                    SpeedAndDistanceObj speedAndDistanceObj = new SpeedAndDistanceObj(0, 0, item);
+                    _speedAndDistanceObjs.add(speedAndDistanceObj);
                 }
             }
         }
-
-        if(_speedAndDistanceObjs.isEmpty()){
-            _speedAndDistanceObjs =tempObjData;
-            return _speedAndDistanceObjs;
-        }
-        else{
-            return _speedAndDistanceObjs;
-        }
+        return _speedAndDistanceObjs;
     }
 
     private double getDistance(Vector2D x, Vector2D y){
@@ -152,8 +159,8 @@ public class RadarModul implements IRadarData {
             return Math.sqrt(xCoordinate+yCoordinate);
     }
 
-    private double getCurrentSpeedOfSpecificObj(SpeedAndDistanceObj previous, Vector2D current){
-        return getDistance(previous.getCurrentPosition(),current)/_sampingTime;
+    private double getCurrentSpeedOfSpecificObj(SpeedAndDistanceObj previous, Vector2D vector2D){
+        return getDistance(previous.getCurrentPosition(),vector2D)/_sampingTime;
     }
 
     private double calculateRelativeSpeed(double firstSpeedValue, double seconedSpeedValue){ //A+B/1+AB
@@ -162,7 +169,17 @@ public class RadarModul implements IRadarData {
                 firstSpeedValue*seconedSpeedValue;
     }
 
-    public  ArrayList<Vector2D> getMostRecentVectorsFromDataBus(ArrayList<Vector2D> incomingVectorDataList){
+    //PROG 1 ROCKS BOYS!!!
+    private SpeedAndDistanceObj IsVectorInSpeedandDistObjList(Vector2D vector){
+        int index =0;
+        while(index!=_speedAndDistanceObjs.size() && !vector.equals(_speedAndDistanceObjs.get(index).getCurrentPosition()) ){
+            index++;
+        }
+       return (index<_speedAndDistanceObjs.size())?_speedAndDistanceObjs.get(index):null;
+    }
+
+    //this function gets the incoming position data and creates a new list while checking the perviously saved positions
+    public   ArrayList<Vector2D> getMostRecentVectorsFromDataBus(ArrayList<Vector2D> incomingVectorDataList){
         ArrayList<Vector2D> recentVectorsList=_previousVectors;
 
         if(!_previousVectors.isEmpty()){
@@ -179,15 +196,14 @@ public class RadarModul implements IRadarData {
                 }
                 index++;
             }
-            while (index != recentVectorsList.size()) {
+            //REFACTOR THIS -> into another method, like: RemovingRemainingItems(int index)
+            while (index < recentVectorsList.size()) {
                 recentVectorsList.remove(index);
             }
         }
         else{
             for (int i = 0; i < incomingVectorDataList.size(); i++) {
                 Vector2D item = incomingVectorDataList.get(i);
-                SpeedAndDistanceObj speedAndDistObj = new SpeedAndDistanceObj(0,0,item);
-                _speedAndDistanceObjs.add(speedAndDistObj);
                 _previousVectors.add(item);
             }
             recentVectorsList=incomingVectorDataList;
