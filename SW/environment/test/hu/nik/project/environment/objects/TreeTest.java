@@ -59,6 +59,10 @@ public class TreeTest {
         //it fits well (angle & distance)
         Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 41, 381) );
 
+        //+360° observer (225+360=585)
+        observerRotation = 585;
+        Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 41, 381) );
+
         //observer rotation: 244°; view: 3°; target: 244-1,5° .. 244+1,5° (between 242,5 and 245,5°)
         observerRotation = 244;
         Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 3, 10000) );
@@ -94,12 +98,6 @@ public class TreeTest {
         Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 360, 10000) );
         Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 1, 10000) );
 
-        //ERROR: the 229° still good, but between 230 and 360° have been wrong
-        Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 229, 10000) );
-        Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 230, 10000) );
-        Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 359, 10000) );
-        Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, 360, 10000) );
-
         //with real sensors
         observerRotation = 225;
         //perfect
@@ -107,6 +105,5 @@ public class TreeTest {
         Assert.assertTrue( tree.isVisibleFromObserver(observerBase, observerRotation, radarViewAngle, radarDistance) );
         //too far
         Assert.assertFalse( tree.isVisibleFromObserver(observerBase, observerRotation, ultraViewAngle, ultraDistance) );
-
     }
 }

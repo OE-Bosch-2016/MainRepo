@@ -78,5 +78,37 @@ public class SimpleRoadTest {
         Assert.assertFalse( simpleRoad.isVisibleFromObserver(observerBase2, observerRotation2, ultraViewAngle, ultraDistance) );
         Assert.assertFalse( simpleRoad.isVisibleFromObserver(observerBase2, observerRotation2, radarViewAngle, radarDistance) );
         Assert.assertFalse( simpleRoad.isVisibleFromObserver(observerBase2, observerRotation2, cameraViewWideAngle, cameraDistance) );
+
+        ScenePoint observerBase5 = new ScenePoint(2200, 2263);
+        observerRotation = 110;
+
+        //too little angle
+        Assert.assertFalse( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 23, 10000) );
+        //too little distance
+        Assert.assertFalse( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 24, 176) );
+        //it fits well (angle & distance)
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 24, 177) );
+
+        //view is near 90°
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 89, 10000) );
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 90, 10000) );
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 91, 10000) );
+        //view is near 180°
+        Assert.assertTrue(simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 179, 10000) );
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 180, 10000) );
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 181, 10000) );
+        //view is near 270°
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 269, 10000) );
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 270, 10000) );
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 271, 10000) );
+        //view is near 360°
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 359, 10000) );
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 360, 10000) );
+        Assert.assertFalse( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, 1, 10000) );
+
+        //with real sensors
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, cameraViewWideAngle, cameraDistance) );
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, radarViewAngle, radarDistance) );
+        Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, ultraViewAngle, ultraDistance) );
     }
 }
