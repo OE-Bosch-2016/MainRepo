@@ -276,7 +276,8 @@ public class Top extends JFrame { // implements KeyListener
 
     private ActionListener parkingTimerListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            vRenderer.get_carLabel().repaint();
+            //vRenderer.get_carLabel().repaint();
+            mapPanel.repaint();
             parkingTimer.stop();
             parkingPilot.doParking();
         }
@@ -284,8 +285,15 @@ public class Top extends JFrame { // implements KeyListener
 
     private ParkingCalculator.OnParkingListener parkingListener = new ParkingCalculator.OnParkingListener() {
         public void changePosition(float front, float side, float rotate) {
-            //car.setPosition(new Vector2D((int)(car.getPosition().get_coordinateX() + side), (int)(car.getPosition().get_coordinateY() + front)));
+            car.setPosition(new Vector2D(car.getPosition().get_coordinateX() + side, car.getPosition().get_coordinateY() + front));
             car.rotation(rotate);
+            //vRenderer.get_carLabel().repaint();
+            parkingTimer.start();
+        }
+
+        public void changePosition(float front, float side) {
+            car.setPosition(new Vector2D(car.getPosition().get_coordinateX() + side, car.getPosition().get_coordinateY() + front));
+            //vRenderer.get_carLabel().repaint();
             parkingTimer.start();
         }
     };

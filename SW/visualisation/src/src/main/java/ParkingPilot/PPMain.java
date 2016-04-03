@@ -30,10 +30,10 @@ public class PPMain {
 
     private void calculateCorners(Vector2D point, int height, int width){
         car = new Point[4];
-        car[0] = new Point(point.get_coordinateX() - width / 2, point.get_coordinateY() + height / 2);
-        car[1] = new Point(point.get_coordinateX() + width / 2, point.get_coordinateY() + height / 2);
-        car[2] = new Point(point.get_coordinateX() - width / 2, point.get_coordinateY() - height / 2);
-        car[3] = new Point(point.get_coordinateX() + width / 2, point.get_coordinateY() + height / 2);
+        car[0] = new Point((int)(point.get_coordinateX() - width / 2), (int)(point.get_coordinateY() + height / 2));
+        car[1] = new Point((int)(point.get_coordinateX() + width / 2), (int)(point.get_coordinateY() + height / 2));
+        car[2] = new Point((int)(point.get_coordinateX() - width / 2), (int)(point.get_coordinateY() - height / 2));
+        car[3] = new Point((int)(point.get_coordinateX() + width / 2), (int)(point.get_coordinateY() + height / 2));
     }
 
     public void doParking(){

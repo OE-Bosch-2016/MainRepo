@@ -56,25 +56,38 @@ public class ParkingCalculator {
     }
 
     public void parking() {
-        if(state == 0)
-            degreeOf45(-45);
-//        goBottom();
-//        degreeOf45(360);
+        if (state == 0)
+            degreeOf45(-10);
+        if (state == 1)
+            goBottom();
+        if (state == 2)
+            degreeOf0(0);
 //        preparePosition();
     }
 
     private void degreeOf45(int degree) {
         carAngle -= 1;
-        if(carAngle == degree)
+        if (carAngle == degree)
             state++;
         if (parkingListener != null)
-            parkingListener.changePosition(0.5f, 0.5f, -3f);
+            parkingListener.changePosition(0.7f, 0.5f, carAngle);
     }
 
     private void goBottom() {
-        while (carPosition[2].y - parkingPlace[2].y < 30) {
-            modifyCarPosition(-0.5f, 0, MODIFY_HORIZONTAL);
-        }
+        if (edgeOfStreet > 1) {
+            edgeOfStreet--;
+            if (parkingListener != null)
+                parkingListener.changePosition(0.7f, 0.7f);
+        } else
+            state++;
+    }
+
+    private void degreeOf0(int degree) {
+        carAngle += 1;
+        if (carAngle == degree)
+            state++;
+        if (parkingListener != null)
+            parkingListener.changePosition(0.7f, 0.5f, carAngle * -1);
     }
 
     private void preparePosition() {
@@ -106,5 +119,7 @@ public class ParkingCalculator {
     // Interface -------------------------------------------------------------------------------------------------------
     public interface OnParkingListener {
         void changePosition(float front, float side, float rotate);
+
+        void changePosition(float front, float side);
     }
 }

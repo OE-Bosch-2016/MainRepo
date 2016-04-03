@@ -39,7 +39,7 @@ public abstract class Visualization implements IWheelVisualization {
     public void ModifyVehicleSpeed(float speed) {
         _hmi.mileage(speed);
         _car.move(speed);
-        _vehicleListener.PositionChanged(_car.getPosition().get_coordinateX(), _car.getPosition().get_coordinateY());
+        _vehicleListener.PositionChanged((int)(_car.getPosition().get_coordinateX()), (int)(_car.getPosition().get_coordinateY()));
     }
 
     public void ModifyVehicleOrientation(float degree) {
@@ -53,7 +53,7 @@ public abstract class Visualization implements IWheelVisualization {
     public void render()
     {
         _carLabel.setIcon(new ImageIcon(_car.getImage()));
-        _carLabel.setLocation(_car.getPosition().get_coordinateX(), _car.getPosition().get_coordinateY());
+        _carLabel.setLocation((int)(_car.getPosition().get_coordinateX()), (int)(_car.getPosition().get_coordinateY()));
     }
 
     public JLabel get_carLabel() {

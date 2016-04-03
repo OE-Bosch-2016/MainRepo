@@ -33,12 +33,12 @@ public class PPManager {
             // only test
             Point[] car1 = new Point[4];
             Point[] car2 = new Point[4];
-            car1[0] = (new Point(coordinate.get_coordinateX() + 10, coordinate.get_coordinateY()));
-            car1[1] = (new Point(coordinate.get_coordinateX() + 34, coordinate.get_coordinateY()));
+            car1[0] = (new Point((int)(coordinate.get_coordinateX() + 10), (int)(coordinate.get_coordinateY())));
+            car1[1] = (new Point((int)(coordinate.get_coordinateX() + 34), (int)(coordinate.get_coordinateY())));
 
-            car2[2] = (new Point(coordinate.get_coordinateX() + 10, coordinate.get_coordinateY() + 30));
-            car2[3] = (new Point(coordinate.get_coordinateX() + 34, coordinate.get_coordinateY() + 30));
-            parking = new Parking(car1, car2, 48);
+            car2[2] = (new Point((int)(coordinate.get_coordinateX() + 10), (int)(coordinate.get_coordinateY() + 30)));
+            car2[3] = (new Point((int)(coordinate.get_coordinateX() + 34), (int)(coordinate.get_coordinateY() + 30)));
+            parking = new Parking(car1, car2, 20);
             //
 
             senderListener.onDataChanged();

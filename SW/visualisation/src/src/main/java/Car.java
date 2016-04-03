@@ -41,8 +41,8 @@ public abstract class Car {
         degree = Math.toDegrees(degree);
         //Origo
         Vector2D origo = new Vector2D(
-                _position.get_coordinateX() + _image.getWidth() / 2,
-                _position.get_coordinateY() + _image.getHeight() / 2
+                (int)( _position.get_coordinateX() + _image.getWidth() / 2),
+                (int)(_position.get_coordinateY() + _image.getHeight() / 2)
         );
 
         //Rotate image
@@ -89,11 +89,10 @@ public abstract class Car {
         int w = _image.getWidth(), h = _image.getHeight();
         GraphicsConfiguration gc = getDefaultConfiguration();
         BufferedImage result = gc.createCompatibleImage(_image.getWidth(), _image.getHeight(), Transparency.TRANSLUCENT);
-        AffineTransform xform = AffineTransform.getRotateInstance(degree, _image.getWidth() / 2,  _image.getHeight() / 2);
         Graphics2D g = result.createGraphics();
         g.translate((_image.getWidth()-w)/2, (_image.getHeight()-h)/2);
         g.rotate(degree, w/2, h/2);
-        g.drawRenderedImage(_image, xform);
+        g.drawRenderedImage(_image, null);
         g.dispose();
 
         _image = result;
