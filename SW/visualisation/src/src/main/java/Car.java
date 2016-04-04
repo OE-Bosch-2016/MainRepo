@@ -1,3 +1,5 @@
+import Utils.ImageLoader;
+import Utils.Scalr;
 import Utils.Vector2D;
 
 import java.awt.*;
@@ -84,24 +86,31 @@ public abstract class Car {
         _image = result;
     }
 
-    public void rotation(double degree){
+    public BufferedImage rotation(double degree){
         degree = Math.toRadians(degree);
+        set_image(ImageLoader.getCarImage());
         int w = _image.getWidth(), h = _image.getHeight();
         GraphicsConfiguration gc = getDefaultConfiguration();
         BufferedImage result = gc.createCompatibleImage(_image.getWidth(), _image.getHeight(), Transparency.TRANSLUCENT);
         Graphics2D g = result.createGraphics();
         g.translate((_image.getWidth()-w)/2, (_image.getHeight()-h)/2);
-        g.rotate(degree, w/2, h/2);
+        g.rotate(degree, w / 2, h / 2);
         g.drawRenderedImage(_image, null);
         g.dispose();
 
+        _image = null;
         _image = result;
+        return result;
     }
 
     private GraphicsConfiguration getDefaultConfiguration() {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         return gd.getDefaultConfiguration();
+    }
+
+    public void set_image(BufferedImage _image) {
+        this._image = _image;
     }
 
     public void move(float speed)

@@ -4,6 +4,7 @@ import HMI.Hmi;
 import ParkingPilot.PPMain;
 import ParkingPilot.Util.ParkingCalculator;
 import Utils.ImageLoader;
+import Utils.Scalr;
 import Utils.Vector2D;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -13,6 +14,7 @@ import org.jfree.data.general.DefaultValueDataset;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -242,6 +244,7 @@ public class Top extends JFrame { // implements KeyListener
         public void keyPressed(KeyEvent e) {
             if (e.getKeyChar() == 'p')
                 simulateMoving();
+            //car.rotation(90);
             //parkingPilot.parkingPilotActivate();
             //System.out.println(e.paramString());
         }
@@ -256,7 +259,7 @@ public class Top extends JFrame { // implements KeyListener
         //car.rotation(Math.toRadians(-45));
     }
 
-    private void simulateParking(){
+    private void simulateParking() {
         parkingPilot.parkingPilotActivate(car.getPosition(), car.getImage().getHeight(), car.getImage().getWidth(), parkingListener);
     }
 
@@ -276,9 +279,9 @@ public class Top extends JFrame { // implements KeyListener
 
     private ActionListener parkingTimerListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            //vRenderer.get_carLabel().repaint();
             mapPanel.repaint();
             parkingTimer.stop();
+
             parkingPilot.doParking();
         }
     };
@@ -286,8 +289,9 @@ public class Top extends JFrame { // implements KeyListener
     private ParkingCalculator.OnParkingListener parkingListener = new ParkingCalculator.OnParkingListener() {
         public void changePosition(float front, float side, float rotate) {
             car.setPosition(new Vector2D(car.getPosition().get_coordinateX() + side, car.getPosition().get_coordinateY() + front));
+//            vRenderer.get_carLabel().setIcon(null);
+//            vRenderer.get_carLabel().setIcon(new ImageIcon(car.rotation(rotate)));
             car.rotation(rotate);
-            //vRenderer.get_carLabel().repaint();
             parkingTimer.start();
         }
 
