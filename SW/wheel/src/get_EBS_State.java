@@ -22,14 +22,16 @@ import java.util.List;
              double x2 = Math.tan( Math.toRadians(car.direction)); //x is the coefficient of x in mx+n=y
              double n2 = walker.PosY - (x2 * walker.PosX ); //n is the running point
              
-              double interPointX = (n1-n2)/(x1-x2);          
-              double interPointY = x1*interPointX + n1;
-             
-             double dirVectorX = walker.PosX-interPointX;
-             double dirVectorY = walker.PosY-interPointY;
-             
-             //angle between the vector from one point to another and the walker.direction vector
-             double angleDiff = Math.acos(
+             if (!(x1==x2)) //if lines are not parralel
+                {
+                double interPointX = (n1-n2)/(x1-x2);          
+                double interPointY = x1*interPointX + n1;
+
+                double dirVectorX = walker.PosX-interPointX;
+                double dirVectorY = walker.PosY-interPointY;
+
+                //angle between the vector from one point to another and the walker.direction vector
+                double angleDiff = Math.acos(
                      (dirVectorX*Math.cos(walker.direction) + dirVectorY*Math.sin(walker.direction))
                      /(Math.sqrt(dirVectorX*dirVectorX + dirVectorY*dirVectorY) 
                              + Math.sqrt(Math.cos(walker.direction)*Math.cos(walker.direction) 
@@ -37,7 +39,7 @@ import java.util.List;
                              ));
 
                     
-                    if (!(x1==x2) && Math.toDegrees(angleDiff) < 90) //if lines are not parralel and walker is going towards the intersection
+                    if (Math.toDegrees(angleDiff) < 90) //if walker is going towards the intersection
                     {                
                     //calculating point of collision
                      double carDist = Math.sqrt((interPointX-car.PosX)*(interPointX-car.PosX) +
@@ -53,7 +55,7 @@ import java.util.List;
                              return true;
                          }
                     }
-                
+                }
             }
         }
         
