@@ -26,13 +26,20 @@ public class ACC implements IACC {
             if ((currentSpeed <= maxSpeed - Math.abs(wheelStateInDegrees * 2)) && (nearestObstacleDistance > minFollowingDistance)) {//Should we accelerate?
                 //throttling
                 pedal = 1;
+                System.out.println("1");
             } else if ((nearestObstacleDistance <= minFollowingDistance) || (currentSpeed > maxSpeed - Math.abs(wheelStateInDegrees * 2))) {//Should we brake?
                 //breaking
                 pedal = -1;
+                System.out.println("-1");
             } else {
                 //do nothing
                 pedal = 0;
+                System.out.println("0");
             }
+        }else{
+            //do nothing
+            pedal = 0;
+            System.out.println("0");
         }
     }
 }

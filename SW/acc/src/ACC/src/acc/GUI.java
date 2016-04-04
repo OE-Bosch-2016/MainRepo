@@ -42,6 +42,7 @@ public class GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane1 = new javax.swing.JSplitPane();
         ButtonACC = new javax.swing.JButton();
         SliderWheel = new javax.swing.JSlider();
         jLabel1 = new javax.swing.JLabel();
@@ -53,6 +54,7 @@ public class GUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        ButtonACC.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         ButtonACC.setText("ACC off");
         ButtonACC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -60,40 +62,37 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
+        SliderWheel.setMajorTickSpacing(10);
         SliderWheel.setMaximum(90);
         SliderWheel.setMinimum(-90);
         SliderWheel.setPaintLabels(true);
         SliderWheel.setPaintTicks(true);
         SliderWheel.setValue(0);
-        SliderWheel.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-                SliderWheelCaretPositionChanged(evt);
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+        SliderWheel.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                SliderWheelStateChanged(evt);
             }
         });
 
         jLabel1.setText("Wheel steering");
 
+        SliderSpeed.setMajorTickSpacing(10);
         SliderSpeed.setMaximum(200);
         SliderSpeed.setPaintLabels(true);
         SliderSpeed.setPaintTicks(true);
         SliderSpeed.setValue(0);
-        SliderSpeed.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-                SliderSpeedCaretPositionChanged(evt);
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+        SliderSpeed.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                SliderSpeedStateChanged(evt);
             }
         });
 
+        SliderObstacleDistance.setMajorTickSpacing(10);
         SliderObstacleDistance.setPaintLabels(true);
         SliderObstacleDistance.setPaintTicks(true);
-        SliderObstacleDistance.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-                SliderObstacleDistanceCaretPositionChanged(evt);
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+        SliderObstacleDistance.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                SliderObstacleDistanceStateChanged(evt);
             }
         });
 
@@ -101,8 +100,9 @@ public class GUI extends javax.swing.JFrame {
 
         jLabel3.setText("Distance");
 
-        LabelState.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        LabelState.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         LabelState.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        LabelState.setText("Do nothing!!!");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,51 +110,70 @@ public class GUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(LabelState, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ButtonACC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LabelState, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(SliderWheel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ButtonACC)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(SliderObstacleDistance, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(SliderSpeed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addGap(166, 166, 166))
-                                    .addComponent(SliderSpeed, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabel3))
-                            .addComponent(SliderObstacleDistance, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel2))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addComponent(SliderWheel, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SliderSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ButtonACC, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(ButtonACC)
-                        .addGap(44, 44, 44)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SliderObstacleDistance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(SliderWheel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(SliderSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(SliderObstacleDistance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(19, 19, 19)
-                .addComponent(LabelState, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
-                .addContainerGap())
+                    .addComponent(LabelState, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void SliderSpeedStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_SliderSpeedStateChanged
+        // TODO add your handling code here:
+        currentSpeed = SliderSpeed.getValue();
+        ChangeLabel();
+    }//GEN-LAST:event_SliderSpeedStateChanged
+
+    private void SliderObstacleDistanceStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_SliderObstacleDistanceStateChanged
+        // TODO add your handling code here:
+        nearestObstacleDistance = SliderObstacleDistance.getValue();
+        ChangeLabel();
+    }//GEN-LAST:event_SliderObstacleDistanceStateChanged
+
+    private void SliderWheelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_SliderWheelStateChanged
+        // TODO add your handling code here:
+        wheelStateInDegrees = SliderWheel.getValue();
+        ChangeLabel();
+    }//GEN-LAST:event_SliderWheelStateChanged
 
     private void ButtonACCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonACCActionPerformed
         // TODO add your handling code here:
@@ -167,24 +186,6 @@ public class GUI extends javax.swing.JFrame {
         ACCState = !ACCState;
         ChangeLabel();
     }//GEN-LAST:event_ButtonACCActionPerformed
-
-    private void SliderWheelCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_SliderWheelCaretPositionChanged
-        // TODO add your handling code here:
-        wheelStateInDegrees = SliderWheel.getValue();
-        ChangeLabel();
-    }//GEN-LAST:event_SliderWheelCaretPositionChanged
-
-    private void SliderSpeedCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_SliderSpeedCaretPositionChanged
-        // TODO add your handling code here:
-        currentSpeed = SliderSpeed.getValue();
-        ChangeLabel();
-    }//GEN-LAST:event_SliderSpeedCaretPositionChanged
-
-    private void SliderObstacleDistanceCaretPositionChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_SliderObstacleDistanceCaretPositionChanged
-        // TODO add your handling code here:
-        nearestObstacleDistance = SliderObstacleDistance.getValue();
-        ChangeLabel();
-    }//GEN-LAST:event_SliderObstacleDistanceCaretPositionChanged
 
     private void ChangeLabel() {
         myACC.PedalState(wheelStateInDegrees, ACCState, currentSpeed, nearestObstacleDistance);
@@ -244,5 +245,6 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 }
