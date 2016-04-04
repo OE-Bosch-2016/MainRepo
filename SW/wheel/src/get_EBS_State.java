@@ -3,10 +3,10 @@ import java.util.List;
 ///base class needs to import package with SceneObject
 
     
-    private static double ebsTolerance = 1; //how sensitive is the EBS system misses in 0.001 of a hour
+    private static double ebsTolerance = 100; //how sensitive is the EBS system misses in 0.001 of a hour
     private static double ebsDistance = 800; //how far does the ebs predict in pixels
     
-    public boolean get_Ebs_State(SceneObject car, List<SceneObject> jay_walkers)
+    public boolean get_EBS_State(SceneObject car, List<SceneObject> jay_walkers)
     {
         
         if (!jay_walkers.isEmpty() && car.speed>0 && car.speed<80)
