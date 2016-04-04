@@ -13,15 +13,14 @@ import java.util.List;
         {
             for (int i = 0; i < jay_walkers.size(); i++) //Every walker
             {
-              SceneObject walker =jay_walkers.get(i); //
-                 //ezt be kell getelni
+              SceneObject walker =jay_walkers.get(i); 
                           
              //path of walker
-             double x1 = Math.tan(Math.toRadians(walker.direction));
-             double n1 = walker.PosY - (x1 * walker.PosX ); //n is the running point?
+             double x1 = Math.tan(Math.toRadians(walker.direction)); //x is the coefficient of x in mx+n=y
+             double n1 = walker.PosY - (x1 * walker.PosX ); //n is the running point
              //path of car
-             double x2 = Math.tan( Math.toRadians(car.direction));
-             double n2 = walker.PosY - (x2 * walker.PosX ); //n is the running point?
+             double x2 = Math.tan( Math.toRadians(car.direction)); //x is the coefficient of x in mx+n=y
+             double n2 = walker.PosY - (x2 * walker.PosX ); //n is the running point
              
               double interPointX = (n1-n2)/(x1-x2);          
               double interPointY = x1*interPointX + n1;
@@ -33,14 +32,14 @@ import java.util.List;
              double angleDiff = Math.acos(
                      (dirVectorX*Math.cos(walker.direction) + dirVectorY*Math.sin(walker.direction))
                      /(Math.sqrt(dirVectorX*dirVectorX + dirVectorY*dirVectorY) 
-                             + Math.sqrt(Math.cos(walker.direction)*Math.cos(walker.direction)) +
-                               Math.sqrt(Math.sin(walker.direction)*Math.sin(walker.direction))
+                             + Math.sqrt(Math.cos(walker.direction)*Math.cos(walker.direction) 
+                             + Math.sin(walker.direction)*Math.sin(walker.direction))
                              ));
 
-                    //calculating point of collision
+                    
                     if (!(x1==x2) && Math.toDegrees(angleDiff) < 90) //if lines are not parralel and walker is going towards the intersection
                     {                
-
+                    //calculating point of collision
                      double carDist = Math.sqrt((interPointX-car.PosX)*(interPointX-car.PosX) +
                                             (interPointY-car.PosY)*(interPointY-car.PosY));
                      double walkDist = Math.sqrt((interPointX-walker.PosX)*(interPointX-walker.PosX) +
