@@ -55,53 +55,24 @@ public class Camera implements ICamera {
 	
 	private void calcLaneDistance(Object car, Object road)
 	{
-		//set lane type
-		//set distance from lane
 		double distance;
 		
-		double width = 175;		//scene width
-		double height = 175;	//scene height
-		
-		double laneXUpDistance = width / 2;		//lane upper end distance
-		double laneXUp = (road.BasePosition.GetX() + width) / 2;	//lane upper end x coordinate
-		double laneYUp = road.BasePosition.GetY();		//lane upper end y coordinate
-		double laneXDownDistance = Math.sqrt((width / 2) * (width / 2) + height * height);		//lane bottom end distance
-		double laneXDown = road.BasePosition.GetX() + width / 2;	//lane bottom end x coordinate
-		double laneYDown = road.BasePosition.GetY() - height;		//lane bottom end y coordinate
-		double laneDownDegree = Math.toDegrees(Math.atan((width / 2) / height)) + 270;		//lane bottom end degree, 270 degree plus because of the default direction
-		
-		//lane upper end x coordinate with rotation
-		double xUpRotationed = road.BasePosition.GetX() + laneXUpDistance * Math.cos(road.rotation);
-		double yUpRotationed = road.BasePosition.GetY() + laneYUpDistance * Math.sin(road.rotation);
-		//lane bottom end x coordinate with rotation
-		double xDownRotationed = road.BasePosition.GetX() + laneXDownDistance * Math.cos(road.rotation + laneDownDegree);
-		double yDownRotationed = road.BasePosition.GetY() + laneYDownDistance * Math.sin(road.rotation + laneDownDegree);
-		
-		switch (road.getObjectType()) {
-			case SIMPLE_STRAIGHT:
-				distance = pDistance(car.BasePosition.GetX(), car.BasePosition.GetY(), xUpRotationed, yUpRotationed, XDownRotationed, YDownRotationed);
-				break;
-			case SIMPLE_45_LEFT:
-				
-				break;	
-			case SIMPLE_45_RIGHT:
-				
-				break;
-			case SIMPLE_65_LEFT:
-				
-				break;
-			case SIMPLE_65_RIGHT:
-				
-				break;
-			case SIMPLE_90_LEFT:
-				
-				break;
-			case SIMPLE_90_RIGHT:
-				
-				break;
-		}
-
-		//set lane type
+	       	if (road.getObjectType() == SIMPLE_STRAIGHT)
+	       	{
+            	distance = pDistance(car.GetBasePosition().GetX(), car.GetBasePosition().GetY(), road.GetTopPoint().GetX(), road.GetTopPoint().GetY(), road.GetBottomPoint().GetX(), road.GetBottomPoint().GetY());
+        	}
+		else
+		{
+        	   double carDistanceToPoint = Math.sqrt(Math.pow(car.GetBasePosition().GetX() - road.getReferencePoint().GetX()) + Math.pow(car.GetBasePosition().GetY() - road.getReferencePoint().GetY()));
+        	    if (carDistanceToPoint > road.getRadius())
+        	    {
+        	      distance = carDistanceToPoint - road.getRadius();
+        	    }
+        	    else
+        	    {
+        	        distance = road.getRadius() - carDistanceToPoint;
+        	    }
+        	}
 	}
 	
 	private double pDistance(x, y, x1, y1, x2, y2)
