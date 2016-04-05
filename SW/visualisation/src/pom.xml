@@ -8,9 +8,6 @@
     <artifactId>Visualisation</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
-    <modules>
-        <module>../../../untitled</module>
-    </modules>
     <dependencies>
         <dependency>
             <groupId>jfree</groupId>
