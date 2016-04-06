@@ -2,10 +2,12 @@ package Radar;
 
 import Utils.Vector2D;
 
+import java.io.Serializable;
+
 /**
  * Created by secured on 2016. 03. 19..
  */
-public class SpeedAndDistanceObj {
+public class SpeedAndDistanceObj implements Serializable {
     private double _relativeSpeed;
     private double _currentDistance;
     private Vector2D _currentPosition;
