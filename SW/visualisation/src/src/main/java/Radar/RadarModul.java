@@ -3,8 +3,10 @@ package Radar;
 import Interfaces.IRadarData;
 import Interfaces.IRadarInputData;
 import Utils.Vector2D;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 
 
@@ -21,8 +23,7 @@ public class RadarModul implements IRadarData {
     private Boolean _isRadarEnabled;
     private Timer _timer; //for sampling
 
-    private ArrayList<Vector2D> _previousVectors;
-    private ArrayList<Vector2D> _currentVectors;
+    private HashMap<Integer,int[]> _previousVectorsHashMap;
 
 
     public RadarModul(IRadarInputData radarInputData, float angelOfSight, int samplingTime) {
@@ -32,8 +33,7 @@ public class RadarModul implements IRadarData {
 
         _speedAndDistanceObjs = null;
         _isRadarEnabled = false;
-        _previousVectors = new ArrayList<Vector2D>();
-        _currentVectors = new ArrayList<Vector2D>();
+        _previousVectorsHashMap = new HashMap<Integer, int[]>();
     }
 
     //<editor-fold desc="Properties of Radar Modul">
@@ -117,7 +117,6 @@ public class RadarModul implements IRadarData {
                     Vector2D currentVector = inputVectors.get(itemIndex);
                     SpeedAndDistanceObj speedAndDistanceObj = IsVectorInSpeedandDistObjList(currentVector);
                     if (speedAndDistanceObj != null) {
-
                         double distance = getDistance(ourCurrentPosition, currentVector);
                         if (isObjectMoving(speedAndDistanceObj,currentVector)) { //bug, cause it's rarely the same|isMoving
                             double itemSpeed = getCurrentSpeedOfSpecificObj(speedAndDistanceObj, currentVector);
@@ -186,35 +185,36 @@ public class RadarModul implements IRadarData {
 
     //this function gets the incoming position data and creates a new list while checking the perviously saved positions
     public ArrayList<Vector2D> getMostRecentVectorsFromDataBus(ArrayList<Vector2D> incomingVectorDataList) {
-        ArrayList<Vector2D> recentVectorsList = _previousVectors;
-        if (!_previousVectors.isEmpty()) {
+        ArrayList<Vector2D> recentVectorsList=new ArrayList<Vector2D>();
+        if (!_previousVectorsHashMap.isEmpty()) {
             int index = 0;
             while (index != incomingVectorDataList.size()) {
                 Vector2D item = incomingVectorDataList.get(index);
-                if (item != null && isItemInList(_previousVectors, item)) {
-                    int itemIndex = _previousVectors.indexOf(item);
-                    recentVectorsList.get(itemIndex).set_coordinateX(item.get_coordinateX());
-                    recentVectorsList.get(itemIndex).set_coordinateY(item.get_coordinateY());
-                } else {
-                    recentVectorsList.add(item);
+                if (!isItemInHashMap(_previousVectorsHashMap, item)) {
+                    int[] vector={item.get_coordinateX(),item.get_coordinateY()};
+                    _previousVectorsHashMap.put(item.hashCode(),vector);
                 }
+                recentVectorsList.add(item);
                 index++;
-            }
+            }/*
             //REFACTOR THIS -> into another method, like: RemovingRemainingItems(int index)
-            while (index < recentVectorsList.size()) {
-                recentVectorsList.remove(index);
+            while (_previousVectorsHashMap.keySet().size()>incomingVectorDataList.size()){
+                throw new NotImplementedException();
             }
-        } else {
+            */
+        }
+        else {
             for (int i = 0; i < incomingVectorDataList.size(); i++) {
                 Vector2D item = incomingVectorDataList.get(i);
-                _previousVectors.add(item);
+                int[] vectorValues={item.get_coordinateX(),item.get_coordinateY()};
+                _previousVectorsHashMap.put(item.hashCode(),vectorValues);
             }
             recentVectorsList = incomingVectorDataList;
         }
         return recentVectorsList;
     }
 
-    private boolean isItemInList(ArrayList<Vector2D> list, Vector2D item) {
-        return list.contains(item);
+    private boolean isItemInHashMap(HashMap<Integer, int[]> hashmap, Vector2D item) {
+        return hashmap.containsKey(item.hashCode());
     }
 }
