@@ -6,6 +6,7 @@ import java.io.*;
  *
  * Created by zhodvogner on 2016.03.23.
  *
+ * Class for the CommBusConnector
  **/
 
 public class CommBusConnector {
@@ -92,10 +93,11 @@ public class CommBusConnector {
 
     //--------------------- send data
 
-    public boolean send( Class dataType, Object dataObject ) throws CommBusException {
+    public boolean send(Class dataType, Object dataObject) throws CommBusException {
         String exceptionMessagePrefix = "Error in CommBusController send: ";
-        if (dataType == null) {throw  new CommBusException(exceptionMessagePrefix + "sent object type cannot be null"); }
-        if (dataObject == null) {throw  new CommBusException(exceptionMessagePrefix + "sent object cannot be null"); }
+        if (connectorType == CommBusConnectorType.Receiver) { throw new CommBusException(exceptionMessagePrefix + "Cannot send with this connector");}
+        if (dataType == null) {throw new CommBusException(exceptionMessagePrefix + "Sent object type cannot be null"); }
+        if (dataObject == null) {throw new CommBusException(exceptionMessagePrefix + "Sent object cannot be null"); }
         if (isDataInBuffer) return false; // unreaded data in the buffer
         if (isDataOutBuffer) return false; // unwritten data in the buffer
         //if ((String)dataObject=="NewestDataArrived") {
@@ -107,7 +109,7 @@ public class CommBusConnector {
         try {
             ObjectOutput out = new ObjectOutputStream(baos);
             out.writeObject(dataObject);
-            if (baos.size() > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException(exceptionMessagePrefix + "data-record is too long (size=" + baos.size() + " bytes)");
+            if (baos.size() > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException(exceptionMessagePrefix + "Data-record is too long (size=" + baos.size() + " bytes)");
             this.byteDataBuffer = baos.toByteArray();
             this.dataType = dataType;
             this.isDataOutBuffer = true; // data-block for write is in the buffer (writer thread will be submit it)
@@ -146,12 +148,8 @@ public class CommBusConnector {
     //--------------------- receive data
 
     public Object receive() throws CommBusException {
+        if (connectorType == CommBusConnectorType.Sender) { throw  new CommBusException("Error in CommBusController receive: Cannot receive with this connector"); }
         if (!isDataInBuffer) return null;
-
-        if (connectorType == CommBusConnectorType.WriteOnly) {
-            reset();
-            return null; // the buffer already is empty or it's a write-only connector
-        }
 
         // Convert object from commbus bytes
         try {

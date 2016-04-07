@@ -48,7 +48,7 @@ public class CommBus {
     private byte[] byteDataBuffer;  // represents the bytes on the bus
     private Class dataType;
 
-    private List<CommBusConnector> connectors = new ArrayList<CommBusConnector>();
+    private List<CommBusConnector> connectors = new ArrayList<>();
     private CommBusConnector acceptedConnector = null;
 
     // create new connector and connect the device
@@ -61,7 +61,6 @@ public class CommBus {
     // disconnects a device and remove a connector
     public void removeConnector(CommBusConnector connector) {
         connectors.remove(connector);
-        connector = null;
     }
 
     public int getConnectorCount() {
@@ -75,7 +74,6 @@ public class CommBus {
     // writes data to bus and sends notifications to the connectors
     protected boolean write(CommBusConnector connector, Class dataType, byte[] data ) throws CommBusException {
         // validity checks
-        if (connector.getConnectorType() == CommBusConnectorType.ReadOnly) throw new CommBusException("CommBus.write error: Connector is read-only.");
         if (!connectors.contains( connector )) throw new CommBusException("CommBus.write error: Unknown connector.");
         if (dataType == null) throw new CommBusException("CommBus.write error: The dataType is null.");
         if (connector == acceptedConnector) return true;   // already accepted
@@ -104,7 +102,7 @@ public class CommBus {
 
             // transmission handling
                 for (CommBusConnector connector : connectors) {
-                    if ((connector != acceptedConnector) && (connector.getConnectorType() != CommBusConnectorType.WriteOnly)) {
+                    if ((connector != acceptedConnector)) {
 
                         //connector.setExceptionThrown(null);
                         connector.setDataBuffer(byteDataBuffer.clone());    // data will be passed to the connector in own local buffer
@@ -117,6 +115,7 @@ public class CommBus {
                     // all listener were notified
 
                 byteDataBuffer = null; // dataBuffer is empty
+
                 if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
 
     }
