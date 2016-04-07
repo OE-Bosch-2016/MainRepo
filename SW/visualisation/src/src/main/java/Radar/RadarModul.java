@@ -3,7 +3,6 @@ package Radar;
 import Interfaces.IRadarData;
 import Interfaces.IRadarInputData;
 import Utils.Vector2D;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,11 +117,12 @@ public class RadarModul implements IRadarData {
                     SpeedAndDistanceObj speedAndDistanceObj = IsVectorInSpeedandDistObjList(currentVector);
                     if (speedAndDistanceObj != null) {
                         double distance = getDistance(ourCurrentPosition, currentVector);
-                        if (isObjectMoving(speedAndDistanceObj,currentVector)) { //bug, cause it's rarely the same|isMoving
+                        if (isObjectMoving(currentVector)) {
                             double itemSpeed = getCurrentSpeedOfSpecificObj(speedAndDistanceObj, currentVector);
                             double relativeSpeed = calculateRelativeSpeed(ourSpeed, itemSpeed);
                             speedAndDistanceObj.setRelativeSpeed(relativeSpeed);
                             speedAndDistanceObj.setCurrentPosition(currentVector);
+                            ChangePreviousHashMapValues(currentVector);
                         }
                         speedAndDistanceObj.setCurrentDistance(distance);
                     } else {
@@ -163,6 +163,11 @@ public class RadarModul implements IRadarData {
         return getDistance(previous.getCurrentPosition(), vector2D) / _sampingTime;
     }
 
+    private void ChangePreviousHashMapValues(Vector2D vector2D){
+        _previousVectorsHashMap.get(vector2D.hashCode())[0]=vector2D.get_coordinateX();
+        _previousVectorsHashMap.get(vector2D.hashCode())[1]=vector2D.get_coordinateY();
+    }
+
     private double calculateRelativeSpeed(double firstSpeedValue, double seconedSpeedValue) { //A+B/1+AB
         return firstSpeedValue +
                 seconedSpeedValue / 1 +
@@ -178,9 +183,9 @@ public class RadarModul implements IRadarData {
         return (index < _speedAndDistanceObjs.size()) ? _speedAndDistanceObjs.get(index) : null;
     }
 
-    private boolean isObjectMoving(SpeedAndDistanceObj previous, Vector2D current) {
-        return previous.getCurrentPosition().get_coordinateX() != current.get_coordinateX()
-                || previous.getCurrentPosition().get_coordinateY() != current.get_coordinateY();
+    private boolean isObjectMoving(Vector2D current) {
+        int[] valuePairs= _previousVectorsHashMap.get(current.hashCode());
+        return valuePairs[0]!=current.get_coordinateX() || valuePairs[1]!=current.get_coordinateY();
     }
 
     //this function gets the incoming position data and creates a new list while checking the perviously saved positions
@@ -190,20 +195,19 @@ public class RadarModul implements IRadarData {
             int index = 0;
             while (index != incomingVectorDataList.size()) {
                 Vector2D item = incomingVectorDataList.get(index);
-                if (!isItemInHashMap(_previousVectorsHashMap, item)) {
+                if (!isItemInHashMap(item)) {
                     int[] vector={item.get_coordinateX(),item.get_coordinateY()};
                     _previousVectorsHashMap.put(item.hashCode(),vector);
                 }
                 recentVectorsList.add(item);
                 index++;
-            }/*
-            //REFACTOR THIS -> into another method, like: RemovingRemainingItems(int index)
-            while (_previousVectorsHashMap.keySet().size()>incomingVectorDataList.size()){
-                throw new NotImplementedException();
             }
-            */
+            for (int i = 0; i < _previousVectorsHashMap.size(); i++) {
+                
+            }
         }
         else {
+            _previousVectorsHashMap.clear();
             for (int i = 0; i < incomingVectorDataList.size(); i++) {
                 Vector2D item = incomingVectorDataList.get(i);
                 int[] vectorValues={item.get_coordinateX(),item.get_coordinateY()};
@@ -214,7 +218,7 @@ public class RadarModul implements IRadarData {
         return recentVectorsList;
     }
 
-    private boolean isItemInHashMap(HashMap<Integer, int[]> hashmap, Vector2D item) {
-        return hashmap.containsKey(item.hashCode());
+    private boolean isItemInHashMap(Vector2D item) {
+        return _previousVectorsHashMap.containsKey(item.hashCode());
     }
 }

@@ -132,12 +132,12 @@ public class RadarModulTest extends TestCase {
         double expectedRelativeSpeed=0;
         double actualRealtiveSpeed=speedAndDistanceObjArrayList.get(0).getRelativeSpeed();
 
-        int expectedXValue=15;
+        int expectedXValue=22;
         int actualXValue=speedAndDistanceObjArrayList.get(1).getCurrentPosition().get_coordinateX();
 
         assertNotNull(speedAndDistanceObjArrayList);
         assertEquals(expectedSize, actualSize);
-        assertTrue(expectedRelativeSpeed > actualRealtiveSpeed);
+        assertTrue(expectedRelativeSpeed < actualRealtiveSpeed);
         assertEquals(expectedXValue,actualXValue);
 
 
