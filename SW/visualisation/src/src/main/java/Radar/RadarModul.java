@@ -6,6 +6,7 @@ import Utils.Vector2D;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 
 
@@ -22,7 +23,7 @@ public class RadarModul implements IRadarData {
     private Boolean _isRadarEnabled;
     private Timer _timer; //for sampling
 
-    private HashMap<Integer,int[]> _previousVectorsHashMap;
+    private HashMap<Integer, int[]> _previousVectorsHashMap;
 
 
     public RadarModul(IRadarInputData radarInputData, float angelOfSight, int samplingTime) {
@@ -163,9 +164,9 @@ public class RadarModul implements IRadarData {
         return getDistance(previous.getCurrentPosition(), vector2D) / _sampingTime;
     }
 
-    private void ChangePreviousHashMapValues(Vector2D vector2D){
-        _previousVectorsHashMap.get(vector2D.hashCode())[0]=vector2D.get_coordinateX();
-        _previousVectorsHashMap.get(vector2D.hashCode())[1]=vector2D.get_coordinateY();
+    private void ChangePreviousHashMapValues(Vector2D vector2D) {
+        _previousVectorsHashMap.get(vector2D.hashCode())[0] = vector2D.get_coordinateX();
+        _previousVectorsHashMap.get(vector2D.hashCode())[1] = vector2D.get_coordinateY();
     }
 
     private double calculateRelativeSpeed(double firstSpeedValue, double seconedSpeedValue) { //A+B/1+AB
@@ -184,38 +185,56 @@ public class RadarModul implements IRadarData {
     }
 
     private boolean isObjectMoving(Vector2D current) {
-        int[] valuePairs= _previousVectorsHashMap.get(current.hashCode());
-        return valuePairs[0]!=current.get_coordinateX() || valuePairs[1]!=current.get_coordinateY();
+        int[] valuePairs = _previousVectorsHashMap.get(current.hashCode());
+        return valuePairs[0] != current.get_coordinateX() || valuePairs[1] != current.get_coordinateY();
     }
 
     //this function gets the incoming position data and creates a new list while checking the perviously saved positions
     public ArrayList<Vector2D> getMostRecentVectorsFromDataBus(ArrayList<Vector2D> incomingVectorDataList) {
-        ArrayList<Vector2D> recentVectorsList=new ArrayList<Vector2D>();
+        ArrayList<Vector2D> recentVectorsList = new ArrayList<Vector2D>();
+        HashMap<Integer, int[]> actualHashMap = CreateHashMapFromArrayList(incomingVectorDataList);
+
         if (!_previousVectorsHashMap.isEmpty()) {
             int index = 0;
             while (index != incomingVectorDataList.size()) {
                 Vector2D item = incomingVectorDataList.get(index);
                 if (!isItemInHashMap(item)) {
-                    int[] vector={item.get_coordinateX(),item.get_coordinateY()};
-                    _previousVectorsHashMap.put(item.hashCode(),vector);
+                    int[] vector = {item.get_coordinateX(), item.get_coordinateY()};
+                    _previousVectorsHashMap.put(item.hashCode(), vector);
                 }
                 recentVectorsList.add(item);
                 index++;
             }
-            for (int i = 0; i < _previousVectorsHashMap.size(); i++) {
-                
+            //TODO: REFACTOR MEEE PLSSS, IT HURTS MY BUTT
+            ArrayList<Integer> hashMapKeyList= new ArrayList<Integer>();
+            for (int key : _previousVectorsHashMap.keySet()){
+                if(!actualHashMap.containsKey(key)){
+                    hashMapKeyList.add(key);
+                }
             }
-        }
-        else {
+            for (int key:hashMapKeyList){
+                _previousVectorsHashMap.remove(key);
+            }
+        } else {
             _previousVectorsHashMap.clear();
             for (int i = 0; i < incomingVectorDataList.size(); i++) {
                 Vector2D item = incomingVectorDataList.get(i);
-                int[] vectorValues={item.get_coordinateX(),item.get_coordinateY()};
-                _previousVectorsHashMap.put(item.hashCode(),vectorValues);
+                int[] vectorValues = {item.get_coordinateX(), item.get_coordinateY()};
+                _previousVectorsHashMap.put(item.hashCode(), vectorValues);
             }
             recentVectorsList = incomingVectorDataList;
         }
         return recentVectorsList;
+    }
+
+    private HashMap<Integer, int[]> CreateHashMapFromArrayList(ArrayList<Vector2D> vector2DsList) {
+        HashMap<Integer, int[]> hashMap=new HashMap<Integer, int[]>();
+        for (Vector2D vector : vector2DsList) {
+            int key = vector.hashCode();
+            int[] values = {vector.get_coordinateX(), vector.get_coordinateY()};
+            hashMap.put(key,values);
+        }
+        return hashMap;
     }
 
     private boolean isItemInHashMap(Vector2D item) {
