@@ -3,7 +3,7 @@ package Radar;
 import Interfaces.IRadarInputData;
 import Utils.Vector2D;
 import junit.framework.TestCase;
-
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -28,6 +28,7 @@ public class RadarModulTest extends TestCase {
 
     }
 
+    @Test
     public void testGetRadarPosition() throws Exception {
         Vector2D mockedPos= new Vector2D(10,10);
         expect(_radarDataInputMOCK.getOurCurrentPosition()).andReturn(mockedPos);
@@ -41,6 +42,7 @@ public class RadarModulTest extends TestCase {
         assertEquals(expectedCameraPos,mockedPos);
     }
 
+    @Test
     public void testGetRadarViewDistance() throws Exception {
         int expectedViewDistance=200;
         int actualViewDistance=_radarModul.getRadarViewDistance();
@@ -48,36 +50,134 @@ public class RadarModulTest extends TestCase {
         assertEquals(expectedViewDistance,actualViewDistance);
     }
 
+    @Test
     public void testGetAngelOfSight() throws Exception {
-        int delta=10;
-        float expectedAngle=20;
-        float actualAngle=_radarModul.getAngelOfSight(); //actual=30, as in the constructor
-
-        assertEquals(expectedAngle,actualAngle,delta);
+        float expectedAngle=30;
+        float actualAngle=_radarModul.getAngelOfSight();
+        assertEquals(expectedAngle,actualAngle);
     }
 
-    public void testCurrentSpeedInput() throws Exception{
-        double returnvalue=20;
-        expect(_radarDataInputMOCK.getOurCurrentSpeed()).andReturn(returnvalue);
+    @Test
+    public void testRadarForSingeCycle() throws Exception {
+        ArrayList<Vector2D> input = new ArrayList<Vector2D>();
+        input.add(new Vector2D(3, 3));
+        input.add(new Vector2D(4, 4));
+
+        ArrayList<SpeedAndDistanceObj> result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
+
+        int expectedSize=2;
+        int actualSize=result.size();
+        for (SpeedAndDistanceObj item:result){
+            double zero =0;
+            assertEquals(zero,item.getRelativeSpeed());
+            assertNotNull(item.getCurrentPosition());
+        }
+        assertEquals(expectedSize,actualSize);
+    }
+
+    @Test
+    public void testRadarForMultipleCycles() throws Exception{
+        ArrayList<Vector2D> input = new ArrayList<Vector2D>();
+        Vector2D first = new Vector2D(3,3);
+        Vector2D second = new Vector2D(4,4);
+        input.add(first);
+        input.add(second);
+
+
+        ArrayList<SpeedAndDistanceObj> result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
+
+        //2 seconds later....
+        input = new ArrayList<Vector2D>();
+        first.set_coordinateX(30);
+        first.set_coordinateY(30);
+
+        second.set_coordinateX(40);
+        second.set_coordinateY(40);
+        input.add(first);
+        input.add(second);
+
+
+        result=_radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
+
+        int expectedSize=2;
+        int actualSize=result.size();
+        for (SpeedAndDistanceObj item:result){
+            double zero =0;
+            assertTrue(zero < item.getRelativeSpeed());
+            assertNotNull(item.getCurrentPosition());
+        }
+        assertEquals(expectedSize,actualSize);
+
+    }
+
+    @Test
+    public void testRadarForMultipleCyclesAndDeletion() throws Exception{
+        ArrayList<Vector2D> input = new ArrayList<Vector2D>();
+        Vector2D first = new Vector2D(3,3);
+        Vector2D second = new Vector2D(4,4);
+        input.add(first);
+        input.add(second);
+
+
+        ArrayList<SpeedAndDistanceObj> result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
+
+        //2 seconds later....
+        input = new ArrayList<Vector2D>();
+        first.set_coordinateX(30);
+        first.set_coordinateY(30);
+
+        second.set_coordinateX(40);
+        second.set_coordinateY(40);
+        input.add(first);
+        input.add(second);
+        input.add(new Vector2D(6,6));
+        input.add(new Vector2D(7,7));
+
+
+        result=_radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
+
+        int expectedSize=4;
+        int actualSize=result.size();
+        for (SpeedAndDistanceObj item:result){
+            assertNotNull(item.getCurrentPosition());
+            assertTrue(4 < item.getCurrentPosition().get_coordinateX());
+            assertTrue(4<item.getCurrentPosition().get_coordinateY());
+        }
+        assertEquals(expectedSize, actualSize);
+
+        //2 seconds later
+
+        input = new ArrayList<Vector2D>();
+        first.set_coordinateX(3);
+        first.set_coordinateY(5);
+
+        input.add(first);
+
+        result=_radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
+
+        expectedSize=1;
+        actualSize=result.size();
+
+        assertEquals(expectedSize, actualSize);
+        for (SpeedAndDistanceObj item:result){
+            assertNotNull(item.getCurrentPosition());
+            assertEquals( 3,item.getCurrentPosition().get_coordinateX());
+            assertEquals(5,item.getCurrentPosition().get_coordinateY());
+            assertTrue(0!=item.getCurrentDistance());
+            assertTrue(0!=item.getRelativeSpeed());
+        }
+
+    }
+
+    private void setMocking(double speed, Vector2D currentPos){
+        expect(_radarDataInputMOCK.getOurCurrentSpeed()).andReturn(speed).once();
+        expect(_radarDataInputMOCK.getOurCurrentPosition()).andReturn(currentPos).once();
         replay(_radarDataInputMOCK);
-
-        double actual= _radarModul.getOurCurrentSpeed();
-        assertEquals(returnvalue,actual);
     }
 
-    public void testGetIncomingPositionList() throws Exception {
-        inputPositions = new ArrayList<Vector2D>();
-        inputPositions.add(new Vector2D(2,2));
-        inputPositions.add(new Vector2D(4,4));
-        expect(_radarDataInputMOCK.getViewableObjectList()).andReturn(inputPositions);
-        replay(_radarDataInputMOCK);
-
-        int actualSize = _radarModul.getIncomingPositionList().size();
-        int expected=2;
-
-        assertEquals(expected, actualSize);
-    }
-
+    //<editor-fold desc="Private method unit tests; can be deleted later">
+    /*
+    @Test
     public void testSpeedAndDistanceListWithSingleIteration() throws Exception{
         inputPositions=new ArrayList<Vector2D>();
         Vector2D first = new Vector2D(2,2);
@@ -100,6 +200,7 @@ public class RadarModulTest extends TestCase {
 
     }
 
+    @Test
     public void testSpeedAndDistanceListWithTwoIteration() throws Exception{
         inputPositions=new ArrayList<Vector2D>();
         Vector2D first = new Vector2D(1,1);
@@ -138,13 +239,28 @@ public class RadarModulTest extends TestCase {
         assertNotNull(speedAndDistanceObjArrayList);
         assertEquals(expectedSize, actualSize);
         assertTrue(expectedRelativeSpeed < actualRealtiveSpeed);
-        assertEquals(expectedXValue,actualXValue);
+        assertEquals(expectedXValue, actualXValue);
+
+        ArrayList<Vector2D> asd2 = new ArrayList<Vector2D>();
+        first.set_coordinateX(100);
+        first.set_coordinateY(100);
+        asd2.add(first);
+
+        recent2 = _radarModul.getMostRecentVectorsFromDataBus(asd2);
+        speedAndDistanceObjArrayList=_radarModul.getDetectedObjsRelativeSpeedDistance(recent2, new Vector2D(5, 5), 21);
+
+        expectedSize=1;
+        actualSize=speedAndDistanceObjArrayList.size();
+
+        assertNotNull(speedAndDistanceObjArrayList);
+        assertEquals(expectedSize,actualSize);
+        assertTrue(speedAndDistanceObjArrayList.get(0).getRelativeSpeed()>0);
 
 
     }
 
-    //<editor-fold desc="Private method unit tests; can be deleted later">
 
+    @Test
     public void testGetMostRecentVectorsFromDataBus() throws Exception {
         inputPositions = new ArrayList<Vector2D>();
         Vector2D first = new Vector2D(2,2);
@@ -203,6 +319,7 @@ public class RadarModulTest extends TestCase {
         //</editor-fold>
     }
 
+    @Test
     public void testGetMostRecentVectorsDeletingItems() throws Exception{
         inputPositions = new ArrayList<Vector2D>();
         inputPositions.add(new Vector2D(2,2));
@@ -227,6 +344,6 @@ public class RadarModulTest extends TestCase {
         assertEquals(expectedCount,actual);
 
     }
-
+    */
     //</editor-fold>
 }

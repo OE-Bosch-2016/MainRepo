@@ -3,11 +3,9 @@ package Radar;
 import Interfaces.IRadarData;
 import Interfaces.IRadarInputData;
 import Utils.Vector2D;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Timer;
+import java.util.*;
 
 
 /**
@@ -38,21 +36,6 @@ public class RadarModul implements IRadarData {
 
     //<editor-fold desc="Properties of Radar Modul">
 
-    public double getOurCurrentSpeed() {
-        return _radarInputData.getOurCurrentSpeed();
-    }
-
-    public ArrayList<Vector2D> getIncomingPositionList() {
-        return _radarInputData.getViewableObjectList();
-    }
-
-    public Vector2D getOurCurrentPosition() {
-        return _radarInputData.getOurCurrentPosition();
-    }
-
-    public ArrayList<SpeedAndDistanceObj> get_speedAndDistanceObjs() {
-        return _speedAndDistanceObjs;
-    }
 
     public Vector2D getRadarPosition() {  //change here, if the camera position is not the same as our current pos.
         return _radarInputData.getOurCurrentPosition();
@@ -66,50 +49,30 @@ public class RadarModul implements IRadarData {
         return _angelOfSight;
     }
 
+
     public Boolean isRadarEnabled() {
         return _isRadarEnabled;
     }
 
-    public void setIsRadarEnabled(Boolean isRadarEnabled) {
-        this._isRadarEnabled = isRadarEnabled;
-    }
-
     //</editor-fold>
 
-    @Deprecated
-    public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance() {
 
-        ArrayList<Vector2D> viewableObjectList = _radarInputData.getViewableObjectList();
-        Vector2D ourCurrentPos = _radarInputData.getOurCurrentPosition();
-        double ourCurrentSpeed = _radarInputData.getOurCurrentSpeed();
+    //TODO: We need to clarify how we will know the OUR current speed and position
+    public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance(ArrayList<Vector2D> incomingData) {
+        double currentSpeed = 20;
+        Vector2D currentPosition = new Vector2D(0,4);
 
-        if (viewableObjectList != null && viewableObjectList.size() != 0) {
-            for (int i = 0; i < viewableObjectList.size(); i++) {
-                double distance = getDistance(viewableObjectList.get(i), ourCurrentPos);
-
-                if (_speedAndDistanceObjs.get(i) == null) {
-                    //if previous values are empty, we create them
-                    SpeedAndDistanceObj mapObjData = new SpeedAndDistanceObj(0, distance, viewableObjectList.get(i));
-                    _speedAndDistanceObjs.add(mapObjData);
-                } else {
-                    SpeedAndDistanceObj previous = _speedAndDistanceObjs.get(i);
-                    Vector2D currentPos = viewableObjectList.get(i);
-
-                    double currentSpeed = getCurrentSpeedOfSpecificObj(previous, currentPos);
-                    double relativeSpeed = calculateRelativeSpeed(ourCurrentSpeed, currentSpeed);
-
-                    previous.setCurrentDistance(distance);
-                    previous.setCurrentPosition(currentPos);
-                    previous.setRelativeSpeed(relativeSpeed);
-                }
-            }
-        }
-
-        return _speedAndDistanceObjs;
+        ArrayList<Vector2D> recent = getMostRecentVectorsFromDataBus(incomingData);
+        return getDetectedObjsRelativeSpeedDistance(recent,currentPosition,currentSpeed);
     }
 
+    public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance() {
+        return null;
+    }
+
+    //<editor-fold desc="Private methods">
     //gives back speed and distance objects in terms of current vector values
-    public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedDistance(ArrayList<Vector2D> inputVectors, Vector2D ourCurrentPosition, double ourSpeed) {
+    private ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedDistance(ArrayList<Vector2D> inputVectors, Vector2D ourCurrentPosition, double ourSpeed) {
         if (_speedAndDistanceObjs != null && _speedAndDistanceObjs.size() != 0) {
             if (inputVectors.size() != 0) {
                 int itemIndex = 0;
@@ -133,9 +96,11 @@ public class RadarModul implements IRadarData {
                     itemIndex++;
                 }
                 //REFACTOR THIS -> into another method, like: RemovingRemainingItems(int index)
-                while (itemIndex < _speedAndDistanceObjs.size()) {
-                    _speedAndDistanceObjs.remove(itemIndex);
-                    itemIndex++;
+
+                ListIterator myListIterator = _speedAndDistanceObjs.listIterator(itemIndex);
+                while (myListIterator.hasNext()) {
+                    SpeedAndDistanceObj removableObj = ((SpeedAndDistanceObj) myListIterator.next());
+                    myListIterator.remove();
                 }
             } else {
                 _speedAndDistanceObjs = new ArrayList<SpeedAndDistanceObj>();
@@ -152,6 +117,44 @@ public class RadarModul implements IRadarData {
             }
         }
         return _speedAndDistanceObjs;
+    }
+
+    //this function gets the incoming position data and creates a new list while checking the perviously saved positions
+    private ArrayList<Vector2D> getMostRecentVectorsFromDataBus(ArrayList<Vector2D> incomingVectorDataList) {
+        ArrayList<Vector2D> recentVectorsList = new ArrayList<Vector2D>();
+        HashMap<Integer, int[]> actualHashMap = CreateHashMapFromArrayList(incomingVectorDataList);
+
+        if (!_previousVectorsHashMap.isEmpty()) {
+            int index = 0;
+            while (index != incomingVectorDataList.size()) {
+                Vector2D item = incomingVectorDataList.get(index);
+                if (!isItemInHashMap(item)) {
+                    int[] vector = {item.get_coordinateX(), item.get_coordinateY()};
+                    _previousVectorsHashMap.put(item.hashCode(), vector);
+                }
+                recentVectorsList.add(item);
+                index++;
+            }
+            //TODO: REFACTOR MEEE PLSSS, IT HURTS MY BUTT
+            ArrayList<Integer> hashMapKeyList = new ArrayList<Integer>();
+            for (int key : _previousVectorsHashMap.keySet()) {
+                if (!actualHashMap.containsKey(key)) {
+                    hashMapKeyList.add(key);
+                }
+            }
+            for (int key : hashMapKeyList) {
+                _previousVectorsHashMap.remove(key);
+            }
+        } else {
+            _previousVectorsHashMap.clear();
+            for (int i = 0; i < incomingVectorDataList.size(); i++) {
+                Vector2D item = incomingVectorDataList.get(i);
+                int[] vectorValues = {item.get_coordinateX(), item.get_coordinateY()};
+                _previousVectorsHashMap.put(item.hashCode(), vectorValues);
+            }
+            recentVectorsList = incomingVectorDataList;
+        }
+        return recentVectorsList;
     }
 
     private double getDistance(Vector2D x, Vector2D y) {
@@ -189,50 +192,12 @@ public class RadarModul implements IRadarData {
         return valuePairs[0] != current.get_coordinateX() || valuePairs[1] != current.get_coordinateY();
     }
 
-    //this function gets the incoming position data and creates a new list while checking the perviously saved positions
-    public ArrayList<Vector2D> getMostRecentVectorsFromDataBus(ArrayList<Vector2D> incomingVectorDataList) {
-        ArrayList<Vector2D> recentVectorsList = new ArrayList<Vector2D>();
-        HashMap<Integer, int[]> actualHashMap = CreateHashMapFromArrayList(incomingVectorDataList);
-
-        if (!_previousVectorsHashMap.isEmpty()) {
-            int index = 0;
-            while (index != incomingVectorDataList.size()) {
-                Vector2D item = incomingVectorDataList.get(index);
-                if (!isItemInHashMap(item)) {
-                    int[] vector = {item.get_coordinateX(), item.get_coordinateY()};
-                    _previousVectorsHashMap.put(item.hashCode(), vector);
-                }
-                recentVectorsList.add(item);
-                index++;
-            }
-            //TODO: REFACTOR MEEE PLSSS, IT HURTS MY BUTT
-            ArrayList<Integer> hashMapKeyList= new ArrayList<Integer>();
-            for (int key : _previousVectorsHashMap.keySet()){
-                if(!actualHashMap.containsKey(key)){
-                    hashMapKeyList.add(key);
-                }
-            }
-            for (int key:hashMapKeyList){
-                _previousVectorsHashMap.remove(key);
-            }
-        } else {
-            _previousVectorsHashMap.clear();
-            for (int i = 0; i < incomingVectorDataList.size(); i++) {
-                Vector2D item = incomingVectorDataList.get(i);
-                int[] vectorValues = {item.get_coordinateX(), item.get_coordinateY()};
-                _previousVectorsHashMap.put(item.hashCode(), vectorValues);
-            }
-            recentVectorsList = incomingVectorDataList;
-        }
-        return recentVectorsList;
-    }
-
     private HashMap<Integer, int[]> CreateHashMapFromArrayList(ArrayList<Vector2D> vector2DsList) {
-        HashMap<Integer, int[]> hashMap=new HashMap<Integer, int[]>();
+        HashMap<Integer, int[]> hashMap = new HashMap<Integer, int[]>();
         for (Vector2D vector : vector2DsList) {
             int key = vector.hashCode();
             int[] values = {vector.get_coordinateX(), vector.get_coordinateY()};
-            hashMap.put(key,values);
+            hashMap.put(key, values);
         }
         return hashMap;
     }
@@ -240,4 +205,5 @@ public class RadarModul implements IRadarData {
     private boolean isItemInHashMap(Vector2D item) {
         return _previousVectorsHashMap.containsKey(item.hashCode());
     }
+//</editor-fold>
 }
