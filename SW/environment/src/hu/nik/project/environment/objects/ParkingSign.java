@@ -1,12 +1,14 @@
 package hu.nik.project.environment.objects;
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
  * Class for Parking signs
  */
-public class ParkingSign extends Sign {
+public class ParkingSign extends Sign implements Serializable {
 
     public enum ParkingSignType  {
         PARKING_LEFT,

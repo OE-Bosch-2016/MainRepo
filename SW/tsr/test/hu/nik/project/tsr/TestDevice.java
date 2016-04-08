@@ -6,7 +6,7 @@ import hu.nik.project.environment.objects.SimpleRoad;
 import hu.nik.project.environment.objects.SpeedSign;
 
 /**
- * Created by hodvogner.zoltan on 2016.03.24.
+ * Created by hodvogner.zoltan on 2016.04.08.
  *
  *  It's a device with two-way connenction, it can write onto the bus and can receive messages with type=1
  */
@@ -16,7 +16,7 @@ class TestDevice implements ICommBusDevice {
     private CommBusConnector commBusConnector;
     private Class neededDataType;
 
-    private String stringData = "";
+    private String stringData = "";   // last error message if something wrong
     private TsrPacket tsrPacketData;
     private SpeedSign speedSignData;
 
@@ -28,17 +28,19 @@ class TestDevice implements ICommBusDevice {
     @Override
     public void commBusDataArrived() {
 
-        if (commBusConnector.getDataType() == neededDataType) {
+        stringData = "";
+        dataType = commBusConnector.getDataType();
 
-            dataType = commBusConnector.getDataType();
-            if (commBusConnector.getDataType() == TsrPacket.class) {
+        if (dataType == neededDataType) {
+
+            if (dataType == TsrPacket.class) {
                 try {
                     tsrPacketData = (TsrPacket) commBusConnector.receive();
                 } catch (CommBusException e) {
                     stringData = e.getMessage();
                 }
             }
-            if (commBusConnector.getDataType() == SpeedSign.class) {
+            if (dataType == SpeedSign.class) {
                 try {
                     speedSignData = (SpeedSign) commBusConnector.receive();
                 } catch (CommBusException e) {
@@ -48,14 +50,10 @@ class TestDevice implements ICommBusDevice {
         }
     }
 
-    public Class DataType() {
-        return dataType;
-    }
-
     public String getStringData() {
         return stringData;
     }
-    public TsrPacket getTsrPAcketData() { return tsrPacketData; }
+    public TsrPacket getTsrPacketData() { return tsrPacketData; }
     public SpeedSign getSpeedSignData() { return speedSignData; }
 
     public CommBusConnector getCommBusConnector() { return commBusConnector;}

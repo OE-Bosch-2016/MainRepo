@@ -1,12 +1,14 @@
 package hu.nik.project.environment.objects;
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
  * Class for Speed signs
  */
-public class SpeedSign extends Sign {
+public class SpeedSign extends Sign implements Serializable {
 
     public enum SpeedSignType  {
         LIMIT_10,

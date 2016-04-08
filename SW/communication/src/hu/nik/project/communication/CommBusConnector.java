@@ -94,7 +94,7 @@ public class CommBusConnector {
     //--------------------- send data
 
     public boolean send(Class dataType, Object dataObject) throws CommBusException {
-        String exceptionMessagePrefix = "Error in CommBusController send: ";
+        String exceptionMessagePrefix = "Error in CommBusConnector send: ";
         if (connectorType == CommBusConnectorType.Receiver) { throw new CommBusException(exceptionMessagePrefix + "Cannot send with this connector");}
         if (dataType == null) {throw new CommBusException(exceptionMessagePrefix + "Sent object type cannot be null"); }
         if (dataObject == null) {throw new CommBusException(exceptionMessagePrefix + "Sent object cannot be null"); }
@@ -148,7 +148,7 @@ public class CommBusConnector {
     //--------------------- receive data
 
     public Object receive() throws CommBusException {
-        if (connectorType == CommBusConnectorType.Sender) { throw  new CommBusException("Error in CommBusController receive: Cannot receive with this connector"); }
+        if (connectorType == CommBusConnectorType.Sender) { throw  new CommBusException("Error in CommBusConnector receive: Cannot receive with this connector"); }
         if (!isDataInBuffer) return null;
 
         // Convert object from commbus bytes
@@ -159,7 +159,7 @@ public class CommBusConnector {
             return object;
         }
         catch (IOException|ClassNotFoundException e) {
-            throw new CommBusException("Error in CommBusController receive: " + e.getMessage());
+            throw new CommBusException("Error in CommBusConnector receive: " + e.getMessage());
         }
     }
 

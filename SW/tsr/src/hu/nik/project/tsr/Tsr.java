@@ -11,6 +11,7 @@ import hu.nik.project.environment.objects.SpeedSign;
 public class Tsr implements ICommBusDevice{
 
     private CommBusConnector commBusConnector;
+    private String stringData = "";
 
     public Tsr(CommBus commBus, CommBusConnectorType commBusConnectorType) {
         commBusConnector = commBus.createConnector(this, commBusConnectorType);
@@ -27,7 +28,7 @@ public class Tsr implements ICommBusDevice{
                         data.getObjectType() == PrioritySign.PrioritySignType.STOP)
                     commBusConnector.send(TsrPacket.class, new TsrPacket(0,data.getCenter()));
             } catch (CommBusException e) {
-                String stringData = e.getMessage();
+                stringData = e.getMessage();
             }
         } else if (dataType == DirectionSign.class) {
             try {
@@ -35,7 +36,7 @@ public class Tsr implements ICommBusDevice{
                 DirectionSign data = (DirectionSign) commBusConnector.receive();
                 commBusConnector.send(TsrPacket.class, new TsrPacket(0,data.getCenter()));
             } catch (CommBusException e) {
-                String stringData = e.getMessage();
+                stringData = e.getMessage();
             }
         } else if (dataType == SpeedSign.class) {
             try {
@@ -67,8 +68,12 @@ public class Tsr implements ICommBusDevice{
                 }
                 if(packet!=null) commBusConnector.send(TsrPacket.class, packet);
             } catch (CommBusException e) {
-                String stringData = e.getMessage();
+                stringData = e.getMessage();
             }
         }
+    }
+
+    public String getStringData() {
+        return stringData;
     }
 }

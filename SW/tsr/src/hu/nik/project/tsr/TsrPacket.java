@@ -2,12 +2,13 @@ package hu.nik.project.tsr;
 
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by CyberZero on 2016. 04. 07..
  */
-public class TsrPacket {
+public class TsrPacket implements Serializable {
 
     private int speedLimit;
     private ScenePoint centerPoint;

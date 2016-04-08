@@ -76,14 +76,14 @@ public class CommBusIntegrationTest {
     @Test
     public void testConnectionTypeReceiver() throws Exception {
         expectedEx.expect(CommBusException.class);
-        expectedEx.expectMessage("Error in CommBusController send: Cannot send with this connector");
+        expectedEx.expectMessage("Error in CommBusConnector send: Cannot send with this connector");
         testDevice3.getCommBusConnector().send(String.class, "Fail");
     }
 
     @Test
     public void testConnectionTypeSender() throws Exception {
         expectedEx.expect(CommBusException.class);
-        expectedEx.expectMessage("Error in CommBusController receive: Cannot receive with this connector");
+        expectedEx.expectMessage("Error in CommBusConnector receive: Cannot receive with this connector");
         testDevice2.getCommBusConnector().receive();
     }
 

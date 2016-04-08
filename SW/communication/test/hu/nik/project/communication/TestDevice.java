@@ -61,10 +61,6 @@ class TestDevice implements ICommBusDevice {
         }
     }
 
-    public Class DataType() {
-        return dataType;
-    }
-
     public int getIntData() {
         return intData;
     }
