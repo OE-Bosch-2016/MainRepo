@@ -26,7 +26,7 @@ public class Tsr implements ICommBusDevice{
                 PrioritySign data = (PrioritySign) commBusConnector.receive();
                 if(data.getObjectType()== PrioritySign.PrioritySignType.GIVEAWAY ||
                         data.getObjectType() == PrioritySign.PrioritySignType.STOP)
-                    commBusConnector.send(TsrPacket.class, new TsrPacket(0,data.getCenter()));
+                    commBusConnector.send( new TsrPacket(0,data.getCenter()));
             } catch (CommBusException e) {
                 stringData = e.getMessage();
             }
@@ -34,7 +34,7 @@ public class Tsr implements ICommBusDevice{
             try {
                 //send anytype direction sign
                 DirectionSign data = (DirectionSign) commBusConnector.receive();
-                commBusConnector.send(TsrPacket.class, new TsrPacket(0,data.getCenter()));
+                commBusConnector.send( new TsrPacket(0,data.getCenter()));
             } catch (CommBusException e) {
                 stringData = e.getMessage();
             }
@@ -66,7 +66,7 @@ public class Tsr implements ICommBusDevice{
                         packet=new TsrPacket(100,data.getCenter());
                         break;
                 }
-                if(packet!=null) commBusConnector.send(TsrPacket.class, packet);
+                if(packet!=null) commBusConnector.send(packet);
             } catch (CommBusException e) {
                 stringData = e.getMessage();
             }

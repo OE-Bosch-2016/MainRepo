@@ -77,7 +77,7 @@ public class CommBusIntegrationTest {
     public void testConnectionTypeReceiver() throws Exception {
         expectedEx.expect(CommBusException.class);
         expectedEx.expectMessage("Error in CommBusConnector send: Cannot send with this connector");
-        testDevice3.getCommBusConnector().send(String.class, "Fail");
+        testDevice3.getCommBusConnector().send("Fail");
     }
 
     @Test
@@ -90,14 +90,14 @@ public class CommBusIntegrationTest {
     @Test
     public void testSendAndReceive() throws Exception {
         // Send testdata to device2
-        Assert.assertTrue(testDevice1.getCommBusConnector().send(String.class, "DataArrived"));
-        Assert.assertFalse(testDevice2.getCommBusConnector().send(String.class, "NewDataArrived1"));
+        Assert.assertTrue(testDevice1.getCommBusConnector().send("DataArrived"));
+        Assert.assertFalse(testDevice2.getCommBusConnector().send("NewDataArrived1"));
         //
         // Check the first send arrives data arrived
         Assert.assertEquals("DataArrived", testDevice3.getStringData());
         //
-        Assert.assertTrue(testDevice1.getCommBusConnector().send(String.class, "NewDataArrived2"));
-        Assert.assertTrue(testDevice1.getCommBusConnector().send(String.class, "NewestDataArrived"));
+        Assert.assertTrue(testDevice1.getCommBusConnector().send("NewDataArrived2"));
+        Assert.assertTrue(testDevice1.getCommBusConnector().send("NewestDataArrived"));
         // Check the second send arrives data arrived
         Assert.assertNotEquals("NewDataArrived2", testDevice2.getStringData()); // it was overwritten with ...
         Assert.assertEquals("NewestDataArrived", testDevice3.getStringData()); // ... this one
@@ -113,9 +113,9 @@ public class CommBusIntegrationTest {
         TestDevice deviceWithInteger = new TestDevice(commBus, Integer.class, CommBusConnectorType.SenderReceiver);
         TestDevice deviceWithScenePoint = new TestDevice(commBus, ScenePoint.class, CommBusConnectorType.SenderReceiver);
 
-        deviceWithInteger.getCommBusConnector().send(ScenePoint.class, new ScenePoint(120, 110));
-        deviceWithScenePoint.getCommBusConnector().send(Integer.class, 52125);
-        deviceWithScenePoint.getCommBusConnector().send(SimpleRoad.class, new SimpleRoad(new ScenePoint(222,111), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT ));
+        deviceWithInteger.getCommBusConnector().send(new ScenePoint(120, 110));
+        deviceWithScenePoint.getCommBusConnector().send((int)52125);
+        deviceWithScenePoint.getCommBusConnector().send(new SimpleRoad(new ScenePoint(222,111), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT ));
 
         Assert.assertEquals(120, deviceWithScenePoint.getScenePointData().getX());
         Assert.assertEquals(52125, deviceWithInteger.getIntData());

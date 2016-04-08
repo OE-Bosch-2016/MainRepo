@@ -30,7 +30,7 @@ public class TsrTest {
     @Test
     public void testSendAndReceive() throws Exception {
         // everyone sends a speed-limit sign onto the bus
-        speedSignSenderDevice.getCommBusConnector().send(SpeedSign.class, speedSignToSend);
+        speedSignSenderDevice.getCommBusConnector().send( speedSignToSend );
 
         // must wait a little for transmission, processing and forwarding as a TsrPacket
         Thread.sleep(200);

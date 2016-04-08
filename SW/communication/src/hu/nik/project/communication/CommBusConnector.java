@@ -93,16 +93,14 @@ public class CommBusConnector {
 
     //--------------------- send data
 
-    public boolean send(Class dataType, Object dataObject) throws CommBusException {
+    public boolean send(Object dataObject) throws CommBusException {
+        Class dataType = dataObject.getClass(); // taa-daaa!!!
         String exceptionMessagePrefix = "Error in CommBusConnector send: ";
         if (connectorType == CommBusConnectorType.Receiver) { throw new CommBusException(exceptionMessagePrefix + "Cannot send with this connector");}
         if (dataType == null) {throw new CommBusException(exceptionMessagePrefix + "Sent object type cannot be null"); }
         if (dataObject == null) {throw new CommBusException(exceptionMessagePrefix + "Sent object cannot be null"); }
         if (isDataInBuffer) return false; // unreaded data in the buffer
         if (isDataOutBuffer) return false; // unwritten data in the buffer
-        //if ((String)dataObject=="NewestDataArrived") {
-        //    exceptionMessagePrefix = "send():";
-        //}
 
         // Make commbus compatible data (microcontroller model)
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
