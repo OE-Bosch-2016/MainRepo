@@ -23,7 +23,7 @@ public class ACC implements IACC {
     @Override
     public void PedalState(int wheelStateInDegrees, boolean ACCState, int currentSpeed, int nearestObstacleDistance) {
         if (ACCState) {//ACC is on
-            if ((currentSpeed <= maxSpeed - Math.abs(wheelStateInDegrees * 2)) && (nearestObstacleDistance > minFollowingDistance)) {//Should we accelerate?
+            if ((currentSpeed < maxSpeed - Math.abs(wheelStateInDegrees * 2)) && (nearestObstacleDistance > minFollowingDistance)) {//Should we accelerate?
                 //throttling
                 pedal = 1;
                 System.out.println("1");
