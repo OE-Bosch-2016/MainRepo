@@ -11,6 +11,7 @@ public class Wheels implements IWheels {
 	
 	//adjust these by testing
     	static double turningAdjustment = 0.01;      //proportion to simulate turning realistically
+    	static double framerate = 24;
 	static double accelerationAdjustment = 0.2; //proportion to convert torque to acceleration
 	static double brakeAdjustment = 0.2;		//proportion to turn brake pedal to deceleration
 	static double natureBrake = 0.02;			//deceleration of environment
@@ -42,7 +43,7 @@ public class Wheels implements IWheels {
 	
 	private void calcDirection(double driverWheel) 
 	{
-		double phiDirection=driverWheel*speed*turningAdjustment;
+		double phiDirection=driverWheel*speed*turningAdjustment/framerate;
 		direction += phiDirection;
 		direction = direction % 360;
 		if (direction<0)
