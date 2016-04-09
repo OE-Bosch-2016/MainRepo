@@ -3,12 +3,14 @@ package hu.nik.project.environment.objects;
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.03.14..
  *
  * * Class for curved roads
  */
-public class CurvedRoad extends Road {
+public class CurvedRoad extends Road implements Serializable {
 
     public enum CurvedRoadType  {
         SIMPLE_45_LEFT,

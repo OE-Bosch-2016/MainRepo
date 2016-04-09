@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.*;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
@@ -111,4 +113,20 @@ public class SimpleRoadTest {
         Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, radarViewAngle, radarDistance) );
         Assert.assertTrue( simpleRoad.isVisibleFromObserver(observerBase5, observerRotation, ultraViewAngle, ultraDistance) );
     }
+
+    @Test
+    public void testReadWriteSerializedObject() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutput out = new ObjectOutputStream(baos);
+        out.writeObject(simpleRoad);
+        //
+        byte[] byteDataBuffer = baos.toByteArray();
+        //
+        ByteArrayInputStream bais = new ByteArrayInputStream(byteDataBuffer);
+        ObjectInput in = new ObjectInputStream(bais);
+        Object clonedSimpleRoad = in.readObject();
+        //
+        Assert.assertEquals(simpleRoad.toString(), clonedSimpleRoad.toString());
+    }
+
 }

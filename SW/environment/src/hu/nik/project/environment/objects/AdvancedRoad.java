@@ -2,12 +2,14 @@ package hu.nik.project.environment.objects;
 
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
  * Class for Advanced roads
  */
-public class AdvancedRoad extends Road {
+public class AdvancedRoad extends Road implements Serializable {
 
     private ScenePoint leftPoint;
     private ScenePoint rightPoint;

@@ -1,11 +1,17 @@
 package hu.nik.project.environment;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.03.14..
  *
  * Base point class for positions
  */
-public class ScenePoint {
+public class ScenePoint implements Serializable {
+
     private int x;
     private int y;
 
@@ -94,5 +100,36 @@ public class ScenePoint {
         if ( viewAngleOfSP > maxAngle ) return false; // not visible because above max-angle
         return viewAngleOfSP >= minAngle;
     }
+
+    // implementation of Serializable interface //////////////////////////////////////////////////////////////
+
+    //private static final long serialVersionUID = 4610859544908152108L;
+
+    //private void validateState() {
+        //  throw new IllegalArgumentException("...") if dome of data-format error occurs
+    //}
+
+    //private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+    //    publicReadObject(aInputStream);
+    //}
+
+    public void publicReadObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+        //always perform the default de-serialization first
+        x = aInputStream.readInt();
+        y = aInputStream.readInt();
+        //ensure that object state has not been corrupted or tampered with maliciously
+        //validateState();
+    }
+
+    //private void writeObject(ObjectOutputStream aOutputStream) throws IOException {
+    //    publicWriteObject(aOutputStream);
+    //}
+
+    public void publicWriteObject(ObjectOutputStream aOutputStream) throws IOException {
+        //perform the default serialization for all non-transient, non-static fields
+        aOutputStream.writeInt(x);
+        aOutputStream.writeInt(y);
+    }
+
 
 }
