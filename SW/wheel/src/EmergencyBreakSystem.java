@@ -6,7 +6,7 @@ import hu.nik.project.environment.objects.SceneObject;
 
 public class EmergencyBreakSystem {
 	
-	private static double ebsTolerance = 100; //how sensitive is the EBS system misses in 0.001 of a hour
+    private static double ebsTolerance = 100; //how sensitive is the EBS system misses in 0.001 of a hour
     private static double ebsDistance = 800; //how far does the ebs predict in pixels
     
     public boolean get_EBS_State(SceneObject car, List<SceneObject> jay_walkers)
