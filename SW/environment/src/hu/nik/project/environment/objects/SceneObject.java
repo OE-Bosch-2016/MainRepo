@@ -2,12 +2,18 @@ package hu.nik.project.environment.objects;
 
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.02.24..
  *
  * Base class for the scene objects
  */
-public abstract class SceneObject<T> {
+public abstract class SceneObject<T> implements Serializable {
+
     private ScenePoint basePosition;
     private int rotation;
 
@@ -37,4 +43,30 @@ public abstract class SceneObject<T> {
     public String toString() {
         return "ClassType: " + getClass().getSimpleName() + " -> " + " Position X: " + basePosition.getX() + " Position Y: " + basePosition.getY() + " Rotation: " + rotation;
     }
+
+    // implementation of Serializable interface //////////////////////////////////////////////////////////////
+
+    private static final long serialVersionUID = -6826276751836292310L;
+
+    private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+        publicReadObject(aInputStream);
+    }
+
+    public void publicReadObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+        basePosition = (ScenePoint)aInputStream.readObject();
+        //basePosition = new ScenePoint(0,0);
+        //basePosition.publicReadObject(aInputStream);
+        rotation = aInputStream.readInt();
+    }
+
+    private void writeObject(ObjectOutputStream aOutputStream) throws IOException {
+        publicWriteObject(aOutputStream);
+    }
+
+    public void publicWriteObject(ObjectOutputStream aOutputStream) throws IOException {
+        aOutputStream.writeObject(basePosition);
+        //basePosition.publicWriteObject(aOutputStream);
+        aOutputStream.writeInt(rotation);
+    }
+
 }

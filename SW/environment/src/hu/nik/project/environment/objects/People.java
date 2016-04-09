@@ -2,12 +2,14 @@ package hu.nik.project.environment.objects;
 
 import hu.nik.project.environment.ScenePoint;
 
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.02.27..
  *
  * Class for people
  */
-public class People extends Misc {
+public class People extends Misc implements Serializable {
 
     public enum PeopleType {
         MAN

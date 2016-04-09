@@ -3,8 +3,12 @@ package hu.nik.project.communication;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
-import java.util.Arrays;
+import java.nio.ByteBuffer;
+import hu.nik.project.environment.objects.SimpleRoad;
+import hu.nik.project.environment.ScenePoint;
 
 /**
  * Created by hodvogner.zoltan on 2016.03.24.
@@ -14,90 +18,107 @@ import java.util.Arrays;
 public class CommBusIntegrationTest {
 
     private static CommBus commBus;
-    private static TestDevice1 testDevice1;
-    private static TestDevice2 testDevice2;
-    private static TestDevice3 testDevice3;
-    private static CommBusConnector commBusConnector1;
-    private static CommBusConnector commBusConnector2;
-    private static CommBusConnector commBusConnector3;
-    private static byte[] testData1;
-    private static byte[] testData2;
+    private static TestDevice testDevice1;
+    private static TestDevice testDevice2;
+    private static TestDevice testDevice3;
+
+    private static byte[] testIntByteData;
+
+    private static String testStringData = "TESTDATA";
+    private static byte[] testStringByteData;
 
     @BeforeClass
     public static void setUp() throws Exception {
-        // commBus instanmce for tests
-        // commBus = new CommBus();
+        // test commBus only
+        commBus = new CommBus();
         // test devices (they implements the ICommBusDevice interface)
-        testDevice1 = new TestDevice1();
-        testDevice2 = new TestDevice2();
-        testDevice3 = new TestDevice3();
+        testDevice1 = new TestDevice(commBus, Integer.class, CommBusConnectorType.SenderReceiver);
+        testDevice2 = new TestDevice(commBus, String.class, CommBusConnectorType.Sender);
+        testDevice3 = new TestDevice(commBus, String.class, CommBusConnectorType.Receiver);
+
         // test data for write and read tests
-        testData1 = "SPEED;45;km/h".getBytes();
-        testData2 = "STEERING;90;degrees".getBytes();
+        testIntByteData = ByteBuffer.allocate(4).putInt(22222).array();
+        testStringByteData = testStringData.getBytes();
     }
 
     @Test
-    public void testSendingAndReceivingData() throws Exception {
-        // reset
-        commBus = null;
-        commBus = new CommBus();
-        // bus-attached connectors for tests
-        commBusConnector1 = commBus.createConnector(testDevice1, CommBusConnectorType.ReadWrite);
-        commBusConnector2 = commBus.createConnector(testDevice2, CommBusConnectorType.ReadOnly);
-        commBusConnector3 = commBus.createConnector(testDevice3, CommBusConnectorType.WriteOnly);
-
-        Assert.assertEquals(0, commBusConnector1.getDataType());
-        Assert.assertEquals(0, commBusConnector2.getDataType());
-        Assert.assertEquals(0, commBusConnector3.getDataType());
-
-        //
-        // connector1 send a data with type(2)                      DATA from DEVICE1 ===> BUS
-        //
-        commBusConnector1.write(2,testData1);
-
-        Assert.assertFalse(commBus.isBusFree()); // bus is busy (data is on the way)
-        Thread.sleep(500);                       // wait for transmission
-        Assert.assertTrue(commBus.isBusFree());  // bus is already free (data has been sent)
-
-        //
-        // connector2 is interested for type=2 data-packages        DATA to DEVICE2 <=== BUS
-        //
-        Assert.assertEquals(2, testDevice2.getLastEventDataType());
-        // connector2 received the message
-        byte[] lastDataReceivedByTestDevice2 = testDevice2.getLastData();
-        Assert.assertEquals(testData1.length,lastDataReceivedByTestDevice2.length);
-
-        // check the send and received data (they are same content)
-        Assert.assertTrue(Arrays.equals(lastDataReceivedByTestDevice2,testData1));
-
-        //
-        // connector3 send a data with type(1)                      DATA from DEVICE3 ===> BUS
-        //
-        commBusConnector3.write(1,testData2);
-
-        Assert.assertFalse(commBus.isBusFree()); // bus is busy (data is on the way)
-        Thread.sleep(500);                       // wait for transmission
-        Assert.assertTrue(commBus.isBusFree());  // bus is already free (data has been sent)
-
-        //
-        // connector2 is not interested for type=1 data-packages    DATA to DEVICE2 ==X== BUS
-        //
-        Assert.assertEquals(2, testDevice2.getLastEventDataType());
-        // connector2 didn't received the message
-        lastDataReceivedByTestDevice2 = testDevice2.getLastData();
-        Assert.assertEquals(testData1.length,lastDataReceivedByTestDevice2.length);
-
-        //
-        // connector1 is interested for type=1 data-packages        DATA to DEVICE1 <=== BUS
-        //
-        Assert.assertEquals(1, testDevice1.getLastEventDataType());
-        // connector2 didn't received the message
-        byte[] lastDataReceivedByTestDevice1 = testDevice1.getLastData();
-        Assert.assertNotEquals(0,lastDataReceivedByTestDevice1.length);
-
-        // check the send and received data (they are same content)
-        Assert.assertTrue(Arrays.equals(lastDataReceivedByTestDevice1,testData2));
-
+    public void testGetDevice() throws Exception {
+        Assert.assertEquals(testDevice1, testDevice1.getCommBusConnector().getDevice());
+        Assert.assertEquals(testDevice2, testDevice2.getCommBusConnector().getDevice());
+        Assert.assertEquals(testDevice3, testDevice3.getCommBusConnector().getDevice());
     }
 
+    @Test
+    public void testGetConnectorType() throws Exception {
+        Assert.assertEquals( CommBusConnectorType.SenderReceiver, testDevice1.getCommBusConnector().getConnectorType());
+        Assert.assertEquals( CommBusConnectorType.Sender, testDevice2.getCommBusConnector().getConnectorType());
+        Assert.assertEquals( CommBusConnectorType.Receiver, testDevice3.getCommBusConnector().getConnectorType());
+    }
+
+    @Test
+    public void testGetSetDataType() throws Exception {
+        // must data exists in the buffer
+        testDevice1.getCommBusConnector().setDataBuffer(testIntByteData);
+        testDevice1.getCommBusConnector().setDataType(Integer.class);
+        Assert.assertEquals(Integer.class, testDevice1.getCommBusConnector().getDataType());
+    }
+
+    @Test
+    public void testSetDataBuffer() throws Exception {
+        testDevice1.getCommBusConnector().setDataBuffer(testIntByteData);
+        testDevice1.getCommBusConnector().setDataType(Integer.class);
+        Assert.assertEquals(Integer.class, testDevice1.getCommBusConnector().getDataType());
+    }
+
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
+
+    @Test
+    public void testConnectionTypeReceiver() throws Exception {
+        expectedEx.expect(CommBusException.class);
+        expectedEx.expectMessage("Error in CommBusConnector send: Cannot send with this connector");
+        testDevice3.getCommBusConnector().send("Fail");
+    }
+
+    @Test
+    public void testConnectionTypeSender() throws Exception {
+        expectedEx.expect(CommBusException.class);
+        expectedEx.expectMessage("Error in CommBusConnector receive: Cannot receive with this connector");
+        testDevice2.getCommBusConnector().receive();
+    }
+
+    @Test
+    public void testSendAndReceive() throws Exception {
+        // Send testdata to device2
+        Assert.assertTrue(testDevice1.getCommBusConnector().send("DataArrived"));
+        Assert.assertFalse(testDevice2.getCommBusConnector().send("NewDataArrived1"));
+        //
+        // Check the first send arrives data arrived
+        Assert.assertEquals("DataArrived", testDevice3.getStringData());
+        //
+        Assert.assertTrue(testDevice1.getCommBusConnector().send("NewDataArrived2"));
+        Assert.assertTrue(testDevice1.getCommBusConnector().send("NewestDataArrived"));
+        // Check the second send arrives data arrived
+        Assert.assertNotEquals("NewDataArrived2", testDevice2.getStringData()); // it was overwritten with ...
+        Assert.assertEquals("NewestDataArrived", testDevice3.getStringData()); // ... this one
+        // Try to receive again, when there is no data on bus
+        Assert.assertNull(testDevice3.getCommBusConnector().getDataType());
+        Assert.assertNull(testDevice3.getCommBusConnector().receive());
+    }
+
+    @Test
+    public void testStressCommunication() throws Exception{
+        // Add new devices to the bus
+        TestDevice deviceWithSimpleRoad = new TestDevice(commBus, SimpleRoad.class, CommBusConnectorType.SenderReceiver);
+        TestDevice deviceWithInteger = new TestDevice(commBus, Integer.class, CommBusConnectorType.SenderReceiver);
+        TestDevice deviceWithScenePoint = new TestDevice(commBus, ScenePoint.class, CommBusConnectorType.SenderReceiver);
+
+        deviceWithInteger.getCommBusConnector().send(new ScenePoint(120, 110));
+        deviceWithScenePoint.getCommBusConnector().send((int)52125);
+        deviceWithScenePoint.getCommBusConnector().send(new SimpleRoad(new ScenePoint(222,111), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT ));
+
+        Assert.assertEquals(120, deviceWithScenePoint.getScenePointData().getX());
+        Assert.assertEquals(52125, deviceWithInteger.getIntData());
+        Assert.assertEquals(SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT, deviceWithSimpleRoad.getSimpleRoadData().getObjectType());
+    }
 }

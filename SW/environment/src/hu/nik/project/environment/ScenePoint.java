@@ -1,11 +1,17 @@
 package hu.nik.project.environment;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 /**
  * Created by Róbert on 2016.03.14..
  *
  * Base point class for positions
  */
-public class ScenePoint {
+public class ScenePoint implements Serializable {
+
     private int x;
     private int y;
 
@@ -73,30 +79,57 @@ public class ScenePoint {
                 viewAngleOfSP = 360 - Math.toDegrees(Math.atan(SPy / SPx));
         }
         if (viewAngleOfSP == 360) viewAngleOfSP = 0;
-        // viewAngleOfSP between 0 and 360 degrees
+        // viewAngleOfSP between 0 and 359.9999... degrees
 
-        double halfViewAngle = (double)viewAngle / 2;
-        if (viewAngle > 360) halfViewAngle = (viewAngle % 360) / 2;
-        // +/- half-viewangle => HVA
+        // I'll shift all degree-values with 1000 to positive distance
+        // so we will work with only positive numbers!!!
 
-        double rotation = observerRotation;
-        if (rotation > 360) rotation = rotation % 360;
-        if (rotation > 180) rotation = rotation - 360;  // --> -180 < rotation < +180
+        viewAngleOfSP = viewAngleOfSP + 1000; // SHIFT: viewAngleOfSP between 1000 and 1360 degrees
+
+        double halfViewAngle; // +/- half-viewangle = value of enabled divergence from observerRotation
+        if ( viewAngle > 360)
+            halfViewAngle = ((double)(viewAngle % 360)) / 2;
+        else
+            halfViewAngle = ((double)viewAngle) / 2;
+
+        double rotation = observerRotation + 1000; // SHIFT: rotation between 1000 and 1360 degrees
 
         double minAngle = rotation - halfViewAngle;
-        if (minAngle < 0) minAngle = minAngle + 360;  // rotation - HVA
-
         double maxAngle = rotation + halfViewAngle;
-        if (maxAngle < 0) maxAngle = maxAngle + 360;  // rotation + HVA
-
-        // unfortunately (in case of extremly high viewangle) minAngle might be the greater value
-        // in this case must decrease minAngle and return to -180,+180 interval
-        if (minAngle > maxAngle) {
-            if (minAngle > 180) minAngle = minAngle - 360;
-        }
 
         if ( viewAngleOfSP > maxAngle ) return false; // not visible because above max-angle
         return viewAngleOfSP >= minAngle;
     }
+
+    // implementation of Serializable interface //////////////////////////////////////////////////////////////
+
+    //private static final long serialVersionUID = 4610859544908152108L;
+
+    //private void validateState() {
+        //  throw new IllegalArgumentException("...") if dome of data-format error occurs
+    //}
+
+    //private void readObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+    //    publicReadObject(aInputStream);
+    //}
+
+    public void publicReadObject(ObjectInputStream aInputStream) throws ClassNotFoundException, IOException {
+        //always perform the default de-serialization first
+        x = aInputStream.readInt();
+        y = aInputStream.readInt();
+        //ensure that object state has not been corrupted or tampered with maliciously
+        //validateState();
+    }
+
+    //private void writeObject(ObjectOutputStream aOutputStream) throws IOException {
+    //    publicWriteObject(aOutputStream);
+    //}
+
+    public void publicWriteObject(ObjectOutputStream aOutputStream) throws IOException {
+        //perform the default serialization for all non-transient, non-static fields
+        aOutputStream.writeInt(x);
+        aOutputStream.writeInt(y);
+    }
+
 
 }
