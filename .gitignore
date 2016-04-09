@@ -1,3 +1,6 @@
+SW/environment/out/
+SW/environment/.idea/workspace.xml
+SW/environment/XML-parse.log
 Thumbs.db
 /SW/gearbox_engine/dist/
 /SW/gearbox_engine/build/
