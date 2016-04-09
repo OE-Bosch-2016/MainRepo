@@ -1,4 +1,4 @@
-package wheel;
+package wheels;
 import java.util.ArrayList;
 import java.util.List;
 import hu.nik.project.environment.objects.SceneObject;
