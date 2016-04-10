@@ -63,7 +63,7 @@ public class Wheels implements IWheels {
 		natureBrake=0.3*1.25*3=1.125; 
 		*/
 		
-		speed = Math.pow((2*(torque*RPM/0.0095488)/(natureBrake)), new Double("0.3333333");
+		speed =  Math.pow((2*(torque*RPM/0.0095488)/(natureBrake)), new Double("0.3333333"));
 		if(torque >= 0)
 		{
 			speed -= brakeAdjustment * brakePedal;
