@@ -3,8 +3,11 @@ package Radar;
 import Interfaces.IRadarData;
 import Interfaces.IRadarInputData;
 import Utils.Vector2D;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 
@@ -22,7 +25,8 @@ public class RadarModul implements IRadarData {
     private Timer _timer; //for sampling
 
     private HashMap<Integer, int[]> _previousVectorsHashMap;
-
+    private ObservableList<SpeedAndDistanceObj> _speedAndDistanceObjObservableList;
+    private OnRadarObjectsListener _radarObjectsListener;
 
     public RadarModul(IRadarInputData radarInputData, float angelOfSight, int samplingTime) {
         _radarInputData = radarInputData;
@@ -32,6 +36,18 @@ public class RadarModul implements IRadarData {
         _speedAndDistanceObjs = null;
         _isRadarEnabled = false;
         _previousVectorsHashMap = new HashMap<Integer, int[]>();
+        _timer= new Timer();
+
+        _speedAndDistanceObjs= new ArrayList<SpeedAndDistanceObj>();
+        _speedAndDistanceObjObservableList = FXCollections.observableList(_speedAndDistanceObjs);
+
+        _speedAndDistanceObjObservableList.addListener(new ListChangeListener<SpeedAndDistanceObj>() {
+            public void onChanged(Change<? extends SpeedAndDistanceObj> change) {
+                if(_radarObjectsListener!=null){
+                    _radarObjectsListener.objectListChanged(_speedAndDistanceObjObservableList);
+                }
+            }
+        });
     }
 
     //<editor-fold desc="Properties of Radar Modul">
@@ -58,26 +74,40 @@ public class RadarModul implements IRadarData {
 
 
     //TODO: We need to clarify how we will know the OUR current speed and position
-    public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance(ArrayList<Vector2D> incomingData) {
+    public ObservableList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance(ArrayList<Vector2D> incomingData) {
         double currentSpeed = 20;
         Vector2D currentPosition = new Vector2D(0,4);
 
         ArrayList<Vector2D> recent = getMostRecentVectorsFromDataBus(incomingData);
-        return getDetectedObjsRelativeSpeedDistance(recent,currentPosition,currentSpeed);
+        _speedAndDistanceObjObservableList= getDetectedObjsRelativeSpeedDistance(recent, currentPosition, currentSpeed);
+
+        return _speedAndDistanceObjObservableList;
     }
 
+    //into consttructor
     public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance() {
         return null;
     }
 
+
+    // Setter ----------------------------------------------------------------------------------------------------------
+    public void setOnRadarObjectListListener(OnRadarObjectsListener radarObjectsListener) {
+        _radarObjectsListener = radarObjectsListener;
+    }
+
+    // Listener --------------------------------------------------------------------------------------------------------
+    public interface OnRadarObjectsListener {
+        void objectListChanged(ObservableList<SpeedAndDistanceObj> result);
+    }
+
     //<editor-fold desc="Private methods">
     //gives back speed and distance objects in terms of current vector values
-    private ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedDistance(ArrayList<Vector2D> inputVectors, Vector2D ourCurrentPosition, double ourSpeed) {
+    private ObservableList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedDistance(ArrayList<Vector2D> recentVectorList, Vector2D ourCurrentPosition, double ourSpeed) {
         if (_speedAndDistanceObjs != null && _speedAndDistanceObjs.size() != 0) {
-            if (inputVectors.size() != 0) {
+            if (recentVectorList.size() != 0) {
                 int itemIndex = 0;
-                while (itemIndex != inputVectors.size()) {
-                    Vector2D currentVector = inputVectors.get(itemIndex);
+                while (itemIndex != recentVectorList.size()) {
+                    Vector2D currentVector = recentVectorList.get(itemIndex);
                     SpeedAndDistanceObj speedAndDistanceObj = IsVectorInSpeedandDistObjList(currentVector);
                     if (speedAndDistanceObj != null) {
                         double distance = getDistance(ourCurrentPosition, currentVector);
@@ -91,7 +121,7 @@ public class RadarModul implements IRadarData {
                         speedAndDistanceObj.setCurrentDistance(distance);
                     } else {
                         SpeedAndDistanceObj newSpeedDistObj = new SpeedAndDistanceObj(0, 0, currentVector);
-                        _speedAndDistanceObjs.add(newSpeedDistObj);
+                        _speedAndDistanceObjObservableList.add(newSpeedDistObj);
                     }
                     itemIndex++;
                 }
@@ -103,20 +133,19 @@ public class RadarModul implements IRadarData {
                     myListIterator.remove();
                 }
             } else {
-                _speedAndDistanceObjs = new ArrayList<SpeedAndDistanceObj>();
-                return _speedAndDistanceObjs;
+                _speedAndDistanceObjObservableList = FXCollections.observableList(new ArrayList<SpeedAndDistanceObj>());
+                return _speedAndDistanceObjObservableList;
             }
         } else {
-            if (inputVectors.size() != 0) {
-                _speedAndDistanceObjs = new ArrayList<SpeedAndDistanceObj>();
-                for (int i = 0; i < inputVectors.size(); i++) {
-                    Vector2D item = inputVectors.get(i);
+            if (recentVectorList.size() != 0) {
+                for (int i = 0; i < recentVectorList.size(); i++) {
+                    Vector2D item = recentVectorList.get(i);
                     SpeedAndDistanceObj speedAndDistanceObj = new SpeedAndDistanceObj(0, 0, item);
-                    _speedAndDistanceObjs.add(speedAndDistanceObj);
+                    _speedAndDistanceObjObservableList.add(speedAndDistanceObj);
                 }
             }
         }
-        return _speedAndDistanceObjs;
+        return _speedAndDistanceObjObservableList;
     }
 
     //this function gets the incoming position data and creates a new list while checking the perviously saved positions

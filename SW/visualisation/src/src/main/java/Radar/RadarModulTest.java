@@ -2,6 +2,7 @@ package Radar;
 
 import Interfaces.IRadarInputData;
 import Utils.Vector2D;
+import javafx.collections.ObservableList;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -63,7 +64,7 @@ public class RadarModulTest extends TestCase {
         input.add(new Vector2D(3, 3));
         input.add(new Vector2D(4, 4));
 
-        ArrayList<SpeedAndDistanceObj> result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
+        ObservableList<SpeedAndDistanceObj> result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
 
         int expectedSize=2;
         int actualSize=result.size();
@@ -84,7 +85,7 @@ public class RadarModulTest extends TestCase {
         input.add(second);
 
 
-        ArrayList<SpeedAndDistanceObj> result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
+        ObservableList<SpeedAndDistanceObj> result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
 
         //2 seconds later....
         input = new ArrayList<Vector2D>();
@@ -119,7 +120,7 @@ public class RadarModulTest extends TestCase {
         input.add(second);
 
 
-        ArrayList<SpeedAndDistanceObj> result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
+        ObservableList<SpeedAndDistanceObj> result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
 
         //2 seconds later....
         input = new ArrayList<Vector2D>();
@@ -167,6 +168,15 @@ public class RadarModulTest extends TestCase {
             assertTrue(0!=item.getRelativeSpeed());
         }
 
+    }
+
+    @Test
+    public void testListChangedListener() throws  Exception{
+        _radarModul.setOnRadarObjectListListener(new RadarModul.OnRadarObjectsListener() {
+            public void objectListChanged(ObservableList<SpeedAndDistanceObj> result) {
+
+            }
+        });
     }
 
     private void setMocking(double speed, Vector2D currentPos){
