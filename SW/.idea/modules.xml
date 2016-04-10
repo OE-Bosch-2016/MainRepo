@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BoschProject.iml" filepath="$PROJECT_DIR$/BoschProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/communication/Communication.iml" filepath="$PROJECT_DIR$/communication/Communication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tsr/Tsr.iml" filepath="$PROJECT_DIR$/tsr/Tsr.iml" />
+      <module fileurl="file://$PROJECT_DIR$/acc/acc.iml" filepath="$PROJECT_DIR$/acc/acc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/environment/environment.iml" filepath="$PROJECT_DIR$/environment/environment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/framework/framework.iml" filepath="$PROJECT_DIR$/framework/framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gearbox_engine/gearbox_engine.iml" filepath="$PROJECT_DIR$/gearbox_engine/gearbox_engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ultrasonicsensor/ultrasonicsensor.iml" filepath="$PROJECT_DIR$/ultrasonicsensor/ultrasonicsensor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/visualisation/visualisation.iml" filepath="$PROJECT_DIR$/visualisation/visualisation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wheel/wheel.iml" filepath="$PROJECT_DIR$/wheel/wheel.iml" />
+    </modules>
+  </component>
+</project>
