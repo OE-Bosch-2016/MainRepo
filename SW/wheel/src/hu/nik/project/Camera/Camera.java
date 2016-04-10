@@ -1,4 +1,4 @@
-package camera;
+package hu.nik.project.camera;
 
 ///class definitions are found in Team1 repo at OE-Bosch-2016-Team1/MainRepo/blob/master/SW/environment/src/hu/nik/project/environment/
 
