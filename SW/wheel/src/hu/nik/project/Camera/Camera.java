@@ -12,10 +12,11 @@ import hu.nik.project.environment.objects.CurvedRoad;
 
 public class Camera implements ICamera {
 	
-	Object closestSign; 	//given in the object itself
+	SceneObject closestSign; 	//given in the object itself
 	double laneDistance;	//meters or pixels define which one! 
-	Object laneType;	//given in degree 0-360
-	
+	SceneObject laneType;	//given in degree 0-360
+        
+    
 	private void calcClosestSign(SceneObject[] visibleObjects, SceneObject car) 
 	{
 		//set closest sign
@@ -135,12 +136,24 @@ public class Camera implements ICamera {
 	}
 	
 	//+interface implementációk via Apor:
-	//what is X and Y? we don't have to return any poritions. ;F.Viktor
-	public int posX(){
-		return 0;	//have to implement the calculation of position X
-	}
-	public int posY(){
-		return 0;	//have to implement the calculation of position X
-	}
+	//deleted x and y, what was that even?. ;F.Viktor
+                
+        @Override
+        public SceneObject getClosestSign()
+        {
+            return closestSign;
+        }
+        
+        @Override
+	public double getLaneDistance()
+        {
+            return laneDistance;
+        } 
+        
+        @Override
+	public SceneObject getLaneType()
+        {
+            return laneType;
+        }
 	
 }
