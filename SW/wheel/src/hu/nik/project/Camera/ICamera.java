@@ -1,4 +1,4 @@
-package camera;
+package hu.nik.project.camera;
 
 public interface ICamera {
 	int posX();		//or double
