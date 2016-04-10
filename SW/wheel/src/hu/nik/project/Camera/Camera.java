@@ -1,4 +1,12 @@
 package hu.nik.project.camera;
+import hu.nik.project.environment.objects.SceneObject;
+import hu.nik.project.environment.objects.DirectionSign;
+import hu.nik.project.environment.objects.ParkingSign;
+import hu.nik.project.environment.objects.PrioritySign;
+import hu.nik.project.environment.objects.SpeedSign;
+import hu.nik.project.environment.objects.Road;
+import hu.nik.project.environment.objects.SimpleRoad;
+import hu.nik.project.environment.objects.CurvedRoad;
 
 ///class definitions are found in Team1 repo at OE-Bosch-2016-Team1/MainRepo/blob/master/SW/environment/src/hu/nik/project/environment/
 
@@ -17,18 +25,36 @@ public class Camera implements ICamera {
 		int distY=0;
 		for(int i=0;i<visibleObjects.length;i++) 					//calculate (x1-x2)^2*(y1-y2)^2 for each
 		{
-		distX = (visibleObjects[i].getBasePosition.getX- car.getBasePosition.getX)*
-		(visibleObjects[i].getBasePosition.getX- car.getBasePosition.getX);
+		distX = (visibleObjects[i].getBasePosition().getX()- car.getBasePosition().getX())*
+		(visibleObjects[i].getBasePosition().getX()- car.getBasePosition().getX());
 		
-		distY =	(visibleObjects[i].getBasePosition.getY- car.getBasePosition.getY)*
-		(visibleObjects[i].getBasePosition.getY- car.getBasePosition.getY);
+		distY =	(visibleObjects[i].getBasePosition().getY()- car.getBasePosition().getY())*
+		(visibleObjects[i].getBasePosition().getY()- car.getBasePosition().getY());
 		
+                if (visibleObjects[1].getObjectType() == DirectionSign.DirectionType.FORWARD) 
+                
 			if(Math.sqrt(distX+distY)<min && 
 				(
-				visibleObjects[i].getObjectType ==DirectionSign ||
-				visibleObjects[i].getObjectType ==ParkingSign ||
-				visibleObjects[i].getObjectType ==PrioritySign ||
-				visibleObjects[i].getObjectType ==SpeedSign
+				visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.FORWARD ||
+                                visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.FORWARD_LEFT ||
+                                visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.FORWARD_RIGHT ||
+                                visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.LEFT ||
+                                visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.RIGHT ||
+                                visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.ROUNDABOUT ||
+				visibleObjects[i].getObjectType() ==ParkingSign.ParkingSignType.PARKING_BOLLARD ||
+                                visibleObjects[i].getObjectType() ==ParkingSign.ParkingSignType.PARKING_LEFT ||
+                                visibleObjects[i].getObjectType() ==ParkingSign.ParkingSignType.PARKING_RIGHT ||
+				visibleObjects[i].getObjectType() ==PrioritySign.PrioritySignType.GIVEAWAY ||
+                                visibleObjects[i].getObjectType() ==PrioritySign.PrioritySignType.PRIORITY_ROAD ||
+                                visibleObjects[i].getObjectType() ==PrioritySign.PrioritySignType.STOP ||
+				visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_10 ||
+                                visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_70 ||
+                                visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_100 ||
+                                visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_20 ||
+                                visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_40 ||
+                                visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_50 ||
+                                visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_90
+                                
 				))
 			{
 				min=Math.sqrt(distX+distY);
@@ -46,29 +72,33 @@ public class Camera implements ICamera {
 		}
 	}
 	
-	private void calcLaneDistance(Object car, Object road)
+	private void calcLaneDistance(SceneObject car, Road road)
 	{
 		double distance;
 		
-	       	if (road.getObjectType() == SIMPLE_STRAIGHT)
+	       	if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)
 	       	{
-            	distance = pDistance(car.GetBasePosition().GetX(), car.GetBasePosition().GetY(), road.GetTopPoint().GetX(), road.GetTopPoint().GetY(), road.GetBottomPoint().GetX(), road.GetBottomPoint().GetY());
+            	distance = pDistance(car.getBasePosition().getX(), car.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
         	}
-		else
+                else 
 		{
-        	   double carDistanceToPoint = Math.sqrt(Math.pow(car.GetBasePosition().GetX() - road.getReferencePoint().GetX()) + Math.pow(car.GetBasePosition().GetY() - road.getReferencePoint().GetY()));
-        	    if (carDistanceToPoint > road.getRadius())
+        	   double carDistanceToPoint = Math.sqrt(
+                           Math.pow(car.getBasePosition().getX() - ((CurvedRoad)road).getReferencePoint().getX(),2) 
+                         + Math.pow(car.getBasePosition().getY() - ((CurvedRoad)road).getReferencePoint().getY(),2)
+                           );
+        	    if (carDistanceToPoint > (((CurvedRoad)road).getRadius()))
+                        
         	    {
-        	      distance = carDistanceToPoint - road.getRadius();
+        	      distance = carDistanceToPoint - ((CurvedRoad)road).getRadius();
         	    }
         	    else
         	    {
-        	        distance = road.getRadius() - carDistanceToPoint;
+        	        distance = ((CurvedRoad)road).getRadius() - carDistanceToPoint;
         	    }
         	}
 	}
 	
-	private double pDistance(x, y, x1, y1, x2, y2)
+	private double pDistance(double x,double y,double x1,double y1,double x2,double y2)
 	{
   		double A = x - x1;
 		double B = y - y1;
