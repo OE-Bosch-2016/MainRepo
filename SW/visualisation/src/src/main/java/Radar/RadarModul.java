@@ -24,7 +24,7 @@ public class RadarModul implements IRadarData {
     private Boolean _isRadarEnabled;
     private Timer _timer; //for sampling
 
-    private HashMap<Integer, int[]> _previousVectorsHashMap;
+    private HashMap<Integer, float[]> _previousVectorsHashMap;
     private ObservableList<SpeedAndDistanceObj> _speedAndDistanceObjObservableList;
     private OnRadarObjectsListener _radarObjectsListener;
 
@@ -35,7 +35,7 @@ public class RadarModul implements IRadarData {
 
         _speedAndDistanceObjs = null;
         _isRadarEnabled = false;
-        _previousVectorsHashMap = new HashMap<Integer, int[]>();
+        _previousVectorsHashMap = new HashMap<Integer, float[]>();
         _timer = new Timer();
 
         _speedAndDistanceObjs = new ArrayList<SpeedAndDistanceObj>();
@@ -149,14 +149,14 @@ public class RadarModul implements IRadarData {
     //this function gets the incoming position data and creates a new list while checking the perviously saved positions
     private ArrayList<Vector2D> getMostRecentVectorsFromDataBus(ArrayList<Vector2D> incomingVectorDataList) {
         ArrayList<Vector2D> recentVectorsList = new ArrayList<Vector2D>();
-        HashMap<Integer, int[]> actualHashMap = CreateHashMapFromArrayList(incomingVectorDataList);
+        HashMap<Integer, float[]> actualHashMap = CreateHashMapFromArrayList(incomingVectorDataList);
 
         if (!_previousVectorsHashMap.isEmpty()) {
             int index = 0;
             while (index != incomingVectorDataList.size()) {
                 Vector2D item = incomingVectorDataList.get(index);
                 if (!isItemInHashMap(item)) {
-                    int[] vector = {item.get_coordinateX(), item.get_coordinateY()};
+                    float[] vector = {item.get_coordinateX(),item.get_coordinateY()};
                     _previousVectorsHashMap.put(item.hashCode(), vector);
                 }
                 recentVectorsList.add(item);
@@ -176,7 +176,7 @@ public class RadarModul implements IRadarData {
             _previousVectorsHashMap.clear();
             for (int i = 0; i < incomingVectorDataList.size(); i++) {
                 Vector2D item = incomingVectorDataList.get(i);
-                int[] vectorValues = {item.get_coordinateX(), item.get_coordinateY()};
+                float[] vectorValues = {item.get_coordinateX(), item.get_coordinateY()};
                 _previousVectorsHashMap.put(item.hashCode(), vectorValues);
             }
             recentVectorsList = incomingVectorDataList;
@@ -215,15 +215,15 @@ public class RadarModul implements IRadarData {
     }
 
     private boolean isObjectMoving(Vector2D current) {
-        int[] valuePairs = _previousVectorsHashMap.get(current.hashCode());
+        float[] valuePairs = _previousVectorsHashMap.get(current.hashCode());
         return valuePairs[0] != current.get_coordinateX() || valuePairs[1] != current.get_coordinateY();
     }
 
-    private HashMap<Integer, int[]> CreateHashMapFromArrayList(ArrayList<Vector2D> vector2DsList) {
-        HashMap<Integer, int[]> hashMap = new HashMap<Integer, int[]>();
+    private HashMap<Integer, float[]> CreateHashMapFromArrayList(ArrayList<Vector2D> vector2DsList) {
+        HashMap<Integer, float[]> hashMap = new HashMap<Integer, float[]>();
         for (Vector2D vector : vector2DsList) {
             int key = vector.hashCode();
-            int[] values = {vector.get_coordinateX(), vector.get_coordinateY()};
+            float[] values = {vector.get_coordinateX(), vector.get_coordinateY()};
             hashMap.put(key, values);
         }
         return hashMap;

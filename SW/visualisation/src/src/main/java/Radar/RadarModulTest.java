@@ -162,8 +162,8 @@ public class RadarModulTest extends TestCase {
         assertEquals(expectedSize, actualSize);
         for (SpeedAndDistanceObj item:result){
             assertNotNull(item.getCurrentPosition());
-            assertEquals( 3,item.getCurrentPosition().get_coordinateX());
-            assertEquals(5,item.getCurrentPosition().get_coordinateY());
+            assertEquals(3f,item.getCurrentPosition().get_coordinateX());
+            assertEquals(5f,item.getCurrentPosition().get_coordinateY());
             assertTrue(0!=item.getCurrentDistance());
             assertTrue(0!=item.getRelativeSpeed());
         }
