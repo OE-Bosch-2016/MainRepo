@@ -1,4 +1,4 @@
-package wheels;
+package EBS;
 
 import java.util.List;
 import hu.nik.project.environment.objects.SceneObject;
