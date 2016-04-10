@@ -1,4 +1,3 @@
-
 package hu.nik.project.ebs;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +9,14 @@ public class EmergencyBreakSystem {
     private static double ebsTolerance = 100; //how sensitive is the EBS system misses in 0.001 of a hour
     private static double ebsDistance = 800; //how far does the ebs predict in pixels
     
-    public boolean get_EBS_State(SceneObject car, List<People> jay_walkers)
+    public boolean get_EBS_State(SceneObject car, List<SceneObject> jay_walkers)
     {
         
-        if (!jay_walkers.isEmpty() && car.getSpeed>0 && car.getSpeed<80)
+        if (!jay_walkers.isEmpty() )//&& car.getSpeed>0 && car.getSpeed<80)
         {
             for (int i = 0; i < jay_walkers.size(); i++) //Every walker
             {
-              SceneObject walker =jay_walkers.getAt(i); 
+              SceneObject walker =jay_walkers.get(i); 
                           
              //path of walker
              double x1 = Math.tan(Math.toRadians(walker.getRotation())); //x is the coefficient of x in mx+n=y
@@ -51,8 +50,8 @@ public class EmergencyBreakSystem {
                      double walkDist = Math.sqrt((interPointX-walker.getBasePosition().getX())*(interPointX-walker.getBasePosition().getX()) +
                                             (interPointY-walker.getBasePosition().getY())*(interPointY-walker.getBasePosition().getY()));
                     //t=s/v
-                     double carT = carDist/car.getSpeed; //to be implemented?
-                     double walkerT = walkDist/walker.getSpeed; //to be implemented?
+                     double carT = 0; //carDist/car.getSpeed; //to be implemented?
+                     double walkerT = 0; // walkDist/walker.getSpeed; //to be implemented?
 
                      if(Math.abs(carT-walkerT)<1/ebsTolerance && carDist<ebsDistance) //distance in pixel coordinates speed in km/h
                          {
