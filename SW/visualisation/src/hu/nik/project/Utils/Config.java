@@ -15,5 +15,4 @@ public class Config {
     public static int carImageSizeY = 24;
 
     public static String pathSteeringWheel = "src/hu/nik/resources/steeringwheel.png";
-    public static String getPathSteeringWheel = "src/hu/nik/resources/steeringwheel.png";
 }
