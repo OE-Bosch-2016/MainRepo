@@ -1,6 +1,7 @@
 package ParkingPilot.Manager;
 
 import ParkingPilot.Model.Parking;
+import ParkingPilot.Util.ParkingCalculator;
 import Utils.Vector2D;
 
 import java.awt.*;
@@ -12,6 +13,7 @@ public class PPManager {
 
     // static
     private static PPManager mInstance;
+    private static int parkingType;
 
     // listener
     private ParkingPilotListener senderListener;
@@ -19,26 +21,39 @@ public class PPManager {
     // local
     private Parking parking;
 
-    public static PPManager newInstance(){
-        if(mInstance != null)
+    public static PPManager newInstance() {
+        if (mInstance != null)
             return mInstance;
         else
             return mInstance = new PPManager();
     }
 
-    public void sendPPData(float distance, float angle, Vector2D coordinate){
+    public void sendPPData(float distance, float angle, Vector2D coordinate, int parkingType) {
         //call Environment, using Bus
 
-        if(senderListener != null) {
+        if (senderListener != null) {
             // only test
-            Point[] car1 = new Point[4];
-            Point[] car2 = new Point[4];
-            car1[0] = (new Point((int)(coordinate.get_coordinateX() + 10), (int)(coordinate.get_coordinateY())));
-            car1[1] = (new Point((int)(coordinate.get_coordinateX() + 34), (int)(coordinate.get_coordinateY())));
+            if (parkingType == ParkingCalculator.MODIFY_HORIZONTAL) {
+                Point[] car1 = new Point[4];
+                Point[] car2 = new Point[4];
+                car1[0] = (new Point((int) (coordinate.get_coordinateX() + 10), (int) (coordinate.get_coordinateY())));
+                car1[1] = (new Point((int) (coordinate.get_coordinateX() + 34), (int) (coordinate.get_coordinateY())));
 
-            car2[2] = (new Point((int)(coordinate.get_coordinateX() + 10), (int)(coordinate.get_coordinateY() + 30)));
-            car2[3] = (new Point((int)(coordinate.get_coordinateX() + 34), (int)(coordinate.get_coordinateY() + 30)));
-            parking = new Parking(car1, car2, 20);
+                car2[2] = (new Point((int) (coordinate.get_coordinateX() + 10), (int) (coordinate.get_coordinateY() + 30)));
+                car2[3] = (new Point((int) (coordinate.get_coordinateX() + 34), (int) (coordinate.get_coordinateY() + 30)));
+                parking = new Parking(car1, car2, 20);
+                parking.setParkingType(ParkingCalculator.MODIFY_HORIZONTAL);
+            } else if (parkingType == ParkingCalculator.MODIFY_VERTICAL_LEFT) {
+                Point[] car1 = new Point[4];
+                Point[] car2 = new Point[4];
+                car1[0] = (new Point((int) (coordinate.get_coordinateX()), (int) (coordinate.get_coordinateY() - 10)));
+                car1[1] = (new Point((int) (coordinate.get_coordinateX()), (int) (coordinate.get_coordinateY() - 30)));
+
+                car2[2] = (new Point((int) (coordinate.get_coordinateX() + 10), (int) (coordinate.get_coordinateY() - 10)));
+                car2[3] = (new Point((int) (coordinate.get_coordinateX() + 10), (int) (coordinate.get_coordinateY() - 30)));
+                parking = new Parking(car1, car2, 80);
+                parking.setParkingType(ParkingCalculator.MODIFY_VERTICAL_LEFT);
+            }
             //
 
             senderListener.onDataChanged();

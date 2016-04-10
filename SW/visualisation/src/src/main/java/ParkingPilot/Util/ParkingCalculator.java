@@ -27,9 +27,9 @@ public class ParkingCalculator {
 
     private int HORIZONTAL_WIDTH = 100;
 
-    public int MODIFY_HORIZONTAL = 0;
-    public int MODIFY_VERTICAL_LEFT = 1;
-    public int MODIFY_VERTICAL_RIGHT = 2;
+    public static int MODIFY_HORIZONTAL = 0;
+    public static int MODIFY_VERTICAL_LEFT = 1;
+    public static int MODIFY_VERTICAL_RIGHT = 2;
 
     private OnParkingListener parkingListener;
 
@@ -45,23 +45,44 @@ public class ParkingCalculator {
         this.parkingPlaceType = parkingPlaceType;
         this.edgeOfStreet = edgeOfStreet;
 
-        //vertical parking
-        if (parkingPlaceType == SearchParkingPlace.HORIZONTAL) {
-            freeDistance = environment2Position[0].y - environment1Position[2].y;
-            bottomFrontDistance = (freeDistance - (carPosition[0].y + carPosition[2].y)) / 2; // distance front of the car and bottom of the car
-            leftRightDistance = (HORIZONTAL_WIDTH - carPosition[1].x - carPosition[0].x) / 2;
-            parkingMatrix = new int[HORIZONTAL_WIDTH + carPosition[1].x * 100][freeDistance * 100];
+        if (parkingPlaceType == MODIFY_HORIZONTAL) {
+//            freeDistance = environment2Position[0].y - environment1Position[2].y;
+//            bottomFrontDistance = (freeDistance - (carPosition[0].y + carPosition[2].y)) / 2; // distance front of the car and bottom of the car
+//            leftRightDistance = (HORIZONTAL_WIDTH - carPosition[1].x - carPosition[0].x) / 2;
+//            parkingMatrix = new int[HORIZONTAL_WIDTH + carPosition[1].x * 100][freeDistance * 100];
+            carAngle = 0;
+        } else if (parkingPlaceType == MODIFY_VERTICAL_LEFT) {
+//            freeDistance = environment2Position[3].x - environment1Position[2].x;
+//            bottomFrontDistance = (carPosition[3].y + carPosition[2].y) / 2; // distance front of the car and bottom of the car
+//            leftRightDistance = (HORIZONTAL_WIDTH - carPosition[1].x - carPosition[0].x) / 2;
+//            parkingMatrix = new int[HORIZONTAL_WIDTH + carPosition[1].x * 100][freeDistance * 100];
+            carAngle = 90;
         }
-        carAngle = 0;
+        state = 0;
     }
 
     public void parking() {
+        if (parkingPlaceType == MODIFY_HORIZONTAL)
+            horizontalParking();
+        else if (parkingPlaceType == MODIFY_VERTICAL_LEFT)
+            verticalLeftParking();
+    }
+
+    private void horizontalParking() {
         if (state == 0)
             degreeOf45(-45);
         if (state == 1)
             goBottom();
         if (state == 2)
             degreeOf0(0);
+    }
+
+    // Horizontal
+    private void verticalLeftParking() {
+        if (state == 0)
+            degreeOf90(0);
+        if (state == 1)
+            goFront();
     }
 
     private void degreeOf45(int degree) {
@@ -88,6 +109,27 @@ public class ParkingCalculator {
         if (parkingListener != null)
             parkingListener.changePosition(0.3f, 0.2f, carAngle);
     }
+    // Horizontal end
+
+    // Vertical left
+    private void degreeOf90(int degree) {
+        carAngle -= 1;
+        if (carAngle == degree)
+            state++;
+        if (parkingListener != null)
+            parkingListener.changePosition(-0.3f, 0.3f, carAngle);
+    }
+
+    private void goFront() {
+        if (edgeOfStreet > 1) {
+            edgeOfStreet--;
+            if (parkingListener != null)
+                parkingListener.changePosition(-0.5f, 0);
+        } else
+            state++;
+    }
+    // Vertical left end
+
     // Setter ----------------------------------------------------------------------------------------------------------
     public void setParkingListener(OnParkingListener parkingListener) {
         this.parkingListener = parkingListener;

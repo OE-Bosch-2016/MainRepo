@@ -72,6 +72,13 @@ public class Top extends JFrame { // implements KeyListener
     //Car
     private AutonomousCar car;
 
+    // parking test
+    private int parkingType;
+    private int stage = 0;
+    private float rotate = 1;
+    private int HORIZONTAL_PARKING = 0;
+    private int VERTICAL_PARKING = 1;
+
     public Top() {
         init();
     }
@@ -237,16 +244,19 @@ public class Top extends JFrame { // implements KeyListener
     };
 
     private KeyListener keyListener = new KeyListener() {
-        public void keyTyped(KeyEvent e) {
-            //System.out.println(e.paramString());
-        }
+        public void keyTyped(KeyEvent e) {}
 
         public void keyPressed(KeyEvent e) {
+            stage = 0;
+            rotate = 1;
+
             if (e.getKeyChar() == 'p')
-                simulateMoving();
-            //car.rotation(90);
-            //parkingPilot.parkingPilotActivate();
-            //System.out.println(e.paramString());
+                simulateMoving(HORIZONTAL_PARKING);
+            else if (e.getKeyChar() == 'o')
+                simulateMoving(VERTICAL_PARKING);
+            else if(e.getKeyChar() == 'r')
+                car.setPosition(new Vector2D(501, 90));
+
         }
 
         public void keyReleased(KeyEvent e) {
@@ -254,26 +264,56 @@ public class Top extends JFrame { // implements KeyListener
         }
     };
 
-    private void simulateMoving() {
+    private void simulateMoving(int type) {
+        parkingType = type;
         moveTimer.start();
-        //car.rotation(Math.toRadians(-45));
     }
 
-    private void simulateParking() {
-        parkingPilot.parkingPilotActivate(car.getPosition(), car.getImage().getHeight(), car.getImage().getWidth(), parkingListener);
+    private void simulateParking(int parkingType) {
+        parkingPilot.parkingPilotActivate(car.getPosition(), car.getImage().getHeight(), car.getImage().getWidth(), parkingListener, parkingType);
+    }
+
+    private void horizontalParking() {
+        car.move(-1);
+        mapPanel.repaint();
+
+        if (car.getPosition().get_coordinateY() < -156) {
+            moveTimer.stop();
+            simulateParking(ParkingCalculator.MODIFY_HORIZONTAL);
+        }
+    }
+
+    private void verticalParking() {
+        if (stage == 0) {
+            car.move(-1);
+
+            if (car.getPosition().get_coordinateY() < 45)
+                stage++;
+        } else if (stage == 1) {
+            car.rotation(rotate);
+            car.setPosition(new Vector2D(car.getPosition().get_coordinateX() + 0.2f, car.getPosition().get_coordinateY() - 0.15f));
+            rotate++;
+
+            if (rotate > 89)
+                stage++;
+        } else if (stage == 2) {
+            car.setPosition(new Vector2D(car.getPosition().get_coordinateX() + 1, car.getPosition().get_coordinateY()));
+
+            if (car.getPosition().get_coordinateX() > 632) {
+                moveTimer.stop();
+                simulateParking(ParkingCalculator.MODIFY_VERTICAL_LEFT);
+            }
+        }
+
     }
 
     // Listener --------------------------------------------------------------------------------------------------------
     private ActionListener moveListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            car.move(-1);
-            mapPanel.repaint();
-
-            if (car.getPosition().get_coordinateY() < -156) {
-                moveTimer.stop();
-                simulateParking();
-            }
-
+            if (parkingType == HORIZONTAL_PARKING)
+                horizontalParking();
+            else if (parkingType == VERTICAL_PARKING)
+                verticalParking();
         }
     };
 
@@ -289,15 +329,12 @@ public class Top extends JFrame { // implements KeyListener
     private ParkingCalculator.OnParkingListener parkingListener = new ParkingCalculator.OnParkingListener() {
         public void changePosition(float front, float side, float rotate) {
             car.setPosition(new Vector2D(car.getPosition().get_coordinateX() + side, car.getPosition().get_coordinateY() + front));
-//            vRenderer.get_carLabel().setIcon(null);
-//            vRenderer.get_carLabel().setIcon(new ImageIcon(car.rotation(rotate)));
             car.rotation(rotate);
             parkingTimer.start();
         }
 
         public void changePosition(float front, float side) {
             car.setPosition(new Vector2D(car.getPosition().get_coordinateX() + side, car.getPosition().get_coordinateY() + front));
-            //vRenderer.get_carLabel().repaint();
             parkingTimer.start();
         }
     };
