@@ -1,4 +1,4 @@
-package hu.nik.project.EBS;
+package hu.nik.project.ebs;
 
 import java.util.List;
 import hu.nik.project.environment.objects.SceneObject;
