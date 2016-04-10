@@ -244,18 +244,19 @@ public class Top extends JFrame { // implements KeyListener
     };
 
     private KeyListener keyListener = new KeyListener() {
-        public void keyTyped(KeyEvent e) {
-            //System.out.println(e.paramString());
-        }
+        public void keyTyped(KeyEvent e) {}
 
         public void keyPressed(KeyEvent e) {
+            stage = 0;
+            rotate = 1;
+
             if (e.getKeyChar() == 'p')
                 simulateMoving(HORIZONTAL_PARKING);
             else if (e.getKeyChar() == 'o')
                 simulateMoving(VERTICAL_PARKING);
-            //car.rotation(90);
-            //parkingPilot.parkingPilotActivate();
-            //System.out.println(e.paramString());
+            else if(e.getKeyChar() == 'r')
+                car.setPosition(new Vector2D(501, 90));
+
         }
 
         public void keyReleased(KeyEvent e) {
@@ -266,7 +267,6 @@ public class Top extends JFrame { // implements KeyListener
     private void simulateMoving(int type) {
         parkingType = type;
         moveTimer.start();
-        //car.rotation(Math.toRadians(-45));
     }
 
     private void simulateParking(int parkingType) {

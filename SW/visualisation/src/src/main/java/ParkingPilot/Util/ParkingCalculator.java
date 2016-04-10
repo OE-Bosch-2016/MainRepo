@@ -58,6 +58,7 @@ public class ParkingCalculator {
 //            parkingMatrix = new int[HORIZONTAL_WIDTH + carPosition[1].x * 100][freeDistance * 100];
             carAngle = 90;
         }
+        state = 0;
     }
 
     public void parking() {
