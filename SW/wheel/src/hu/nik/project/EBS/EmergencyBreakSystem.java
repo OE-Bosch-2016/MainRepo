@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import hu.nik.project.environment.objects.SceneObject;
 
-
+//should implement interface, does not yet
 public class EmergencyBreakSystem {
 	
     private static double ebsTolerance = 100; //how sensitive is the EBS system misses in 0.001 of a hour
