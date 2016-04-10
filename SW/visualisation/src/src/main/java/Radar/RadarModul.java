@@ -36,18 +36,21 @@ public class RadarModul implements IRadarData {
         _speedAndDistanceObjs = null;
         _isRadarEnabled = false;
         _previousVectorsHashMap = new HashMap<Integer, int[]>();
-        _timer= new Timer();
+        _timer = new Timer();
 
-        _speedAndDistanceObjs= new ArrayList<SpeedAndDistanceObj>();
+        _speedAndDistanceObjs = new ArrayList<SpeedAndDistanceObj>();
         _speedAndDistanceObjObservableList = FXCollections.observableList(_speedAndDistanceObjs);
 
-        _speedAndDistanceObjObservableList.addListener(new ListChangeListener<SpeedAndDistanceObj>() {
-            public void onChanged(Change<? extends SpeedAndDistanceObj> change) {
-                if(_radarObjectsListener!=null){
-                    _radarObjectsListener.objectListChanged(_speedAndDistanceObjObservableList);
-                }
-            }
-        });
+//        _speedAndDistanceObjObservableList.addListener(new ListChangeListener<SpeedAndDistanceObj>() {
+//            public void onChanged(Change<? extends SpeedAndDistanceObj> change) {
+//                if(_radarObjectsListener!=null){
+//                    _radarObjectsListener.objectListChanged(_speedAndDistanceObjObservableList);
+//                }
+//            }
+//        });
+
+        if (_radarObjectsListener != null)
+            _radarObjectsListener.objectListChanged(_speedAndDistanceObjObservableList);
     }
 
     //<editor-fold desc="Properties of Radar Modul">
@@ -76,10 +79,10 @@ public class RadarModul implements IRadarData {
     //TODO: We need to clarify how we will know the OUR current speed and position
     public ObservableList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance(ArrayList<Vector2D> incomingData) {
         double currentSpeed = 20;
-        Vector2D currentPosition = new Vector2D(0,4);
+        Vector2D currentPosition = new Vector2D(0, 4);
 
         ArrayList<Vector2D> recent = getMostRecentVectorsFromDataBus(incomingData);
-        _speedAndDistanceObjObservableList= getDetectedObjsRelativeSpeedDistance(recent, currentPosition, currentSpeed);
+        _speedAndDistanceObjObservableList = getDetectedObjsRelativeSpeedDistance(recent, currentPosition, currentSpeed);
 
         return _speedAndDistanceObjObservableList;
     }
@@ -93,11 +96,6 @@ public class RadarModul implements IRadarData {
     // Setter ----------------------------------------------------------------------------------------------------------
     public void setOnRadarObjectListListener(OnRadarObjectsListener radarObjectsListener) {
         _radarObjectsListener = radarObjectsListener;
-    }
-
-    // Listener --------------------------------------------------------------------------------------------------------
-    public interface OnRadarObjectsListener {
-        void objectListChanged(ObservableList<SpeedAndDistanceObj> result);
     }
 
     //<editor-fold desc="Private methods">
@@ -235,4 +233,9 @@ public class RadarModul implements IRadarData {
         return _previousVectorsHashMap.containsKey(item.hashCode());
     }
 //</editor-fold>
+
+    // Listener --------------------------------------------------------------------------------------------------------
+    public interface OnRadarObjectsListener {
+        void objectListChanged(ObservableList<SpeedAndDistanceObj> result);
+    }
 }
