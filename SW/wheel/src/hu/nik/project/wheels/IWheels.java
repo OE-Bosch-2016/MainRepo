@@ -1,4 +1,4 @@
-package wheels;
+package hu.nik.project.wheels;
 
 public interface IWheels {
 	double Direction();		//0-360 degree

@@ -1,4 +1,4 @@
-package wheels;
+package hu.nik.project.wheels;
 
 public class Wheels implements IWheels {
 //author: Ferter Viktor
