@@ -1,6 +1,7 @@
 ## remove temp directories
 /.idea
 /out
+/target
 
 ## remove other files
 *.log
