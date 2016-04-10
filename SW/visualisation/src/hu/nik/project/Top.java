@@ -1,13 +1,13 @@
-import hmi2.Hmi;
+import hmi.Hmi;
 
-//import parkingPilot2.PPMain;
-import parkingPilot2.PPMain;
-import parkingPilot2.Util.ParkingCalculator;
-import utils2.ImageLoader;
-import utils2.Vector2D;
-import visualisation2.Car.AutonomousCar;
-import visualisation2.Car.SteeringWheel;
-import visualisation2.VisualizationRenderer;
+//import parkingPilot.PPMain;
+import parkingPilot.PPMain;
+import parkingPilot.Util.ParkingCalculator;
+import utils.ImageLoader;
+import utils.Vector2D;
+import visualisation.Car.AutonomousCar;
+import visualisation.Car.SteeringWheel;
+import visualisation.VisualizationRenderer;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
@@ -51,10 +51,10 @@ public class Top extends JFrame { // implements KeyListener
     //Timer
     private Timer timer;
 
-    //visualisation2.Visualization
+    //visualisation.Visualization
     public VisualizationRenderer vRenderer = null;
 
-    // hmi2 elements
+    // hmi elements
     private Hmi hmi;
 
     // Parking pilot
@@ -70,7 +70,7 @@ public class Top extends JFrame { // implements KeyListener
     private final DefaultValueDataset tachoMeterDisplayDataset = new DefaultValueDataset();
     private StringBuilder builder;
 
-    //visualisation2.Car.Car
+    //visualisation.Car.Car
     private AutonomousCar car;
 
     // parking test
@@ -101,10 +101,10 @@ public class Top extends JFrame { // implements KeyListener
         setContentPane(rootPanel);
         pack();
 
-        //visualisation2.Car.Car setup
+        //visualisation.Car.Car setup
         car = new AutonomousCar(new Vector2D(501, 90), ImageLoader.getCarImage());
 
-        //visualisation2.Visualization renderer setup
+        //visualisation.Visualization renderer setup
         vRenderer = new VisualizationRenderer(mapPanel, hmi, car);
 
         //Timer setup
