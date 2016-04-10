@@ -1,8 +1,8 @@
-package radar;
+package hu.nik.project.radar;
 
-
-import utils.Vector2D;
+import hu.nik.project.utils.Vector2D;
 import java.util.ArrayList;
+
 
 /**
  * Created by secured on 2016. 03. 19..

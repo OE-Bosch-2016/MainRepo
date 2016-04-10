@@ -1,8 +1,9 @@
-package visualisation.Car;
+package hu.nik.project.visualisation.car;
 
-import hmi.Hmi;
-import utils.Config;
-
+import hu.nik.project.hmi.Hmi;
+import hu.nik.project.visualisation.interfaces.OnBreakSteeringWheelListener;
+import hu.nik.project.utils.Config;
+import hu.nik.project.utils.Scalr;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -10,10 +11,10 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import hu.nik.project.visualisation.interfaces.OnBreakSteeringWheelListener;
 
-import visualisation.Interfaces.OnBreakSteeringWheelListener;
 
 /**
  * Created by Perec on 2016.03.16..
@@ -41,7 +42,7 @@ public class SteeringWheel {
         try {
             rotation = rotation + rotate;
             scaledImage = ImageIO.read(new File(Config.pathSteeringWheel));
-            scaledImage = utils.Scalr.resize(scaledImage, 250, 250);
+            scaledImage = Scalr.resize(scaledImage, 250, 250);
             scaledImage = rotate(scaledImage, rotation);
         } catch (IOException e) {
             e.printStackTrace();

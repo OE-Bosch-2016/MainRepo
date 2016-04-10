@@ -1,4 +1,4 @@
-package utils;
+package hu.nik.project.utils;
 
 /**
  * Created by haxxi on 2016.03.13..

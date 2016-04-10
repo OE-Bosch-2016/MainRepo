@@ -1,3 +1,5 @@
+package hu.nik.project.visualisation.main;
+
 /**
  * Created by haxxi on 2016.03.01..
  */

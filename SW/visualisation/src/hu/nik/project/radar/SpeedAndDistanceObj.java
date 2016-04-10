@@ -1,6 +1,6 @@
-package radar;
+package hu.nik.project.radar;
 
-import utils.Vector2D;
+import hu.nik.project.utils.Vector2D;
 
 import java.io.Serializable;
 

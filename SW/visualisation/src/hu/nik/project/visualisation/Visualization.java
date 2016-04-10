@@ -1,9 +1,9 @@
-package visualisation;
+package hu.nik.project.visualisation;
 
-import hmi.Hmi;
-import visualisation.Car.Car;
-import visualisation.Interfaces.IWheelVisualization;
-import visualisation.Interfaces.OnVehicleListener;
+import hu.nik.project.hmi.Hmi;
+import hu.nik.project.visualisation.car.Car;
+import hu.nik.project.visualisation.interfaces.IWheelVisualization;
+import hu.nik.project.visualisation.interfaces.OnVehicleListener;
 
 import javax.swing.*;
 

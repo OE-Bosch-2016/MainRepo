@@ -1,10 +1,13 @@
-package radar;
+package hu.nik.project.radar;
 
-import utils.Vector2D;
+import hu.nik.project.utils.Vector2D;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.HashMap;
+import java.util.ListIterator;
 
 
 /**

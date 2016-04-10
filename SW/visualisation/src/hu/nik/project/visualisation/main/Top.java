@@ -1,13 +1,14 @@
-import hmi.Hmi;
+package hu.nik.project.visualisation.main;
 
-//import parkingPilot.PPMain;
-import parkingPilot.PPMain;
-import parkingPilot.Util.ParkingCalculator;
-import utils.ImageLoader;
-import utils.Vector2D;
-import visualisation.Car.AutonomousCar;
-import visualisation.Car.SteeringWheel;
-import visualisation.VisualizationRenderer;
+import hu.nik.project.hmi.Hmi;
+import hu.nik.project.parkingpilot.PPMain;
+import hu.nik.project.parkingpilot.util.ParkingCalculator;
+import hu.nik.project.utils.ImageLoader;
+import hu.nik.project.utils.Vector2D;
+import hu.nik.project.visualisation.car.AutonomousCar;
+import hu.nik.project.visualisation.car.SteeringWheel;
+import hu.nik.project.visualisation.VisualizationRenderer;
+
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;

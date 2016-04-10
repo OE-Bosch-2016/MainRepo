@@ -1,8 +1,9 @@
-package visualisation;
+package hu.nik.project.visualisation;
 
-import hmi.Hmi;
-import utils.ImageLoader;
-import visualisation.Car.Car;
+
+import hu.nik.project.hmi.Hmi;
+import hu.nik.project.utils.ImageLoader;
+import hu.nik.project.visualisation.car.Car;
 
 import javax.swing.*;
 

@@ -1,7 +1,7 @@
-package visualisation.Car;
+package hu.nik.project.visualisation.car;
 
-import utils.ImageLoader;
-import utils.Vector2D;
+import hu.nik.project.utils.ImageLoader;
+import hu.nik.project.utils.Vector2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

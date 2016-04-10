@@ -1,4 +1,4 @@
-package visualisation.Interfaces;
+package hu.nik.project.visualisation.interfaces;
 
 
 /**

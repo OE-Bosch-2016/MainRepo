@@ -1,6 +1,6 @@
-package radar;
-import utils.Vector2D;
+package hu.nik.project.radar;
 
+import hu.nik.project.utils.Vector2D;
 import java.util.ArrayList;
 
 

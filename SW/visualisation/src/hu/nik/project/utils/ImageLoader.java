@@ -1,4 +1,4 @@
-package utils;
+package hu.nik.project.utils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,7 +18,7 @@ public class ImageLoader {
     public static ImageIcon getMapImage(int mapType) {
         ImageIcon icon = null;
         BufferedImage scaledImage = loadImageFromPath(mapType == MAP2 ? Config.pathMap2 : Config.pathMap1);
-        scaledImage = utils.Scalr.resize(scaledImage, Config.imageSizeX, Config.imageSizeY);
+        scaledImage = Scalr.resize(scaledImage, Config.imageSizeX, Config.imageSizeY);
         icon = new ImageIcon(scaledImage);
 
         return icon;
@@ -26,7 +26,7 @@ public class ImageLoader {
 
     public static BufferedImage getCarImage() {
         BufferedImage scaledImage = loadImageFromPath(Config.pathCar);
-        scaledImage = utils.Scalr.resize(scaledImage, Config.carImageSizeX, Config.carImageSizeY);
+        scaledImage = Scalr.resize(scaledImage, Config.carImageSizeX, Config.carImageSizeY);
 
         return scaledImage;
     }
