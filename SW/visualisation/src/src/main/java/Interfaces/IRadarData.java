@@ -1,6 +1,6 @@
 package Interfaces;
-import Radar.MapObjectData;
-import Utils.Position;
+import Radar.SpeedAndDistanceObj;
+import Utils.Vector2D;
 
 import java.util.ArrayList;
 
@@ -11,9 +11,10 @@ import java.util.ArrayList;
 
 //this is the real output interface of modul "RADAR"
 public interface IRadarData {
-    Position getRadarPosition();
+    Vector2D getRadarPosition();
     Integer getRadarViewDistance();
     Float getAngelOfSight();
 
-    ArrayList<MapObjectData> getDetectedObjsRelativeSpeedAndDistance();
+
+    ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance();
 }

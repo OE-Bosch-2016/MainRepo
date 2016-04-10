@@ -1,10 +1,8 @@
 package Interfaces;
 
 
-import Utils.Position;
-
+import Utils.Vector2D;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by secured on 2016. 03. 19..
@@ -12,7 +10,7 @@ import java.util.Objects;
 
 //this will be a mocked interface, representing the incoming data
 public interface IRadarInputData {
-    Position getOurCurrentPosition();
+    Vector2D getOurCurrentPosition();
     double getOurCurrentSpeed();
-    ArrayList<Position> getViewableObjectList();
+    ArrayList<Vector2D> getViewableObjectList();
 }

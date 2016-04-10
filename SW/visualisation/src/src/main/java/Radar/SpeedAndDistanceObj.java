@@ -1,16 +1,18 @@
 package Radar;
 
-import Utils.Position;
+import Utils.Vector2D;
+
+import java.io.Serializable;
 
 /**
  * Created by secured on 2016. 03. 19..
  */
-public class MapObjectData {
+public class SpeedAndDistanceObj implements Serializable {
     private double _relativeSpeed;
     private double _currentDistance;
-    private Position _currentPosition;
+    private Vector2D _currentPosition;
 
-    public MapObjectData(int relativeSpeed, double currentDistance, Position currentPosition) {
+    public SpeedAndDistanceObj(int relativeSpeed, double currentDistance, Vector2D currentPosition) {
         _relativeSpeed = relativeSpeed;
         _currentDistance = currentDistance;
         _currentPosition = currentPosition;
@@ -30,10 +32,10 @@ public class MapObjectData {
         return _currentDistance;
     }
 
-    public Position getCurrentPosition() {
+    public Vector2D getCurrentPosition() {
         return _currentPosition;
     }
-    public void setCurrentPosition(Position currentPosition) {
+    public void setCurrentPosition(Vector2D currentPosition) {
         _currentPosition = currentPosition;
     }
 }
