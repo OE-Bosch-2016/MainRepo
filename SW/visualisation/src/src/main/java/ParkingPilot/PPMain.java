@@ -22,10 +22,10 @@ public class PPMain {
         parkingCalculator = new ParkingCalculator();
     }
 
-    public void parkingPilotActivate(Vector2D point, int height, int width, ParkingCalculator.OnParkingListener parkingListener){
+    public void parkingPilotActivate(Vector2D point, int height, int width, ParkingCalculator.OnParkingListener parkingListener, int parkingType){
         calculateCorners(point, height, width);
         parkingCalculator.setParkingListener(parkingListener);
-        manager.sendPPData(40, 0f, point);
+        manager.sendPPData(40, 0f, point, parkingType);
     }
 
     private void calculateCorners(Vector2D point, int height, int width){
@@ -44,7 +44,7 @@ public class PPMain {
     private PPManager.ParkingPilotListener parkingListener = new PPManager.ParkingPilotListener() {
         public void onDataChanged() {
             Parking parking = manager.getParking();
-            parkingCalculator.init(car, parking.getCar1(), parking.getCar2(), parking.getEdgeOfStreet(), parkingCalculator.MODIFY_HORIZONTAL);
+            parkingCalculator.init(car, parking.getCar1(), parking.getCar2(), parking.getEdgeOfStreet(), parking.getParkingType());
             doParking();
         }
     };
