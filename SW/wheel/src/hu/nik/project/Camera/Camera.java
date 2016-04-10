@@ -1,13 +1,6 @@
 package camera;
 
 ///class definitions are found in Team1 repo at OE-Bosch-2016-Team1/MainRepo/blob/master/SW/environment/src/hu/nik/project/environment/
-import hu.nik.project.environment.SceneObject;	 //for understanding SceneObjects
-import hu.nik.project.environment.ScenePoint;	 //for understanding ScenePoints
-import hu.nik.project.environment.Sign;			//for understanding Signs
-import hu.nik.project.environment.DirectionSign;
-import hu.nik.project.environment.ParkingSing;	
-import hu.nik.project.environment.PrioritySign;	
-import hu.nik.project.environment.SpeedSign;
 
 public class Camera implements ICamera {
 	
