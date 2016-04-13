@@ -33,7 +33,7 @@ public abstract class SceneObject<T> implements Serializable {
     abstract public T getObjectType();
 
     public ScenePoint getBasePosition() { return basePosition; }
-    public double getRotation() {
+    public int getRotation() {
         return rotation;
     }
 

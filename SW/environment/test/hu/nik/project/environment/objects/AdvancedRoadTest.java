@@ -33,7 +33,7 @@ public class AdvancedRoadTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(775, advancedRoad.getBasePosition().getX());
         Assert.assertEquals(1913, advancedRoad.getBasePosition().getY());
-        Assert.assertEquals(90, advancedRoad.getRotation(), 0.00001);
+        Assert.assertEquals(90, advancedRoad.getRotation());
     }
 
     @Test

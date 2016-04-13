@@ -41,7 +41,7 @@ public class PeopleTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(1608, people.getBasePosition().getX());
         Assert.assertEquals(308, people.getBasePosition().getY());
-        Assert.assertEquals(0, people.getRotation(), 0.00001);
+        Assert.assertEquals(0, people.getRotation());
     }
 
     @Test

@@ -33,7 +33,7 @@ public class DirectionSignTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(2785, directionSign.getBasePosition().getX());
         Assert.assertEquals(2245, directionSign.getBasePosition().getY());
-        Assert.assertEquals(0, directionSign.getRotation(), 0.00001);
+        Assert.assertEquals(0, directionSign.getRotation());
     }
 
     @Test

@@ -41,7 +41,7 @@ public class PrioritySignTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(300, prioritySign.getBasePosition().getX());
         Assert.assertEquals(300, prioritySign.getBasePosition().getY());
-        Assert.assertEquals(0, prioritySign.getRotation(), 0.00001);
+        Assert.assertEquals(0, prioritySign.getRotation());
     }
 
     @Test

@@ -33,7 +33,7 @@ public class CrossWalkTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(1550, crossWalk.getBasePosition().getX());
         Assert.assertEquals(498, crossWalk.getBasePosition().getY());
-        Assert.assertEquals(90, crossWalk.getRotation(), 0.00001);
+        Assert.assertEquals(90, crossWalk.getRotation());
     }
 
     @Test

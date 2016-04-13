@@ -42,7 +42,7 @@ public class SpeedSignTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(235, speedSign.getBasePosition().getX());
         Assert.assertEquals(3908, speedSign.getBasePosition().getY());
-        Assert.assertEquals(270, speedSign.getRotation(), 0.00001);
+        Assert.assertEquals(270, speedSign.getRotation());
     }
 
     @Test
