@@ -19,8 +19,6 @@ import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 
-///class definitions are found in Team1 repo at OE-Bosch-2016-Team1/MainRepo/blob/master/SW/environment/src/hu/nik/project/environment/
-
 public class Camera implements ICamera, ICommBusDevice {
 	
 	SceneObject closestSign; 	//given in the object itself
@@ -53,7 +51,7 @@ public class Camera implements ICamera, ICommBusDevice {
     
 	private void calcClosestSign( SceneObject car) //need to get the car ???!!
 	{
-		visibleObjects = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70).toArray();  //rotation is got in double needs in int
+		visibleObjects = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70).toArray();  
 
 		//set closest sign
 		double min=999999;	//irrationally high number for minimum selection
@@ -109,7 +107,7 @@ public class Camera implements ICamera, ICommBusDevice {
 		}
 	}
 	
-	private void calcLaneDistance(SceneObject car)  //somehow need to get road from enviroment!!!!!!!!!!!!!
+	private void calcLaneDistance(SceneObject car) 
 	{
 		Road road = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation());
 	       	if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)
