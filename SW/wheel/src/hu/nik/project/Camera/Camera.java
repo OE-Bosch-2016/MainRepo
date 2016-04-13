@@ -27,6 +27,7 @@ public class Camera implements ICamera, ICommBusDevice, ISensorScene {
 	double laneDistance;	//meters or pixels define which one! 
 	SceneObject laneType;	//given in degree 0-360
 	ISensorScene currentScene;
+	SceneObject[] visibleObjects;
 
 	private CommBusConnector commBusConnector;
 
@@ -35,7 +36,7 @@ public class Camera implements ICamera, ICommBusDevice, ISensorScene {
 
 	public void SendToCom() {
 		;
-		while(!commBusConnector.send(new CameraMessagePackage(closestSign,laneDistance,laneType))); //is this gonna work even? have to also send visible objects to ebs
+		while(!commBusConnector.send(new CameraMessagePackage(closestSign,laneDistance,laneType,visibleObjects))); //is this gonna work even? have to also send visible objects to ebs
 	}
 
 
@@ -51,7 +52,7 @@ public class Camera implements ICamera, ICommBusDevice, ISensorScene {
     
 	private void calcClosestSign( SceneObject car) //need to get the car ???!!
 	{
-		SceneObject[] visibleObjects = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70).toArray();  //rotation is got in double needs in int
+		visibleObjects = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70).toArray();  //rotation is got in double needs in int
 
 		//set closest sign
 		double min=999999;	//irrationally high number for minimum selection
