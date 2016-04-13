@@ -44,7 +44,7 @@ public class TreeTest {
         //Assert.assertEquals(88, tree.getBasePosition().getY());
         Assert.assertEquals(176, tree.getBasePosition().getX());
         Assert.assertEquals(836, tree.getBasePosition().getY());
-        Assert.assertEquals(333, tree.getRotation(), 0.00001);
+        Assert.assertEquals(333, tree.getRotation());
     }
 
     @Test

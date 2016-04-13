@@ -47,7 +47,7 @@ public class SimpleRoadTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(2175, simpleRoad.getBasePosition().getX());
         Assert.assertEquals(2263, simpleRoad.getBasePosition().getY());
-        Assert.assertEquals(90, simpleRoad.getRotation(), 0.00001);
+        Assert.assertEquals(90, simpleRoad.getRotation());
     }
 
     @Test

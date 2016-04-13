@@ -37,7 +37,7 @@ public class SceneObjectWithConcreteClassTest {
     @Test
     public void testGetRotation() throws Exception {
         Assert.assertNotEquals(90, sceneObject.getRotation());
-        Assert.assertEquals(20, sceneObject.getRotation(), 0.00001);
+        Assert.assertEquals(20, sceneObject.getRotation());
     }
 
     @Test(expected = SceneObjectException.class)

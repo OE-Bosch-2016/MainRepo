@@ -42,7 +42,7 @@ public class ParkingTest {
     public void testPositionsAndRotationGetters() throws Exception{
         Assert.assertEquals(300, parking.getBasePosition().getX());
         Assert.assertEquals(300, parking.getBasePosition().getY());
-        Assert.assertEquals(0, parking.getRotation(), 0.00001);
+        Assert.assertEquals(0, parking.getRotation());
     }
 
     @Test
