@@ -1,1 +1,0 @@
-Designs, review documents, etc.

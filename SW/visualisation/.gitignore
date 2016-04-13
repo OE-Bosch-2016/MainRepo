@@ -1,0 +1,18 @@
+## remove temp directories
+/.idea
+/out
+/target
+
+## remove other files
+*.log
+*.pyo
+*.pyc
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+## remove all *.iml
+*.iml
