@@ -9,6 +9,8 @@ import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 import hu.nik.project.environment.objects.SceneObject;
 
+import hu.nik.project.camera.CameraMeassagePackage;
+
 //should implement interface, does not yet
 public class EmergencyBreakSystem implements ICommBusDevice {
 
