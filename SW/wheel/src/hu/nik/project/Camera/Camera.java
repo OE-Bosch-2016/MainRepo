@@ -3,7 +3,7 @@ package hu.nik.project.camera;
 import java.util.ArrayList;
 
 import hu.nik.project.communication.ICommBusDevice;
-import hu.nik.project.environment.ISensorScene;
+import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.environment.objects.DirectionSign;
 import hu.nik.project.environment.objects.ParkingSign;
@@ -21,12 +21,12 @@ import hu.nik.project.communication.CommBusConnectorType;
 
 ///class definitions are found in Team1 repo at OE-Bosch-2016-Team1/MainRepo/blob/master/SW/environment/src/hu/nik/project/environment/
 
-public class Camera implements ICamera, ICommBusDevice, ISensorScene {
+public class Camera implements ICamera, ICommBusDevice {
 	
 	SceneObject closestSign; 	//given in the object itself
 	double laneDistance;	//meters or pixels define which one! 
 	SceneObject laneType;	//given in degree 0-360
-	ISensorScene currentScene;
+	Scene currentScene;
 	SceneObject[] visibleObjects;
 
 	private CommBusConnector commBusConnector;
@@ -40,13 +40,14 @@ public class Camera implements ICamera, ICommBusDevice, ISensorScene {
 	}
 
 
-	public Camera(CommBus commBus, CommBusConnectorType commBusConnectorType)
+	public Camera(CommBus commBus, CommBusConnectorType commBusConnectorType, Scene scene) //scene has to be given in pointer?
 	{
 		commBusConnector = commBus.createConnector(this, commBusConnectorType);
 
 		closestSign=null;
 		laneDistance=-1;
 		laneType=null;
+		currentScene =scene;
 	}
         
     
