@@ -5,6 +5,5 @@ import java.util.List;
 import hu.nik.project.environment.objects.SceneObject;
 
 public class EmergencyBreakSystemMessagePackage {
-	public SceneObject car;
-	public List<SceneObject> jaywalkers;
+	public Boolean breaking;		//to break or not to break. that is the question
 }
