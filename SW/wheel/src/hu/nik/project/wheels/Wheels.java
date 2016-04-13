@@ -6,6 +6,9 @@ import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 
+import hu.nik.project.camera.EngineMeassagePackage;
+import hu.nik.project.camera.HMIMeassagePackage;
+
 public class Wheels implements IWheels, ICommBusDevice {
 
 	private CommBusConnector commBusConnector;
