@@ -109,8 +109,9 @@ public class Camera implements ICamera, ICommBusDevice {
 		}
 	}
 	
-	private void calcLaneDistance(SceneObject car, Road road)  //somehow need to get road from enviroment!!!!!!!!!!!!!
+	private void calcLaneDistance(SceneObject car)  //somehow need to get road from enviroment!!!!!!!!!!!!!
 	{
+		Road road = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation());
 	       	if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)
 	       	{
             	laneDistance = pDistance(car.getBasePosition().getX(), car.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
