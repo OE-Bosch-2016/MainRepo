@@ -5,11 +5,13 @@ package hu.nik.project.wheels;
 import hu.nik.project.communication;
 
 public class Wheels implements IWheels, ICommBusDevice {
+//author: Ferter Viktor
+//Last modified: Sipos Pal
+//Last Last modified: Apor
 
-	//imput buffers
-	private int EngineRPM;
-	private int EngineTorque;
-	private int HMIWheel;
+
+	private double speed; 						   //given in km/h
+	private double direction; 					   //given in degree 0-360
 
 	//adjust these by testing
 	static private double turningAdjustment = 0.01;      //proportion to simulate turning realistically
@@ -18,9 +20,9 @@ public class Wheels implements IWheels, ICommBusDevice {
 	static private double brakeAdjustment = 0.2;		//proportion to turn brake pedal to deceleration
 	static private double natureBrake = 0.02;			//deceleration of environment
 
-	//output buffers
-	private double speed; 						   //given in km/h
-	private double direction; 					   //given in degree 0-360
+	private int EngineRPM;
+	private int EngineTorque;
+	private int HMIWheel;
 
 	@Override
 	public void commBusDataArrived() {
