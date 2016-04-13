@@ -1,10 +1,14 @@
-
-
 package hu.nik.project.wheels;
 
-import hu.nik.project.communication;
+import hu.nik.project.communication.ICommBusDevice;
+import hu.nik.project.communication.CommBus;
+import hu.nik.project.communication.CommBusConnector;
+import hu.nik.project.communication.CommBusConnectorType;
+import hu.nik.project.communication.CommBusException;
 
 public class Wheels implements IWheels, ICommBusDevice {
+
+	private CommBusConnector commBusConnector;
 
 	//imput buffers
 	private int EngineRPM;
@@ -24,6 +28,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 
 	@Override
 	public void commBusDataArrived() {
+
 		if (commBusConnector.getDataType() == EnginePacket || commBusConnector.getDataType() == HMIPacket ) {
 
 			//dataType = commBusConnector.getDataType();
@@ -33,7 +38,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 					EngineTorque = ((EnginePacket)commBusConnector.receive()).Torque;
 
 				} catch (CommBusException e) {
-					stringData = e.getMessage();
+					//stringData = e.getMessage();
 				}
 			}
 
@@ -42,7 +47,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 					HMIWheel = ((HMIPacket)commBusConnector.receive()).DriverWheelAngle;
 
 				} catch (CommBusException e) {
-					stringData = e.getMessage();
+					//stringData = e.getMessage();
 				}
 			}
 		}
