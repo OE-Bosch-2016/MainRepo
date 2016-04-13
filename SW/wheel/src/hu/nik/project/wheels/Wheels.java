@@ -14,6 +14,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 	private int EngineRPM;
 	private int EngineTorque;
 	private int HMIWheel;
+	private bool HMIBrake;
 
 	//adjust these by testing
 	static private double turningAdjustment = 0.01;      //proportion to simulate turning realistically
@@ -29,22 +30,22 @@ public class Wheels implements IWheels, ICommBusDevice {
 	@Override
 	public void commBusDataArrived() {
 
-		if (commBusConnector.getDataType() == EnginePacket || commBusConnector.getDataType() == HMIPacket ) {
+		if (commBusConnector.getDataType() == EngineMessagePackage || commBusConnector.getDataType() == HMIMeassagePacket ) {
 
 			//dataType = commBusConnector.getDataType();
-			if (commBusConnector.getDataType() == EnginePacket) {
+			if (commBusConnector.getDataType() == EngineMessagePackage) {
 				try {
-					EngineRPM = ((EnginePacket)commBusConnector.receive()).RPM;
-					EngineTorque = ((EnginePacket)commBusConnector.receive()).Torque;
+					EngineRPM = ((EngineMessagePackage)commBusConnector.receive()).RPM;
+					EngineTorque = ((EngineMessagePackage)commBusConnector.receive()).Torque;
 
 				} catch (CommBusException e) {
 					//stringData = e.getMessage();
 				}
 			}
 
-			if (commBusConnector.getDataType() == HMIPacket) {
+			if (commBusConnector.getDataType() == HMIMeassagePacket) {
 				try {
-					HMIWheel = ((HMIPacket)commBusConnector.receive()).DriverWheelAngle;
+					HMIWheel = ((HMIMeassagePacket)commBusConnector.receive()).DriverWheelAngle;
 
 				} catch (CommBusException e) {
 					//stringData = e.getMessage();
@@ -62,15 +63,16 @@ public class Wheels implements IWheels, ICommBusDevice {
 	}
 
 
-	public void calcOnTick(double driverWheel,double torque ,double RPM, double brakePedal)
+	public void calcOnTick(double brakePedal)
 	{
-		calcDirection(driverWheel);    //calculates first because new direction is effected by last speed
-		calcSpeed(torque, brakePedal, RPM);
+		calcDirection();    //calculates first because new direction is effected by last speed
+		calcSpeed(brakePedal);
+		SendToCom();
 	}
 
-	private void calcDirection(double driverWheel)
+	private void calcDirection()
 	{
-		double phiDirection=driverWheel*speed*turningAdjustment/framerate;
+		double phiDirection=HMIWheel*speed*turningAdjustment/framerate;
 		direction += phiDirection;
 		direction = direction % 360;
 		if (direction<0)
@@ -79,7 +81,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 		}
 	}
 
-	private void calcSpeed(double torque, double brakePedal, double RPM) {
+	private void calcSpeed(double brakePedal) {
 		/*
 		Power (kW) = Torque (N.m) x Speed (RPM) /0.0095488
 		c=0.3
@@ -89,17 +91,17 @@ public class Wheels implements IWheels, ICommBusDevice {
 		natureBrake=0.3*1.25*3=1.125;
 		*/
 
-		speed = Math.pow((2 * (torque * RPM / 0.0095488) / (natureBrake)), new Double("0.3333333"));
-		if (torque >= 0) {
-			speed -= brakeAdjustment * brakePedal;
+		speed = Math.pow((2 * (EngineTorque * EngineRPM / 0.0095488) / (natureBrake)), new Double("0.3333333"));
+		if (EngineTorque >= 0) {
+			speed -= brakeAdjustment * brakePedal; //have to change this to adjust for boolean brake variable
 		} else {
 			speed += brakeAdjustment * brakePedal;
 		}
 	}
 
 	public void SendToCom() {
-		new WheelPacket(speed,direction);
-		while(!commBusConnector.send(WheelPacket)); //is this gonna work even?
+		;
+		while(!commBusConnector.send(new WheelsMessagePackage(speed,direction))); //is this gonna work even?
 	}
 	//Interface metodusok
 	public double Direction(){
