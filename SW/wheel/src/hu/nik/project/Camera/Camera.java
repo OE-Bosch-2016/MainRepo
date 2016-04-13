@@ -1,6 +1,9 @@
 package hu.nik.project.camera;
 
+import java.util.ArrayList;
+
 import hu.nik.project.communication.ICommBusDevice;
+import hu.nik.project.environment.ISensorScene;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.environment.objects.DirectionSign;
 import hu.nik.project.environment.objects.ParkingSign;
@@ -10,6 +13,7 @@ import hu.nik.project.environment.objects.Road;
 import hu.nik.project.environment.objects.SimpleRoad;
 import hu.nik.project.environment.objects.CurvedRoad;
 
+
 import hu.nik.project.communication.ICommBusDevice;
 import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnector;
@@ -17,11 +21,12 @@ import hu.nik.project.communication.CommBusConnectorType;
 
 ///class definitions are found in Team1 repo at OE-Bosch-2016-Team1/MainRepo/blob/master/SW/environment/src/hu/nik/project/environment/
 
-public class Camera implements ICamera, ICommBusDevice {
+public class Camera implements ICamera, ICommBusDevice, ISensorScene {
 	
 	SceneObject closestSign; 	//given in the object itself
 	double laneDistance;	//meters or pixels define which one! 
 	SceneObject laneType;	//given in degree 0-360
+	ISensorScene currentScene;
 
 	private CommBusConnector commBusConnector;
 
@@ -44,8 +49,10 @@ public class Camera implements ICamera, ICommBusDevice {
 	}
         
     
-	private void calcClosestSign(SceneObject[] visibleObjects, SceneObject car) 
+	private void calcClosestSign( SceneObject car) //need to get the car ???!!
 	{
+		SceneObject[] visibleObjects = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70).toArray();  //rotation is got in double needs in int
+
 		//set closest sign
 		double min=999999;	//irrationally high number for minimum selection
 		int minIndex=-1;
@@ -100,7 +107,7 @@ public class Camera implements ICamera, ICommBusDevice {
 		}
 	}
 	
-	private void calcLaneDistance(SceneObject car, Road road)
+	private void calcLaneDistance(SceneObject car, Road road)  //somehow need to get road from enviroment!!!!!!!!!!!!!
 	{
 	       	if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)
 	       	{
