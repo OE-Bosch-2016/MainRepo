@@ -1,4 +1,6 @@
 package hu.nik.project.camera;
+
+import hu.nik.project.communication.ICommBusDevice;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.environment.objects.DirectionSign;
 import hu.nik.project.environment.objects.ParkingSign;
@@ -8,13 +10,38 @@ import hu.nik.project.environment.objects.Road;
 import hu.nik.project.environment.objects.SimpleRoad;
 import hu.nik.project.environment.objects.CurvedRoad;
 
+import hu.nik.project.communication.ICommBusDevice;
+import hu.nik.project.communication.CommBus;
+import hu.nik.project.communication.CommBusConnector;
+import hu.nik.project.communication.CommBusConnectorType;
+
 ///class definitions are found in Team1 repo at OE-Bosch-2016-Team1/MainRepo/blob/master/SW/environment/src/hu/nik/project/environment/
 
-public class Camera implements ICamera {
+public class Camera implements ICamera, ICommBusDevice {
 	
 	SceneObject closestSign; 	//given in the object itself
 	double laneDistance;	//meters or pixels define which one! 
 	SceneObject laneType;	//given in degree 0-360
+
+	private CommBusConnector commBusConnector;
+
+	@Override
+	public void commBusDataArrived(){}
+
+	public void SendToCom() {
+		;
+		while(!commBusConnector.send(new CameraMessagePackage(closestSign,laneDistance,laneType))); //is this gonna work even? have to also send visible objects to ebs
+	}
+
+
+	public Camera(CommBus commBus, CommBusConnectorType commBusConnectorType)
+	{
+		commBusConnector = commBus.createConnector(this, commBusConnectorType);
+
+		closestSign=null;
+		laneDistance=-1;
+		laneType=null;
+	}
         
     
 	private void calcClosestSign(SceneObject[] visibleObjects, SceneObject car) 
@@ -75,11 +102,9 @@ public class Camera implements ICamera {
 	
 	private void calcLaneDistance(SceneObject car, Road road)
 	{
-		double distance;
-		
 	       	if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)
 	       	{
-            	distance = pDistance(car.getBasePosition().getX(), car.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
+            	laneDistance = pDistance(car.getBasePosition().getX(), car.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
         	}
                 else 
 		{
@@ -90,13 +115,14 @@ public class Camera implements ICamera {
         	    if (carDistanceToPoint > (((CurvedRoad)road).getRadius()))
                         
         	    {
-        	      distance = carDistanceToPoint - ((CurvedRoad)road).getRadius();
+        	      laneDistance = carDistanceToPoint - ((CurvedRoad)road).getRadius();
         	    }
         	    else
         	    {
-        	        distance = ((CurvedRoad)road).getRadius() - carDistanceToPoint;
+        	        laneDistance = ((CurvedRoad)road).getRadius() - carDistanceToPoint;
         	    }
         	}
+
 	}
 	
 	private double pDistance(double x,double y,double x1,double y1,double x2,double y2)
