@@ -19,7 +19,7 @@ public class EmergencyBreakSystem implements ICommBusDevice {
     private static double ebsTolerance = 100; //how sensitive is the EBS system misses in 0.001 of a hour
     private static double ebsDistance = 800; //how far does the ebs predict in pixels
     private ArrayList<SceneObject> jay_walkers;
-    private SceneObject[] visibleObjectArray;
+    public SceneObject[] visibleObjectArray;
     private boolean EBSState;
 
     public void commBusDataArrived() {
@@ -51,7 +51,7 @@ public class EmergencyBreakSystem implements ICommBusDevice {
             }
             catch(CommBusException e)
             {
-                //sad times
+                break;
             }
         }
     }
