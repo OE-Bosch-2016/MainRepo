@@ -71,7 +71,7 @@ public class Top extends JFrame { // implements KeyListener
     private final DefaultValueDataset tachoMeterDisplayDataset = new DefaultValueDataset();
     private StringBuilder builder;
 
-    //visualisation.Car2.Car2
+    //visualisation.car.car
     private AutonomousCar car;
 
     // parking test
@@ -102,7 +102,7 @@ public class Top extends JFrame { // implements KeyListener
         setContentPane(rootPanel);
         pack();
 
-        //visualisation.Car2.Car2 setup
+        //visualisation.car.car setup
         car = new AutonomousCar(new Vector2D(501, 90), ImageLoader.getCarImage());
 
         //visualisation.Visualization renderer setup
