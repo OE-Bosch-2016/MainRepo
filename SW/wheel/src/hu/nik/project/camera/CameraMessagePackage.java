@@ -1,16 +1,19 @@
 package hu.nik.project.camera;
 
 import hu.nik.project.environment.objects.SceneObject;
-import java.lang.reflect.Array;
 
 public class CameraMessagePackage {
 	public SceneObject ClosestSign;
 	public double LaneDistance;
 	public SceneObject LaneType;
+	public SceneObject[] visibleObjects;
 	
-	public void CameraMessagePackage(SceneObject closestSign, double laneDistance, SceneObject laneType, Array[] visibleObjects){
-		this.ClosestSign = closestsign;
-		this.LaneDistance = laned;
-		this.LaneType = laneType
+	public CameraMessagePackage(SceneObject closestSign, double laneDistance, SceneObject laneType, SceneObject[] visibleObjects)
+	{
+		this.ClosestSign = closestSign;
+		this.LaneDistance = laneDistance;
+		this.LaneType = laneType;
+		this.visibleObjects= visibleObjects;
+
 	}
 }

@@ -1,109 +1,128 @@
-package hu.nik.project.ebs;
-import java.util.ArrayList;
-import java.util.List;
+package hu.nik.project.wheels;
 
 import hu.nik.project.communication.ICommBusDevice;
 import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
-import hu.nik.project.environment.objects.SceneObject;
 
-import hu.nik.project.camera.CameraMeassagePackage;
+//import hu.nik.project.camera.EngineMeassagePackage;
+//import hu.nik.project.camera.HMIMeassagePackage;
 
-//should implement interface, does not yet
-public class EmergencyBreakSystem implements ICommBusDevice {
+public class Wheels implements IWheels, ICommBusDevice {
 
-    private CommBusConnector commBusConnector;
+	private CommBusConnector commBusConnector;
 
-    private static double ebsTolerance = 100; //how sensitive is the EBS system misses in 0.001 of a hour
-    private static double ebsDistance = 800; //how far does the ebs predict in pixels
-    private ArrayList<SceneObject> jay_walkers;
-    private SceneObject[] visibleObjectArray;
-    private boolean EBSState;
+	//imput buffers
+	private int EngineRPM;
+	private int EngineTorque;
+	private int HMIWheel;
+	private boolean HMIBrake;
 
-    public void commBusDataArrived() {
+	//adjust these by testing
+	static private double turningAdjustment = 0.01;      //proportion to simulate turning realistically
+	static private double framerate = 24;
+	static private double accelerationAdjustment = 0.2; //proportion to convert torque to acceleration
+	static private double brakeAdjustment = 0.2;		//proportion to turn brake pedal to deceleration
+	static private double natureBrake = 0.02;			//deceleration of environment
 
-        if (commBusConnector.getDataType() == CameraMessagePackage) {
+	//output buffers
+	private double speed; 						   //given in km/h
+	private double direction; 					   //given in degree 0-360
 
-            //dataType = commBusConnector.getDataType();
-            if (commBusConnector.getDataType() == CameraMessagePackagee) {
-                try {
-                    visibleObjectArray = ((CameraMessagePackage)commBusConnector.receive()).visibleObjects;
+	@Override
+	public void commBusDataArrived() {
+/*		This will have to wait until both the engine and the hmi make their packages
+		if (commBusConnector.getDataType() == EngineMessagePackage || commBusConnector.getDataType() == HMIMeassagePacket ) {
 
-                } catch (CommBusException e) {
-                    //stringData = e.getMessage();
-                }
-            }
+			//dataType = commBusConnector.getDataType();
+			if (commBusConnector.getDataType() == EngineMessagePackage) {
+				try {
+					EngineRPM = ((EngineMessagePackage)commBusConnector.receive()).RPM;
+					EngineTorque = ((EngineMessagePackage)commBusConnector.receive()).Torque;
 
-        }
-    }
-    
-    public void SendToCom() {
-        ;
-        while(!commBusConnector.send(new EBSMessagePackage(EBSState))); //is this gonna work even? have to also send visible objects to ebs
-    }
+				} catch (CommBusException e) {
+					//stringData = e.getMessage();
+				}
+			}
 
+			if (commBusConnector.getDataType() == HMIMeassagePacket) {
+				try {
+					HMIWheel = ((HMIMeassagePacket)commBusConnector.receive()).DriverWheelAngle;
 
-    public EmergencyBreakSystem(CommBus commBus, CommBusConnectorType commBusConnectorType)
-    {
-        commBusConnector = commBus.createConnector(this, commBusConnectorType);
-    }
+				} catch (CommBusException e) {
+					//stringData = e.getMessage();
+				}
+			}
+		}
+		*/
+	}
 
+	public Wheels(CommBus commBus, CommBusConnectorType commBusConnectorType)
+	{
+		commBusConnector = commBus.createConnector(this, commBusConnectorType);
 
-    public void get_EBS_State(SceneObject car)
-    {
-        if (!jay_walkers.isEmpty() )//&& car.getSpeed>0 && car.getSpeed<80)
-        {
-            for (int i = 0; i < jay_walkers.size(); i++) //Every walker
-            {
-              SceneObject walker =jay_walkers.get(i); 
-                          
-             //path of walker
-             double x1 = Math.tan(Math.toRadians(walker.getRotation())); //x is the coefficient of x in mx+n=y
-             double n1 = walker.getBasePosition().getY() - (x1 * walker.getBasePosition().getX() ); //n is the running point
-             //path of car
-             double x2 = Math.tan( Math.toRadians(car.getRotation())); //x is the coefficient of x in mx+n=y
-             double n2 = walker.getBasePosition().getY() - (x2 * walker.getBasePosition().getX() ); //n is the running point
-             
-             if (!(x1==x2)) //if lines are not parralel
-                {
-                double interPointX = (n1-n2)/(x1-x2);          
-                double interPointY = x1*interPointX + n1;
+		speed=0;
+		direction=0;
+	}
 
-                double dirVectorX = walker.getBasePosition().getX()-interPointX;
-                double dirVectorY = walker.getBasePosition().getY()-interPointY;
+	@Override
+	public void calcOnTick(double brakePedal)
+	{
+		calcDirection();    //calculates first because new direction is effected by last speed
+		calcSpeed(brakePedal);
+		SendToCom();
+	}
 
-                //angle between the vector from one point to another and the walker.direction vector
-                double angleDiff = Math.acos(
-                     (dirVectorX*Math.cos(walker.getRotation()) + dirVectorY*Math.sin(walker.getRotation()))
-                     /(Math.sqrt(dirVectorX*dirVectorX + dirVectorY*dirVectorY) 
-                             + Math.sqrt(Math.cos(walker.getRotation())*Math.cos(walker.getRotation()) 
-                             + Math.sin(walker.getRotation())*Math.sin(walker.getRotation()))
-                             ));
+	private void calcDirection()
+	{
+		double phiDirection=HMIWheel*speed*turningAdjustment/framerate;
+		direction += phiDirection;
+		direction = direction % 360;
+		if (direction<0)
+		{
+			direction=360+direction;
+		}
+	}
 
-                    
-                    if (Math.toDegrees(angleDiff) < 90) //if walker is going towards the intersection
-                    {                
-                    //calculating point of collision
-                     double carDist = Math.sqrt((interPointX-car.getBasePosition().getX())*(interPointX-car.getBasePosition().getX()) +
-                                            (interPointY-car.getBasePosition().getY())*(interPointY-car.getBasePosition().getY()));
-                     double walkDist = Math.sqrt((interPointX-walker.getBasePosition().getX())*(interPointX-walker.getBasePosition().getX()) +
-                                            (interPointY-walker.getBasePosition().getY())*(interPointY-walker.getBasePosition().getY()));
-                    //t=s/v
-                     double carT = 0; //carDist/car.getSpeed; //to be implemented?
-                     double walkerT = 0; // walkDist/walker.getSpeed; //to be implemented?
+	private void calcSpeed(double brakePedal) {
+		/*
+		Power (kW) = Torque (N.m) x Speed (RPM) /0.0095488
+		c=0.3
+		D=1.25
+		A=3
+		v = (2*P/(c*D*A))^(1/3)
+		natureBrake=0.3*1.25*3=1.125;
+		*/
 
-                     if(Math.abs(carT-walkerT)<1/ebsTolerance && carDist<ebsDistance) //distance in pixel coordinates speed in km/h
-                         {
-                             EBSState  = true;
-                             return;
-                         }
-                    }
-                }
-            }
-        }
+		speed = Math.pow((2 * (EngineTorque * EngineRPM / 0.0095488) / (natureBrake)), new Double("0.3333333"));
+		if (EngineTorque >= 0) {
+			speed -= brakeAdjustment * brakePedal; //have to change this to adjust for boolean brake variable
+		} else {
+			speed += brakeAdjustment * brakePedal;
+		}
+	}
 
-        EBSState =false;
-    }
+	public void SendToCom() {
+		boolean sent = false;
+		WheelsMessagePackage message = new WheelsMessagePackage(speed,direction); //so it doesnt have to remake it every time
+		while(!sent) {
+			try {
+				if (commBusConnector.send(message)) {
+					sent = true;
+				}
+			} catch (CommBusException e) {
+				break;
+			}
+		}
+	}
+	//Interface metodusok
+	public double Direction(){
+		return direction;
+	}
+
+	public double Speed(){
+		return speed;
+	}
+
 }
