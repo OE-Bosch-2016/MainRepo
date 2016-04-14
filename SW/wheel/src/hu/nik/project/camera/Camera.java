@@ -45,7 +45,7 @@ public class Camera implements ICamera, ICommBusDevice {
 			}
 			catch(CommBusException e)
 			{
-				sent =false;
+				//
 			}
 		}
 	}
