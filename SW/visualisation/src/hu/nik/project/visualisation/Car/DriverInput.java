@@ -1,11 +1,6 @@
-package hu.nik.project.visualisation.car;
+package hu.nik.project.visualisation.Car;
 
-import hu.nik.project.visualisation.interfaces.IDriverInputEngine;
-import hu.nik.project.visualisation.interfaces.IDriverInputGearBox;
-import hu.nik.project.visualisation.interfaces.IDriverInputWheel;
-import hu.nik.project.visualisation.interfaces.OnBreakSteeringWheelListener;
-import hu.nik.project.visualisation.interfaces.OnGasListener;
-import hu.nik.project.visualisation.interfaces.OnGearPositionListener;
+import hu.nik.project.visualisation.Interfaces.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**

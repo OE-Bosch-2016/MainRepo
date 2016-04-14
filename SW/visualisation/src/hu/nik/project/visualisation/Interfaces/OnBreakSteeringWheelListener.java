@@ -1,4 +1,4 @@
-package hu.nik.project.visualisation.interfaces;
+package hu.nik.project.visualisation.Interfaces;
 
 public interface OnBreakSteeringWheelListener {
     Boolean breakPushed();

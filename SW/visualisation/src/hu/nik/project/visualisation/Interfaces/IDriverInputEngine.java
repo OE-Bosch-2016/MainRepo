@@ -1,4 +1,4 @@
-package hu.nik.project.visualisation.interfaces;
+package hu.nik.project.visualisation.Interfaces;
 
 /**
  * Created by secured on 2016. 03. 13..

@@ -1,4 +1,4 @@
-package hu.nik.project.visualisation.car;
+package hu.nik.project.visualisation.Car;
 
 import hu.nik.project.utils.Vector2D;
 

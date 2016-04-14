@@ -7,12 +7,12 @@ import java.io.Serializable;
 /**
  * Created by secured on 2016. 03. 19..
  */
-public class SpeedAndDistanceObj implements Serializable {
+public class RadarPacket implements Serializable {
     private double _relativeSpeed;
     private double _currentDistance;
     private Vector2D _currentPosition;
 
-    public SpeedAndDistanceObj(int relativeSpeed, double currentDistance, Vector2D currentPosition) {
+    public RadarPacket(int relativeSpeed, double currentDistance, Vector2D currentPosition) {
         _relativeSpeed = relativeSpeed;
         _currentDistance = currentDistance;
         _currentPosition = currentPosition;

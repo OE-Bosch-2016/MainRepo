@@ -1,9 +1,10 @@
-package hu.nik.project.visualisation.car;
+package hu.nik.project.visualisation.Car;
 
 import hu.nik.project.hmi.Hmi;
-import hu.nik.project.visualisation.interfaces.OnBreakSteeringWheelListener;
 import hu.nik.project.utils.Config;
 import hu.nik.project.utils.Scalr;
+import hu.nik.project.visualisation.Interfaces.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import hu.nik.project.visualisation.interfaces.OnBreakSteeringWheelListener;
 
 
 /**

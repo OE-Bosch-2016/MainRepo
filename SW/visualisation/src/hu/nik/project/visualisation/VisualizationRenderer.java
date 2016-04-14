@@ -3,8 +3,7 @@ package hu.nik.project.visualisation;
 
 import hu.nik.project.hmi.Hmi;
 import hu.nik.project.utils.ImageLoader;
-import hu.nik.project.visualisation.car.Car;
-
+import hu.nik.project.visualisation.Car.Car;
 import javax.swing.*;
 
 /**
