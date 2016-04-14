@@ -18,6 +18,7 @@ import hu.nik.project.communication.ICommBusDevice;
 import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
+import hu.nik.project.communication.CommBusException;
 
 public class Camera implements ICamera, ICommBusDevice {
 	
@@ -33,8 +34,20 @@ public class Camera implements ICamera, ICommBusDevice {
 	public void commBusDataArrived(){}
 
 	public void SendToCom() {
-		;
-		while(!commBusConnector.send(new CameraMessagePackage(closestSign,laneDistance,laneType,visibleObjects))); //is this gonna work even? have to also send visible objects to ebs
+		boolean sent = false;
+		CameraMessagePackage message = new CameraMessagePackage(closestSign,laneDistance,laneType,visibleObjects); //so it doesnt have to remake it every time
+		while(!sent)
+		{
+			try {
+				if(commBusConnector.send(message)) {
+					sent = true;
+				}
+			}
+			catch(CommBusException e)
+			{
+				sent =false;
+			}
+		}
 	}
 
 
@@ -51,7 +64,7 @@ public class Camera implements ICamera, ICommBusDevice {
     
 	private void calcClosestSign( SceneObject car) //need to get the car ???!!
 	{
-		visibleObjects = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70).toArray();  
+		visibleObjects = (SceneObject[]) currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70).toArray();
 
 		//set closest sign
 		double min=999999;	//irrationally high number for minimum selection
@@ -109,7 +122,8 @@ public class Camera implements ICamera, ICommBusDevice {
 	
 	private void calcLaneDistance(SceneObject car) 
 	{
-		Road road = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation());
+		//Road road = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70);
+		Road road = null; //temporary to make it complie^
 	       	if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)
 	       	{
             	laneDistance = pDistance(car.getBasePosition().getX(), car.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
