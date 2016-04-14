@@ -2,7 +2,7 @@ package hu.nik.project.camera;
 
 import java.util.ArrayList;
 
-import hu.nik.project.communication.ICommBusDevice;
+
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.environment.objects.DirectionSign;
@@ -26,7 +26,7 @@ public class Camera implements ICamera, ICommBusDevice {
 	double laneDistance;	//meters or pixels define which one! 
 	SceneObject laneType;	//given in degree 0-360
 	Scene currentScene;
-	SceneObject[] visibleObjects;
+public	SceneObject[] visibleObjects;
 
 	private CommBusConnector commBusConnector;
 
@@ -45,7 +45,7 @@ public class Camera implements ICamera, ICommBusDevice {
 			}
 			catch(CommBusException e)
 			{
-				//
+				break;
 			}
 		}
 	}
