@@ -17,7 +17,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 	private int EngineRPM;
 	private int EngineTorque;
 	private int HMIWheel;
-	private bool HMIBrake;
+	private boolean HMIBrake;
 
 	//adjust these by testing
 	static private double turningAdjustment = 0.01;      //proportion to simulate turning realistically
@@ -32,7 +32,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 
 	@Override
 	public void commBusDataArrived() {
-
+/*		This will have to wait until both the engine and the hmi make their packages
 		if (commBusConnector.getDataType() == EngineMessagePackage || commBusConnector.getDataType() == HMIMeassagePacket ) {
 
 			//dataType = commBusConnector.getDataType();
@@ -55,6 +55,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 				}
 			}
 		}
+		*/
 	}
 
 	public Wheels(CommBus commBus, CommBusConnectorType commBusConnectorType)
@@ -65,7 +66,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 		direction=0;
 	}
 
-
+	@Override
 	public void calcOnTick(double brakePedal)
 	{
 		calcDirection();    //calculates first because new direction is effected by last speed
@@ -103,8 +104,17 @@ public class Wheels implements IWheels, ICommBusDevice {
 	}
 
 	public void SendToCom() {
-		;
-		while(!commBusConnector.send(new WheelsMessagePackage(speed,direction))); //is this gonna work even?
+		boolean sent = false;
+		WheelsMessagePackage message = new WheelsMessagePackage(speed,direction); //so it doesnt have to remake it every time
+		while(!sent) {
+			try {
+				if (commBusConnector.send(message)) {
+					sent = true;
+				}
+			} catch (CommBusException e) {
+				sent = false;
+			}
+		}
 	}
 	//Interface metodusok
 	public double Direction(){
