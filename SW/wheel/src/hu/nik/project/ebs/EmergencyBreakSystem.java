@@ -51,7 +51,7 @@ public class EmergencyBreakSystem implements ICommBusDevice {
             }
             catch(CommBusException e)
             {
-                sent =false;
+                //sad times
             }
         }
     }
