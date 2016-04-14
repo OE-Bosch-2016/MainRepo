@@ -1,4 +1,9 @@
 package hu.nik.project.camera;
+
+import java.util.ArrayList;
+
+import hu.nik.project.communication.ICommBusDevice;
+import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.environment.objects.DirectionSign;
 import hu.nik.project.environment.objects.ParkingSign;
@@ -8,17 +13,46 @@ import hu.nik.project.environment.objects.Road;
 import hu.nik.project.environment.objects.SimpleRoad;
 import hu.nik.project.environment.objects.CurvedRoad;
 
-///class definitions are found in Team1 repo at OE-Bosch-2016-Team1/MainRepo/blob/master/SW/environment/src/hu/nik/project/environment/
 
-public class Camera implements ICamera {
+import hu.nik.project.communication.ICommBusDevice;
+import hu.nik.project.communication.CommBus;
+import hu.nik.project.communication.CommBusConnector;
+import hu.nik.project.communication.CommBusConnectorType;
+
+public class Camera implements ICamera, ICommBusDevice {
 	
 	SceneObject closestSign; 	//given in the object itself
 	double laneDistance;	//meters or pixels define which one! 
 	SceneObject laneType;	//given in degree 0-360
+	Scene currentScene;
+	SceneObject[] visibleObjects;
+
+	private CommBusConnector commBusConnector;
+
+	@Override
+	public void commBusDataArrived(){}
+
+	public void SendToCom() {
+		;
+		while(!commBusConnector.send(new CameraMessagePackage(closestSign,laneDistance,laneType,visibleObjects))); //is this gonna work even? have to also send visible objects to ebs
+	}
+
+
+	public Camera(CommBus commBus, CommBusConnectorType commBusConnectorType, Scene scene) //scene has to be given in pointer?
+	{
+		commBusConnector = commBus.createConnector(this, commBusConnectorType);
+
+		closestSign=null;
+		laneDistance=-1;
+		laneType=null;
+		currentScene =scene;
+	}
         
     
-	private void calcClosestSign(SceneObject[] visibleObjects, SceneObject car) 
+	private void calcClosestSign( SceneObject car) //need to get the car ???!!
 	{
+		visibleObjects = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70).toArray();  
+
 		//set closest sign
 		double min=999999;	//irrationally high number for minimum selection
 		int minIndex=-1;
@@ -73,13 +107,12 @@ public class Camera implements ICamera {
 		}
 	}
 	
-	private void calcLaneDistance(SceneObject car, Road road)
+	private void calcLaneDistance(SceneObject car) 
 	{
-		double distance;
-		
+		Road road = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation());
 	       	if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)
 	       	{
-            	distance = pDistance(car.getBasePosition().getX(), car.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
+            	laneDistance = pDistance(car.getBasePosition().getX(), car.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
         	}
                 else 
 		{
@@ -90,13 +123,14 @@ public class Camera implements ICamera {
         	    if (carDistanceToPoint > (((CurvedRoad)road).getRadius()))
                         
         	    {
-        	      distance = carDistanceToPoint - ((CurvedRoad)road).getRadius();
+        	      laneDistance = carDistanceToPoint - ((CurvedRoad)road).getRadius();
         	    }
         	    else
         	    {
-        	        distance = ((CurvedRoad)road).getRadius() - carDistanceToPoint;
+        	        laneDistance = ((CurvedRoad)road).getRadius() - carDistanceToPoint;
         	    }
         	}
+
 	}
 	
 	private double pDistance(double x,double y,double x1,double y1,double x2,double y2)
