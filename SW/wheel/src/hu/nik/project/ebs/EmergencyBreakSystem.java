@@ -9,7 +9,7 @@ import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 import hu.nik.project.environment.objects.SceneObject;
 
-import hu.nik.project.camera.CameraMeassagePackage;
+import hu.nik.project.camera.CameraMessagePackage;
 
 //should implement interface, does not yet
 public class EmergencyBreakSystem implements ICommBusDevice {
@@ -24,10 +24,10 @@ public class EmergencyBreakSystem implements ICommBusDevice {
 
     public void commBusDataArrived() {
 
-        if (commBusConnector.getDataType() == CameraMessagePackage) {
+        if (commBusConnector.getDataType() == CameraMessagePackage.class) {
 
             //dataType = commBusConnector.getDataType();
-            if (commBusConnector.getDataType() == CameraMessagePackagee) {
+            if (commBusConnector.getDataType() == CameraMessagePackage.class) {
                 try {
                     visibleObjectArray = ((CameraMessagePackage)commBusConnector.receive()).visibleObjects;
 
@@ -40,8 +40,20 @@ public class EmergencyBreakSystem implements ICommBusDevice {
     }
     
     public void SendToCom() {
-        ;
-        while(!commBusConnector.send(new EBSMessagePackage(EBSState))); //is this gonna work even? have to also send visible objects to ebs
+        boolean sent = false;
+        EmergencyBreakSystemMessagePackage message = new EmergencyBreakSystemMessagePackage(EBSState); //so it doesnt have to remake it every time
+        while(!sent)
+        {
+            try {
+                if(commBusConnector.send(message)) {
+                    sent = true;
+                }
+            }
+            catch(CommBusException e)
+            {
+                sent =false;
+            }
+        }
     }
 
 
