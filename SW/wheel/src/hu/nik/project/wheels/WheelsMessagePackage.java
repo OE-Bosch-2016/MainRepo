@@ -1,6 +1,8 @@
 package hu.nik.project.wheels;
 
-public class WheelsMessagePackage {
+import java.io.Serializable;
+
+public class WheelsMessagePackage implements Serializable {
 	public double speed;
 	public double direction;
 	

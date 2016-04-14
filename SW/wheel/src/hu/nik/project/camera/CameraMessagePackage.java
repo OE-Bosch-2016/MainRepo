@@ -2,7 +2,9 @@ package hu.nik.project.camera;
 
 import hu.nik.project.environment.objects.SceneObject;
 
-public class CameraMessagePackage {
+import java.io.Serializable;
+
+public class CameraMessagePackage implements Serializable {
 	public SceneObject ClosestSign;
 	public double LaneDistance;
 	public SceneObject LaneType;
