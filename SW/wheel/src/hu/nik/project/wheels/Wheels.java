@@ -112,7 +112,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 					sent = true;
 				}
 			} catch (CommBusException e) {
-				sent = false;
+			//sad times
 			}
 		}
 	}
