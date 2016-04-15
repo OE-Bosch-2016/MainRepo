@@ -4,6 +4,7 @@ import hu.nik.project.utils.Vector2D;
 import javafx.collections.ObservableList;
 import junit.framework.TestCase;
 import org.junit.Test;
+
 import java.util.ArrayList;
 
 import static org.easymock.EasyMock.*;
