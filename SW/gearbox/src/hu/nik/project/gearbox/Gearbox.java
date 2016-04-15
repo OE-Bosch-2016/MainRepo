@@ -48,7 +48,7 @@ public class Gearbox implements ICommBusDevice {
                 stringData = e.getMessage();
             }
 		}
-		else if(dataType == xxx.class)
+		/*else if(dataType == xxx.class)
 		{
 			try {
                 XXXX data = (XXXX) commBusConnector.receive();
@@ -57,10 +57,9 @@ public class Gearbox implements ICommBusDevice {
             } catch (CommBusException e) {
                 stringData = e.getMessage();
             }
-		}
+		}*/
 	}
 
-    @Override
     public void operateGearbox() {	
         switch (gearLever) {
             case 1:
