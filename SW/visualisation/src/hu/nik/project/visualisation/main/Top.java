@@ -135,25 +135,24 @@ public class Top extends JFrame { // implements KeyListener
             }
         });
 
-        comboBox1.addItem("1");
-        comboBox1.addItem("2");
-        comboBox1.addItem("3");
-        comboBox1.addItem("4");
-        comboBox1.addItem("5");
-        comboBox1.addItem("6");
+//        comboBox1.addItem("1");
+//        comboBox1.addItem("2");
+//        comboBox1.addItem("3");
+//        comboBox1.addItem("4");
+//        comboBox1.addItem("5");
+//        comboBox1.addItem("6");
 
 
-        comboBox1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                hmi.gearshift(Integer.parseInt(comboBox1.getSelectedItem().toString()) - 1);
-            }
-        });
+//        comboBox1.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                          }
+//        });
 
         steeringWheelLabel.addKeyListener(keyListener);
         steeringWheelLabel.setFocusable(true);
         steeringWheelLabel.setFocusTraversalKeysEnabled(false);
         steeringWheelLabel.requestFocus();
-        comboBox1.setSelectedIndex(0);
+        //comboBox1.setSelectedIndex(0);
         steeringWheelLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         // Test end
@@ -340,4 +339,6 @@ public class Top extends JFrame { // implements KeyListener
             parkingTimer.start();
         }
     };
+
+    // Communication bus
 }
