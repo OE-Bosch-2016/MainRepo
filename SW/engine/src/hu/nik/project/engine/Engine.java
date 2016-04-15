@@ -1,59 +1,75 @@
-package hu.nik.project.engineandgearbox;
+package hu.nik.project.engine;
+
+import hu.nik.project.communication.ICommBusDevice;
+import hu.nik.project.communication.CommBus;
+import hu.nik.project.communication.CommBusConnector;
+import hu.nik.project.communication.CommBusConnectorType;
+import hu.nik.project.communication.CommBusException;
 
 /*
  * @author Laci & Patrik
  */
-public class Engine implements IEngine {
-
+public class Engine implements ICommBusDevice {
+	
+	private CommBusConnector commBusConnector;
+	
+	//input
+	boolean throttle;
+	//deltatime
+	
+	//inner
     final int maxRpm = 4000;
     final int minRpm = 500;
+    private int lastGearStage;
+	//lasttime
+	
+	//output
     private double rpm;
-    private double torque;
-    private int lastGearState;
-
-    public Engine(int gearState) {
+	
+	
+    public Engine() {
         rpm = 0;
-        torque = 0;
-        lastGearState = gearState;
+        lastGearStage = 0;
     }
 
     @Override
-    public void operateEngine(int gearState, boolean throttle) {
-        if (gearState > lastGearState) { //shift up
-            shiftUp(gearState);
-        } else if(gearState < lastGearState){ //shift down
-            shiftDown(gearState);
+    public void operateEngine(int gearStage, boolean throttle) {
+        if (gearStage > lastGearStage) { //shift up
+            onShiftUp(gearStage);
+        } else if(gearStage < lastGearStage){ //shift down
+            onShiftDown(gearStage);
         }
-            calculateRpm(throttle);
+        calculateRpm(throttle);//a végén üziküldés
     }
 
-    private void shiftUp(int gearState) {
-        if (gearState == 0) {
+    private void onShiftUp(int gearStage) {
+        if (gearStage == 0) {
             shiftToN(); //shift from R to N
-        } else if (lastGearState == 0) {
-            shiftFromN(gearState); //shift to 1 from N
+        } else if(lastGearStage == 0) {
+            shiftFromN(gearStage); //shift to 1 from N
         } else {
             rpm -= 1500;
         }
-        lastGearState = gearState;
+        lastGearStage = gearStage;
     }
 
-    private void shiftDown(int gearState) {
-        if (gearState == 0) {
+    private void onShiftDown(int gearStage) {
+        if (gearStage == 0) {
             shiftToN(); //shift to N
-        } else if (lastGearState == 0) {
-            shiftFromN(gearState); //shift to R
+        } else if (lastGearStage == 0) {
+            shiftFromN(gearStage); //shift to R
         } else {
             rpm += 500;
         }
-        lastGearState = gearState;
+        lastGearStage = gearStage;
     }
 
-    private void shiftFromN(int gearState) {
+    private void shiftFromN(int gearStage) {
         rpm -= 1500;
     }
 
     private void shiftToN() {
+		rpm = rpm;
     }
 
     private void calculateRpm(boolean throttle) {
@@ -74,33 +90,6 @@ public class Engine implements IEngine {
                 rpm = minRpm;
             }
         }
-        calculateTorque();
-    }
-
-    private void calculateTorque() {
-        switch (lastGearState) {
-            case 0://now in N
-                torque = 0;
-                break;
-            case -1://now in R
-                torque = -1 * rpm / 10;
-                break;
-            case 1://now in 1
-                torque = rpm / 10;
-                break;
-            default://now in > 1
-                torque = rpm / 10 - lastGearState * 20;
-                break;
-        }
-    }
-
-    @Override
-    public double getRpm() {
-        return rpm;
-    }
-
-    @Override
-    public double getTorque() {
-        return torque;
+		//kiküldi a datát
     }
 }
