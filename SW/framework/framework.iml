@@ -8,5 +8,13 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="environment" />
+    <orderEntry type="module" module-name="acc" />
+    <orderEntry type="module" module-name="communication" />
+    <orderEntry type="module" module-name="gearbox_engine" />
+    <orderEntry type="module" module-name="tsr" />
+    <orderEntry type="module" module-name="ultrasonicsensor" />
+    <orderEntry type="module" module-name="wheel" />
+    <orderEntry type="module" module-name="visualisation" />
   </component>
 </module>

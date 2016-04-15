@@ -64,6 +64,14 @@ public class Scene implements ISensorScene {
         return null;
     }
 
+    public boolean addCarToScene(Car car) {
+        if (!sceneObjects.contains(car)) {
+            sceneObjects.add(car);
+            return true;
+        }
+        return false;
+    }
+
     private void createSceneObject(int id, String objectName, ScenePoint basePosition, int rotation) {
 
         int size = sceneObjects.size();

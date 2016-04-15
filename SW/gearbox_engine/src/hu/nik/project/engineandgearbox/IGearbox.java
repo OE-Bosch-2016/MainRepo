@@ -1,4 +1,4 @@
-package engineandgearbox;
+package hu.nik.project.engineandgearbox;
 
 /**
  * @author Patrik

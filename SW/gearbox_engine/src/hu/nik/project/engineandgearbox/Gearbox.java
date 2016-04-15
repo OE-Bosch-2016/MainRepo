@@ -1,4 +1,4 @@
-package engineandgearbox;
+package hu.nik.project.engineandgearbox;
 
 /**
  *
@@ -8,7 +8,7 @@ public class Gearbox implements IGearbox {
 
     private int stage;
 
-    Gearbox(int gearLever) {
+    public Gearbox(int gearLever) {
         stage = gearLever;
     }
 

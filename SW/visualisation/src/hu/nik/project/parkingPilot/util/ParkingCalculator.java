@@ -1,4 +1,4 @@
-package hu.nik.project.parkingpilot.util;
+package hu.nik.project.parkingPilot.util;
 
 import java.awt.*;
 import java.util.List;

@@ -1,4 +1,4 @@
-package hu.nik.project.parkingpilot.model;
+package hu.nik.project.parkingPilot.model;
 
 import java.awt.*;
 

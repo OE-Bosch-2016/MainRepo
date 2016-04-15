@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package engineandgearbox;
+package hu.nik.project.engineandgearbox;
 
 import java.awt.Color;
 import java.awt.Dimension;

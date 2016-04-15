@@ -1,4 +1,4 @@
-package engineandgearbox;
+package hu.nik.project.engineandgearbox;
 
 /*
  * @author Laci & Patrik
@@ -11,7 +11,7 @@ public class Engine implements IEngine {
     private double torque;
     private int lastGearState;
 
-    Engine(int gearState) {
+    public Engine(int gearState) {
         rpm = 0;
         torque = 0;
         lastGearState = gearState;

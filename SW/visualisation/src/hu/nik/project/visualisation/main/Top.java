@@ -1,8 +1,8 @@
 package hu.nik.project.visualisation.main;
 
 import hu.nik.project.hmi.Hmi;
-import hu.nik.project.parkingpilot.PPMain;
-import hu.nik.project.parkingpilot.util.ParkingCalculator;
+import hu.nik.project.parkingPilot.PPMain;
+import hu.nik.project.parkingPilot.util.ParkingCalculator;
 import hu.nik.project.utils.ImageLoader;
 import hu.nik.project.utils.Vector2D;
 import hu.nik.project.visualisation.car.AutonomousCar;

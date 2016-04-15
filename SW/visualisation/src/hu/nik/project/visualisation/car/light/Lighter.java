@@ -1,4 +1,4 @@
-package visualisation.Car.Light;
+package hu.nik.project.visualisation.car.light;
 
 /**
  * Created by Perec on 2016.03.06..

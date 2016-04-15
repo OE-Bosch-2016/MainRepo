@@ -1,7 +1,7 @@
-package hu.nik.project.parkingpilot.manager;
+package hu.nik.project.parkingPilot.manager;
 
-import hu.nik.project.parkingpilot.model.Parking;
-import hu.nik.project.parkingpilot.util.ParkingCalculator;
+import hu.nik.project.parkingPilot.model.Parking;
+import hu.nik.project.parkingPilot.util.ParkingCalculator;
 import hu.nik.project.utils.Vector2D;
 import java.awt.*;
 

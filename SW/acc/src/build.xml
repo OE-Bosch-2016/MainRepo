@@ -7,14 +7,14 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="ACC" default="default" basedir=".">
+<project name="ACC" default="default" basedir="hun/nik/project/acc">
     <description>Builds, tests, and runs the project ACC.</description>
-    <import file="nbproject/build-impl.xml"/>
+    <import file="../nbproject/build-impl.xml"/>
     <!--
 
     There exist several targets which are by default empty and which can be 
     used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
+    before and after some framework targets. They are:
 
       -pre-init:                 called before initialization of project properties
       -post-init:                called after initialization of project properties
@@ -44,7 +44,7 @@
     nbproject/build-impl.xml file. 
 
 
-    Another way to customize the build is by overriding existing main targets.
+    Another way to customize the build is by overriding existing framework targets.
     The targets of interest are: 
 
       -init-macrodef-javac:     defines macro for javac compilation

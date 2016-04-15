@@ -3,12 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BoschProject.iml" filepath="$PROJECT_DIR$/BoschProject.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tsr/Tsr.iml" filepath="$PROJECT_DIR$/tsr/Tsr.iml" />
       <module fileurl="file://$PROJECT_DIR$/acc/acc.iml" filepath="$PROJECT_DIR$/acc/acc.iml" />
       <module fileurl="file://$PROJECT_DIR$/communication/communication.iml" filepath="$PROJECT_DIR$/communication/communication.iml" />
       <module fileurl="file://$PROJECT_DIR$/environment/environment.iml" filepath="$PROJECT_DIR$/environment/environment.iml" />
       <module fileurl="file://$PROJECT_DIR$/framework/framework.iml" filepath="$PROJECT_DIR$/framework/framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/gearbox_engine/gearbox_engine.iml" filepath="$PROJECT_DIR$/gearbox_engine/gearbox_engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tsr/tsr.iml" filepath="$PROJECT_DIR$/tsr/tsr.iml" />
       <module fileurl="file://$PROJECT_DIR$/ultrasonicsensor/ultrasonicsensor.iml" filepath="$PROJECT_DIR$/ultrasonicsensor/ultrasonicsensor.iml" />
       <module fileurl="file://$PROJECT_DIR$/visualisation/visualisation.iml" filepath="$PROJECT_DIR$/visualisation/visualisation.iml" />
       <module fileurl="file://$PROJECT_DIR$/wheel/wheel.iml" filepath="$PROJECT_DIR$/wheel/wheel.iml" />

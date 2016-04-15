@@ -1,4 +1,4 @@
-package acc;
+package hun.nik.project.acc;
 
 /**
  *
