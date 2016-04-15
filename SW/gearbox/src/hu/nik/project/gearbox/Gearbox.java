@@ -1,10 +1,8 @@
 package hu.nik.project.gearbox;
 
-import hu.nik.project.communication.ICommBusDevice;
-import hu.nik.project.communication.CommBus;
-import hu.nik.project.communication.CommBusConnector;
-import hu.nik.project.communication.CommBusConnectorType;
-import hu.nik.project.communication.CommBusException;
+import hu.nik.project.communication.*;
+import hu.nik.project.engine.EngineMessagePackage;
+//import hu.nik.project.visualisation
 
 /**
  *
@@ -13,6 +11,7 @@ import hu.nik.project.communication.CommBusException;
 public class Gearbox implements ICommBusDevice {
 	
 	private CommBusConnector commBusConnector;
+	private String stringData = "";
 	
 	//input
 	int gearLever;
@@ -26,12 +25,43 @@ public class Gearbox implements ICommBusDevice {
 	private int gearStage;
 	private double torque;
 	
-    public Gearbox(int gearLever) {
-        gearStage = gearLever;
+    public Gearbox(int gearLever, CommBus commBus, CommBusConnectorType commBusConnectorType) {
+        this.gearStage = this.gearLever = gearLever;
+		this.commBusConnector = commBus.createConnector(this, commBusConnectorType);
+		this.rpm = 0;
     }
+	
+    public String getStringData() {
+        return stringData;
+    }
+	
+    @Override
+    public void commBusDataArrived() {
+		Class dataType = commBusConnector.getDataType();
+		if(dataType == EngineMessagePackage.class)
+		{
+			try {
+                EngineMessagePackage data = (EngineMessagePackage) commBusConnector.receive();
+                rpm = data.getRpm();
+				operateGearbox();
+            } catch (CommBusException e) {
+                stringData = e.getMessage();
+            }
+		}
+		else if(dataType == xxx.class)
+		{
+			try {
+                XXXX data = (XXXX) commBusConnector.receive();
+                gearLever = data.getXXXX();
+				operateGearbox();
+            } catch (CommBusException e) {
+                stringData = e.getMessage();
+            }
+		}
+	}
 
     @Override
-    public void operateGearbox(int gearLever, double rpm) {	
+    public void operateGearbox() {	
         switch (gearLever) {
             case 1:
                 if (gearStage > 0 && gearStage < 5 && rpm > maxShiftRpm) {
@@ -69,4 +99,14 @@ public class Gearbox implements ICommBusDevice {
                 break;
         }
     }
+	
+	public int getGearStage()
+	{
+		return gearStage;
+	}
+	
+	public double getTorque()
+	{
+		return torque;
+	}
 }
