@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ultrasonicsensor;
+package hu.nik.project.ultrasonicsensor;
 
 /**
  *
  * @author András
  */
 public class Pos {
-    
     private int x;
     private int y;
 
@@ -34,4 +33,5 @@ public class Pos {
     public void setPosY(int posY) {
         y = posY;
     }
+
 }
