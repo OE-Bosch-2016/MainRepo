@@ -5,6 +5,8 @@ package hu.nik.project.hmi;
  */
 public class Hmi implements IHmi {
 
+    private static Hmi mInstance;
+
     public static int GEAR_SHIFT_D = 0;
     public static int GEAR_SHIFT_N = 1;
     public static int GEAR_SHIFT_R = 2;
@@ -17,25 +19,28 @@ public class Hmi implements IHmi {
 
     OnHmiListener hmiListener;
 
-    public void setKhm(int kmh)
-    {
+    public static Hmi newInstance() {
+        if (mInstance == null)
+            mInstance = new Hmi();
+        return mInstance;
+    }
+
+    public void setKhm(int kmh) {
         this.kmh = kmh;
     }
 
-    public void setRpm(int rpm)
-    {
+    public void setRpm(int rpm) {
         this.rpm = rpm;
     }
 
-    public int getKhm()
-    {
+    public int getKhm() {
         return kmh;
     }
 
-    public  int getRpm()
-    {
+    public int getRpm() {
         return rpm;
     }
+
     public void mileage(float mile) {
         if (hmiListener != null)
             hmiListener.mileAgeChanged(mile);

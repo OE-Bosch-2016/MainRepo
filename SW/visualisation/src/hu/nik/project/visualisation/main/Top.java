@@ -90,7 +90,7 @@ public class Top extends JFrame { // implements KeyListener
         parkingTimer = new Timer(42, parkingTimerListener);
         parkingPilot = new PPMain();
         moveTimer = new Timer(42, moveListener);
-        hmi = new Hmi();
+        hmi = Hmi.newInstance();
         hmi.setHmiListener(mileAgeListener);
         mileAgePanel.add(buildDialPlot(0, DISPLAY_MAX_KM, 20, mileAgeDataset, mileAgeDisplayDataset));
         tachometerPanel.add(buildDialPlot(0, DISPLAY_MAX_TACHO, 1000, tachoMeterDataset, tachoMeterDisplayDataset));
@@ -245,7 +245,8 @@ public class Top extends JFrame { // implements KeyListener
     };
 
     private KeyListener keyListener = new KeyListener() {
-        public void keyTyped(KeyEvent e) {}
+        public void keyTyped(KeyEvent e) {
+        }
 
         public void keyPressed(KeyEvent e) {
             stage = 0;
@@ -255,7 +256,7 @@ public class Top extends JFrame { // implements KeyListener
                 simulateMoving(HORIZONTAL_PARKING);
             else if (e.getKeyChar() == 'o')
                 simulateMoving(VERTICAL_PARKING);
-            else if(e.getKeyChar() == 'r')
+            else if (e.getKeyChar() == 'r')
                 car.setPosition(new Vector2D(501, 90));
 
         }
@@ -339,6 +340,4 @@ public class Top extends JFrame { // implements KeyListener
             parkingTimer.start();
         }
     };
-
-    // Communication bus
 }

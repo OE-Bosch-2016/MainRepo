@@ -33,7 +33,7 @@ public class SteeringWheel {
     }
 
     public SteeringWheel(Hmi hmi,JLabel label) {
-        this.hmi = hmi;
+        this.hmi = Hmi.newInstance();
         this.label = label;
     }
 
