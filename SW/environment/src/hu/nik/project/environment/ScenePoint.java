@@ -84,16 +84,32 @@ public class ScenePoint implements Serializable {
         // I'll shift all degree-values with 1000 to positive distance
         // so we will work with only positive numbers!!!
 
-        viewAngleOfSP = viewAngleOfSP + 1000; // SHIFT: viewAngleOfSP between 1000 and 1360 degrees
+        // viewAngleOfSP will be normalized into interval between -180 and +180 and shifted with +1000
+        if ( viewAngleOfSP >= 180 ) viewAngleOfSP = viewAngleOfSP - 360;
+        viewAngleOfSP = viewAngleOfSP + 1000; // viewAngleOfSP between 1000-180 and 1000+180 degrees
 
-        double halfViewAngle; // +/- half-viewangle = value of enabled divergence from observerRotation
-        if ( viewAngle > 360)
+        // +/- half-viewangle = value of enabled divergence from observerRotation (between 0 and +180)
+        double halfViewAngle;
+        if ( Math.abs(viewAngle) > 360)
             halfViewAngle = ((double)(viewAngle % 360)) / 2;
         else
             halfViewAngle = ((double)viewAngle) / 2;
+        // halfViewAngle always positive number
+        if ( halfViewAngle < 0 ) halfViewAngle = -halfViewAngle; // Math.abs(halfViewAngle)
 
-        double rotation = observerRotation + 1000; // SHIFT: rotation between 1000 and 1360 degrees
+        // rotation also will be normalized into interval between -180 and +180 and shifted with +1000
+        double rotation;
+        if ( Math.abs(observerRotation) > 360 )
+            rotation = (observerRotation % 360);
+        else
+            rotation = observerRotation;
 
+        if ( rotation < 0 ) rotation = 360 + rotation; // 360 - Math.abs(rotation)
+        if ( rotation >= 180 ) rotation = rotation - 360;
+
+        rotation = rotation + 1000; // SHIFT: rotation between 1000-180 and 1000+180 degrees
+
+        // min-angle and max-angle are relative to rotation pro and contra
         double minAngle = rotation - halfViewAngle;
         double maxAngle = rotation + halfViewAngle;
 
