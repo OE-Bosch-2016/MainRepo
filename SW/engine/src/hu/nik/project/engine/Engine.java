@@ -1,10 +1,9 @@
 package hu.nik.project.engine;
 
-import hu.nik.project.communication.ICommBusDevice;
-import hu.nik.project.communication.CommBus;
-import hu.nik.project.communication.CommBusConnector;
-import hu.nik.project.communication.CommBusConnectorType;
-import hu.nik.project.communication.CommBusException;
+import hu.nik.project.communication.*;
+import hu.nik.project.engine.GearboxMessagePackage;
+//import hu.nik.project.HMI!
+//import hu.nik.project.SYSTEM!
 
 /*
  * @author Laci & Patrik
@@ -12,10 +11,12 @@ import hu.nik.project.communication.CommBusException;
 public class Engine implements ICommBusDevice {
 	
 	private CommBusConnector commBusConnector;
+	private String stringData = "";
 	
 	//input
 	boolean throttle;
-	//deltatime
+	int gearStage;
+	//deltatime time?
 	
 	//inner
     final int maxRpm = 4000;
@@ -27,22 +28,64 @@ public class Engine implements ICommBusDevice {
     private double rpm;
 	
 	
-    public Engine() {
+    public Engine(CommBus commBus, CommBusConnectorType commBusConnectorType) {
+		this.commBusConnector = commBus.createConnector(this, commBusConnectorType);
         rpm = 0;
         lastGearStage = 0;
+        gearStage = 0;
     }
-
+	
+    public String getStringData() {
+        return stringData;
+    }
+	
     @Override
-    public void operateEngine(int gearStage, boolean throttle) {
-        if (gearStage > lastGearStage) { //shift up
-            onShiftUp(gearStage);
-        } else if(gearStage < lastGearStage){ //shift down
-            onShiftDown(gearStage);
-        }
-        calculateRpm(throttle);//a végén üziküldés
+    public void commBusDataArrived() {
+		Class dataType = commBusConnector.getDataType();
+		if(dataType == GearboxMessagePackage.class)
+		{
+			try {
+                GearboxMessagePackage data = (GearboxMessagePackage) commBusConnector.receive();
+                gearStage = data.getGearStage();
+				operateShift();
+				//data küldés a buszra
+            } catch (CommBusException e) {
+                stringData = e.getMessage();
+            }
+		}
+		/*else if(dataType == xxx.class) //throttle
+		{
+			try {
+                XXXX data = (XXXX) commBusConnector.receive();
+                throttle = data.getXXXX();
+				//itt nem számolunk RPM-t mert nem tudjuk mennyi idő telt el -> negatív input lagg lesz
+            } catch (CommBusException e) {
+                stringData = e.getMessage();
+            }
+		}*/
+		/*else if(dataType == yyyy.class) //time
+		{
+			try {
+                YYYY data = (YYYY) commBusConnector.receive();
+                time = data.getYYYY();
+				calculateRpm();
+				//data küldés a buszra
+            } catch (CommBusException e) {
+                stringData = e.getMessage();
+            }
+		}*/
+	}
+	
+	
+    public void operateShift() {
+		if (gearStage > lastGearStage) { //shift up
+			onShiftUp(gearStage);
+		} else if(gearStage < lastGearStage){ //shift down
+			onShiftDown(gearStage);
+		}
     }
 
-    private void onShiftUp(int gearStage) {
+    private void onShiftUp() {
         if (gearStage == 0) {
             shiftToN(); //shift from R to N
         } else if(lastGearStage == 0) {
@@ -53,7 +96,7 @@ public class Engine implements ICommBusDevice {
         lastGearStage = gearStage;
     }
 
-    private void onShiftDown(int gearStage) {
+    private void onShiftDown() {
         if (gearStage == 0) {
             shiftToN(); //shift to N
         } else if (lastGearStage == 0) {
@@ -72,7 +115,7 @@ public class Engine implements ICommBusDevice {
 		rpm = rpm;
     }
 
-    private void calculateRpm(boolean throttle) {
+    private void calculateRpm() {
         double time = 5 * (Math.pow(Math.E, rpm / 1600) - 1);
         if (throttle) {
             time += 0.5;
@@ -90,6 +133,5 @@ public class Engine implements ICommBusDevice {
                 rpm = minRpm;
             }
         }
-		//kiküldi a datát
     }
 }
