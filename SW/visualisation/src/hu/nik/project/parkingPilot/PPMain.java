@@ -2,6 +2,7 @@ package hu.nik.project.parkingPilot;
 
 import hu.nik.project.parkingPilot.manager.PPManager;
 import hu.nik.project.parkingPilot.model.Parking;
+import hu.nik.project.parkingPilot.searchParkingPlace.ParkingPlaceSearcher;
 import hu.nik.project.parkingPilot.util.ParkingCalculator;
 import hu.nik.project.utils.Vector2D;
 
@@ -15,11 +16,13 @@ public class PPMain {
     private PPManager manager;
     private ParkingCalculator parkingCalculator;
     private Point[] car;
+    private ParkingPlaceSearcher placeSearcher;
 
     public PPMain() {
         manager = PPManager.newInstance();
         manager.setSenderListener(parkingListener);
         parkingCalculator = new ParkingCalculator();
+        placeSearcher= new ParkingPlaceSearcher();
     }
 
     public void parkingPilotActivate(Vector2D point, int height, int width, ParkingCalculator.OnParkingListener parkingListener, int parkingType){
