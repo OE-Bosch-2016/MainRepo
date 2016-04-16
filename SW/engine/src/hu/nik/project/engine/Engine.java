@@ -79,9 +79,9 @@ public class Engine implements ICommBusDevice {
 	
     public void operateShift() {
 		if (gearStage > lastGearStage) { //shift up
-			onShiftUp(gearStage);
+			onShiftUp();
 		} else if(gearStage < lastGearStage){ //shift down
-			onShiftDown(gearStage);
+			onShiftDown();
 		}
     }
 

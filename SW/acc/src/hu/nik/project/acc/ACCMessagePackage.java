@@ -14,11 +14,11 @@ public class ACCMessagePackage implements Serializable {
 		this.breakPedal = breakPedal;
 	}
  
-    public int getGasPedal(){
+    public boolean getGasPedal(){
 		return gasPedal;
 	}
  
-	public double getBreakPedal(){
+	public boolean getBreakPedal(){
 		return breakPedal;
 	}
 }
