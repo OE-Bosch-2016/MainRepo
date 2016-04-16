@@ -11,13 +11,18 @@ import java.io.IOException;
  */
 public class ImageLoader {
 
-    public static int MAP1 = 0;
-    public static int MAP2 = 1;
+
 
     // Getter ----------------------------------------------------------------------------------------------------------
-    public static ImageIcon getMapImage(int mapType) {
+    public static ImageIcon getMapImage(String mapPath) {
         ImageIcon icon = null;
-        BufferedImage scaledImage = loadImageFromPath(mapType == MAP2 ? Config.pathMap2 : Config.pathMap1);
+
+        if (mapPath == "") {
+           mapPath = Config.pathMap;
+        } else
+            Config.pathMap = mapPath;
+
+        BufferedImage scaledImage = loadImageFromPath(mapPath);
         scaledImage = Scalr.resize(scaledImage, Config.imageSizeX, Config.imageSizeY);
         icon = new ImageIcon(scaledImage);
 

@@ -81,7 +81,11 @@ public class Top extends JFrame { // implements KeyListener
     private int HORIZONTAL_PARKING = 0;
     private int VERTICAL_PARKING = 1;
 
-    public Top() {
+    // mapPath
+    private String mapPath;
+
+    public Top(String mapPath) {
+        this.mapPath = mapPath;
         init();
     }
 
@@ -106,7 +110,7 @@ public class Top extends JFrame { // implements KeyListener
         car = new AutonomousCar(new Vector2D(501, 90), ImageLoader.getCarImage());
 
         //visualisation.Visualization renderer setup
-        vRenderer = new VisualizationRenderer(mapPanel, hmi, car);
+        vRenderer = new VisualizationRenderer(mapPanel, hmi, car, mapPath);
 
         //Timer setup
         //1 sec / 24 ~= 42 ms -> 24fps

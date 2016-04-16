@@ -6,8 +6,7 @@ package hu.nik.project.visualisation.main;
 public class Main {
 
     public static void main(String[] args) {
-        Top top = new Top();
-
+        //Top top = new Top("");
+        Top top = new Top("sceneroads\\road_1.png");
     }
-
 }

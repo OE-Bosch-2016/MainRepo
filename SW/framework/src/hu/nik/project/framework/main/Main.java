@@ -35,7 +35,7 @@ public class Main {
             if (args.length > 0)
                 xmlPath = args[0];
             else
-                xmlPath = "sceneroads\\Road1Scene.xml";
+                xmlPath = "sceneroads\\road_1.xml";
 
             scene = new Scene(xmlPath);
             programLogger.log("XML parsing completed! Scene created!");
@@ -64,7 +64,7 @@ public class Main {
         // Start the visualisation
         programLogger.log("Starting visualisation...");
         try {
-            top = new Top();
+            top = new Top("sceneroads\road_1.png");
         }catch (Exception e) {
             System.out.println("Error in visualisation: " + e.getMessage());
             programLogger.log("Error in visualisation: " + e.getMessage());
