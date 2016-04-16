@@ -1,7 +1,7 @@
 package hu.nik.project.engine;
 
 import hu.nik.project.communication.*;
-import hu.nik.project.engine.GearboxMessagePackage;
+import hu.nik.project.gearbox.GearboxMessagePackage;
 //import hu.nik.project.HMI!
 //import hu.nik.project.SYSTEM!
 

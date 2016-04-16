@@ -8,8 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="environment" />
-    <orderEntry type="module" module-name="communication" />
+    <orderEntry type="module" module-name="environment" exported="" />
+    <orderEntry type="module" module-name="communication" exported="" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit4">
         <CLASSES>

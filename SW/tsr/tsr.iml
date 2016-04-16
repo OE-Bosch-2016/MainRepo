@@ -18,7 +18,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="environment" />
-    <orderEntry type="module" module-name="communication" />
+    <orderEntry type="module" module-name="environment" exported="" />
+    <orderEntry type="module" module-name="communication" exported="" />
   </component>
 </module>
