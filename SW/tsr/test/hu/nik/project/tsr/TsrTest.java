@@ -24,7 +24,7 @@ public class TsrTest {
         commBus = new CommBus();
         speedSignSenderDevice = new TestDevice(commBus, SpeedSign.class, CommBusConnectorType.SenderReceiver);
         tsrModule = new Tsr(commBus, CommBusConnectorType.SenderReceiver);
-        tsrReceiverDevice = new TestDevice(commBus, TsrPacket.class, CommBusConnectorType.SenderReceiver);
+        tsrReceiverDevice = new TestDevice(commBus, TsrMessagePackage.class, CommBusConnectorType.SenderReceiver);
     }
 
     @Test
@@ -37,8 +37,8 @@ public class TsrTest {
 
         // if TSR modul works fine the speed-sign will be forwarded as an expected TsrPacket:
 
-        TsrPacket expected = new TsrPacket(50, speedSignToSend.getCenter()); // we except the central position of the sign!!!
-        TsrPacket received = tsrReceiverDevice.getTsrPacketData();
+        TsrMessagePackage expected = new TsrMessagePackage(50, speedSignToSend.getCenter()); // we except the central position of the sign!!!
+        TsrMessagePackage received = tsrReceiverDevice.getTsrPacketData();
 
         // a test-trick: last error message must be empty (if not empty, we will see what's happened)
         Assert.assertEquals("", tsrReceiverDevice.getStringData());

@@ -8,12 +8,12 @@ import java.util.ArrayList;
 /**
  * Created by CyberZero on 2016. 04. 07..
  */
-public class TsrPacket implements Serializable {
+public class TsrMessagePackage implements Serializable {
 
     private int speedLimit;
     private ScenePoint centerPoint;
 
-    public TsrPacket(int speedLimit, ScenePoint centerPoint) {
+    public TsrMessagePackage(int speedLimit, ScenePoint centerPoint) {
         this.speedLimit = speedLimit;
         this.centerPoint = centerPoint;
     }

@@ -26,7 +26,7 @@ public class Tsr implements ICommBusDevice{
                 PrioritySign data = (PrioritySign) commBusConnector.receive();
                 if(data.getObjectType()== PrioritySign.PrioritySignType.GIVEAWAY ||
                         data.getObjectType() == PrioritySign.PrioritySignType.STOP)
-                    commBusConnector.send( new TsrPacket(0,data.getCenter()));
+                    commBusConnector.send( new TsrMessagePackage(0,data.getCenter()));
             } catch (CommBusException e) {
                 stringData = e.getMessage();
             }
@@ -34,7 +34,7 @@ public class Tsr implements ICommBusDevice{
             try {
                 //send anytype direction sign
                 DirectionSign data = (DirectionSign) commBusConnector.receive();
-                commBusConnector.send( new TsrPacket(0,data.getCenter()));
+                commBusConnector.send( new TsrMessagePackage(0,data.getCenter()));
             } catch (CommBusException e) {
                 stringData = e.getMessage();
             }
@@ -42,28 +42,28 @@ public class Tsr implements ICommBusDevice{
             try {
                 //send anytype, but different speedlimit
                 SpeedSign data = (SpeedSign) commBusConnector.receive();
-                TsrPacket packet = null;
+                TsrMessagePackage packet = null;
                 switch(data.getObjectType()){
                     case LIMIT_10:
-                        packet=new TsrPacket(10,data.getCenter());
+                        packet=new TsrMessagePackage(10,data.getCenter());
                         break;
                     case LIMIT_20:
-                        packet=new TsrPacket(20,data.getCenter());
+                        packet=new TsrMessagePackage(20,data.getCenter());
                         break;
                     case LIMIT_40:
-                        packet=new TsrPacket(40,data.getCenter());
+                        packet=new TsrMessagePackage(40,data.getCenter());
                         break;
                     case LIMIT_50:
-                        packet=new TsrPacket(50,data.getCenter());
+                        packet=new TsrMessagePackage(50,data.getCenter());
                         break;
                     case LIMIT_70:
-                        packet=new TsrPacket(70,data.getCenter());
+                        packet=new TsrMessagePackage(70,data.getCenter());
                         break;
                     case LIMIT_90:
-                        packet=new TsrPacket(90,data.getCenter());
+                        packet=new TsrMessagePackage(90,data.getCenter());
                         break;
                     case LIMIT_100:
-                        packet=new TsrPacket(100,data.getCenter());
+                        packet=new TsrMessagePackage(100,data.getCenter());
                         break;
                 }
                 if(packet!=null) commBusConnector.send(packet);

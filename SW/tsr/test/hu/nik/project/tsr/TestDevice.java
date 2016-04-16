@@ -17,7 +17,7 @@ class TestDevice implements ICommBusDevice {
     private Class neededDataType;
 
     private String stringData = "";   // last error message if something wrong
-    private TsrPacket tsrPacketData;
+    private TsrMessagePackage tsrPacketData;
     private SpeedSign speedSignData;
 
     public TestDevice(CommBus commBus, Class whatKindOfObjectIsNeededToTest, CommBusConnectorType commBusConnectorType) {
@@ -33,9 +33,9 @@ class TestDevice implements ICommBusDevice {
 
         if (dataType == neededDataType) {
 
-            if (dataType == TsrPacket.class) {
+            if (dataType == TsrMessagePackage.class) {
                 try {
-                    tsrPacketData = (TsrPacket) commBusConnector.receive();
+                    tsrPacketData = (TsrMessagePackage) commBusConnector.receive();
                 } catch (CommBusException e) {
                     stringData = e.getMessage();
                 }
@@ -53,7 +53,7 @@ class TestDevice implements ICommBusDevice {
     public String getStringData() {
         return stringData;
     }
-    public TsrPacket getTsrPacketData() { return tsrPacketData; }
+    public TsrMessagePackage getTsrPacketData() { return tsrPacketData; }
     public SpeedSign getSpeedSignData() { return speedSignData; }
 
     public CommBusConnector getCommBusConnector() { return commBusConnector;}
