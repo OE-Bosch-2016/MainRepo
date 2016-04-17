@@ -5,14 +5,7 @@ import java.util.ArrayList;
 
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
-import hu.nik.project.environment.objects.SceneObject;
-import hu.nik.project.environment.objects.DirectionSign;
-import hu.nik.project.environment.objects.ParkingSign;
-import hu.nik.project.environment.objects.PrioritySign;
-import hu.nik.project.environment.objects.SpeedSign;
-import hu.nik.project.environment.objects.Road;
-import hu.nik.project.environment.objects.SimpleRoad;
-import hu.nik.project.environment.objects.CurvedRoad;
+import hu.nik.project.environment.objects.*;
 
 
 import hu.nik.project.communication.ICommBusDevice;
@@ -27,6 +20,7 @@ public class Camera implements ICamera, ICommBusDevice {
 	double laneDistance;	//meters or pixels define which one! 
 	boolean IsLaneRestricted;	//given in degree 0-360
 	Scene currentScene;
+	Car currentCar;
 
 public	SceneObject[] visibleObjects;
 
@@ -54,11 +48,11 @@ public	SceneObject[] visibleObjects;
 
 	public void calcOnTick()
 	{
-		//calcClosestSign();
-		//calcLaneDistance();
+		calcClosestSign();
+		calcLaneDistance();
 	}
 
-	public Camera(CommBus commBus, CommBusConnectorType commBusConnectorType, Scene scene) //scene has to be given in pointer?
+	public Camera(CommBus commBus, CommBusConnectorType commBusConnectorType, Scene scene, Car car) //scene has to be given in pointer?
 	{
 		commBusConnector = commBus.createConnector(this, commBusConnectorType);
 
@@ -66,12 +60,13 @@ public	SceneObject[] visibleObjects;
 		laneDistance=-1;
 		IsLaneRestricted=false;
 		currentScene =scene;
+		currentCar = car;
 	}
         
     
-	private void calcClosestSign( SceneObject car) //need to get the car ???!!
+	private void calcClosestSign() //need to get the car ???!!
 	{
-		visibleObjects = (SceneObject[]) currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70).toArray();
+		visibleObjects = (SceneObject[]) currentScene.getVisibleSceneObjects(currentCar.getBasePosition(),currentCar.getRotation(),70).toArray();
 
 		//set closest sign
 		double min=999999;	//irrationally high number for minimum selection
@@ -80,11 +75,11 @@ public	SceneObject[] visibleObjects;
 		int distY=0;
 		for(int i=0;i<visibleObjects.length;i++) 					//calculate (x1-x2)^2*(y1-y2)^2 for each
 		{
-		distX = (visibleObjects[i].getBasePosition().getX()- car.getBasePosition().getX())*
-		(visibleObjects[i].getBasePosition().getX()- car.getBasePosition().getX());
+		distX = (visibleObjects[i].getBasePosition().getX()- currentCar.getBasePosition().getX())*
+		(visibleObjects[i].getBasePosition().getX()- currentCar.getBasePosition().getX());
 		
-		distY =	(visibleObjects[i].getBasePosition().getY()- car.getBasePosition().getY())*
-		(visibleObjects[i].getBasePosition().getY()- car.getBasePosition().getY());
+		distY =	(visibleObjects[i].getBasePosition().getY()- currentCar.getBasePosition().getY())*
+		(visibleObjects[i].getBasePosition().getY()- currentCar.getBasePosition().getY());
 		
                 if (visibleObjects[1].getObjectType() == DirectionSign.DirectionType.FORWARD) 
                 
@@ -127,19 +122,19 @@ public	SceneObject[] visibleObjects;
 		}
 	}
 	
-	private void calcLaneDistance(SceneObject car) 
+	private void calcLaneDistance()
 	{
 		//Road road = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70);
 		Road road = null; //temporary to make it complie^
 	       	if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)
 	       	{
-            	laneDistance = pDistance(car.getBasePosition().getX(), car.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
+            	laneDistance = pDistance(currentCar.getBasePosition().getX(), currentCar.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
         	}
                 else 
 		{
         	   double carDistanceToPoint = Math.sqrt(
-                           Math.pow(car.getBasePosition().getX() - ((CurvedRoad)road).getReferencePoint().getX(),2) 
-                         + Math.pow(car.getBasePosition().getY() - ((CurvedRoad)road).getReferencePoint().getY(),2)
+                           Math.pow(currentCar.getBasePosition().getX() - ((CurvedRoad)road).getReferencePoint().getX(),2)
+                         + Math.pow(currentCar.getBasePosition().getY() - ((CurvedRoad)road).getReferencePoint().getY(),2)
                            );
         	    if (carDistanceToPoint > (((CurvedRoad)road).getRadius()))
                         
