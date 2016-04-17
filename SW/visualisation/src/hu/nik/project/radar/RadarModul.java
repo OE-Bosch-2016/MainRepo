@@ -6,6 +6,7 @@ import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.ICommBusDevice;
 import hu.nik.project.environment.ISensorScene;
 import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.environment.objects.Car;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.utils.Vector2D;
 import javafx.collections.FXCollections;
@@ -14,7 +15,6 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ListIterator;
-import java.util.Timer;
 
 
 /**
@@ -29,43 +29,36 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     private static final int _viewDistance = 200;
     private float _angelOfSight;
     private int _sampingTime;
-    private double _currentSpeed;
     private Vector2D _currentPosition;
 
     private ArrayList<RadarMessagePacket> _radarPackets;
     private Boolean _isRadarEnabled;
-    private Timer _timer; //for sampling
 
     private HashMap<Integer, float[]> _previousVectorsHashMap;
     private ObservableList<RadarMessagePacket> _radarPacketObservableList;
     private OnRadarObjectsListener _radarObjectsListener;
 
-    public RadarModul(ISensorScene sensorScene,CommBus commbus, float angelOfSight, int samplingTime,double currentSpeed,Vector2D currentPos ) {
+    public RadarModul(ISensorScene sensorScene, CommBus commbus, float angelOfSight, int samplingTime, ScenePoint currentPos) {
         _sensorScene = sensorScene;
-        _communicationBus=commbus;
+        _communicationBus = commbus;
         _angelOfSight = angelOfSight;
         _sampingTime = samplingTime;
-        _currentPosition=currentPos;
-        _currentSpeed=currentSpeed;
+        _currentPosition = new Vector2D((float) currentPos.getX(), (float) currentPos.getX());
 
-        commBusConnector=commbus.createConnector(this,CommBusConnectorType.Sender);
+        commBusConnector = commbus.createConnector(this, CommBusConnectorType.Sender);
 
         _isRadarEnabled = false;
         _previousVectorsHashMap = new HashMap<Integer, float[]>();
-        _timer = new Timer();
 
         _radarPackets = new ArrayList<RadarMessagePacket>();
         _radarPacketObservableList = FXCollections.observableList(_radarPackets);
 
     }
 
-    /*  if (_radarObjectsListener != null)
-            _radarObjectsListener.objectListChanged(_radarPacketObservableList);
-    * */
     //<editor-fold desc="Properties of radar Modul">
 
-    public Vector2D getRadarPosition() {
-        return null;
+    public ScenePoint getRadarPosition() {
+        return new ScenePoint((int) _currentPosition.get_coordinateX(), (int) _currentPosition.get_coordinateY());
     }
 
     public Integer getRadarViewDistance() {
@@ -76,10 +69,9 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         return _angelOfSight;
     }
 
-    public RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance() {
-        return null;
+    public void setIsRadarEnabled(Boolean _isRadarEnabled) {
+        this._isRadarEnabled = _isRadarEnabled;
     }
-
 
     public Boolean isRadarEnabled() {
         return _isRadarEnabled;
@@ -87,23 +79,20 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     //</editor-fold>
 
-
-    //TODO: We need to clarify how we will know the OUR current speed and position
-    public ObservableList<RadarMessagePacket> getDetectedObjsRelativeSpeedAndDistance(ArrayList<Vector2D> incomingData) {
-        ArrayList<Vector2D> recent = getMostRecentVectorsFromEnv(incomingData);
-        _radarPacketObservableList = getDetectedObjsRelativeSpeedDistance(recent, _currentPosition, _currentSpeed);
-
-        return _radarPacketObservableList;
-    }
-
-
-    //currentspeed and position comes from outside
-    public RadarMessagePacket getDetectedObjRelativeSpeedAndDistance() {
-
-        ArrayList<Vector2D> incomingData = getSceeneObjectsInSpecificArea(_currentPosition,0,(int)_angelOfSight,_viewDistance);
-        ArrayList<Vector2D> recent = getMostRecentVectorsFromEnv(incomingData);
-        _radarPacketObservableList = getDetectedObjsRelativeSpeedDistance(recent, _currentPosition, _currentSpeed);
-        return getClosestObjectFromList(_radarPacketObservableList);
+    public RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance(double currentSpeed, int observerRotation) {
+        if (_isRadarEnabled) {
+            ArrayList<Vector2D> incomingData = getSceneObjectsInSpecificArea(_currentPosition, observerRotation, (int) _angelOfSight, _viewDistance);
+            if (incomingData != null) {
+                ArrayList<Vector2D> recent = getMostRecentVectorsFromEnv(incomingData);
+                _radarPacketObservableList = getDetectedObjsRelativeSpeedDistance(recent, _currentPosition, currentSpeed);
+                return getClosestObjectFromList(_radarPacketObservableList);
+            } else {
+                return null;
+            }
+        }
+        else{
+            return null;
+        }
     }
 
 
@@ -114,19 +103,20 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     //<editor-fold desc="Private methods">
 
-    //what is "int observerRotation"
-    private ArrayList<Vector2D> getSceeneObjectsInSpecificArea(Vector2D currentPos, int observerRotation, int viewAngle, int viewDistance){
+    private ArrayList<Vector2D> getSceneObjectsInSpecificArea(Vector2D currentPos, int observerRotation, int viewAngle, int viewDistance) {
         ArrayList<SceneObject> sceneObjectArrayList =
                 _sensorScene.getVisibleSceneObjects(new ScenePoint((int) currentPos.get_coordinateX(), (int) currentPos.get_coordinateX()), observerRotation, viewAngle, viewDistance);
 
-        if(sceneObjectArrayList!=null) {
-            ArrayList<Vector2D> vector2DArrayList=new ArrayList<Vector2D>();
-            for(SceneObject item : sceneObjectArrayList){
-                vector2DArrayList.add(new Vector2D(item.getBasePosition().getX(), item.getBasePosition().getY()));
+        if (sceneObjectArrayList != null) {
+            ArrayList<Vector2D> vector2DArrayList = new ArrayList<Vector2D>();
+            for (SceneObject item : sceneObjectArrayList) {
+                if(item.getObjectType().equals(Car.class)) {
+                    Car car = (Car)item;
+                    vector2DArrayList.add(new Vector2D(car.getCenterPoint().getX(),car.getCenterPoint().getY()));
+                }
             }
             return vector2DArrayList;
-        }
-        else{
+        } else {
             return null;
         }
     }
@@ -273,8 +263,9 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
                     min = i;
                 }
             }
+            return radarPacketList.get(min);
         }
-        return radarPacketList.get(min);
+        return null;
     }
 
     private boolean IsAllDistanceZero() {

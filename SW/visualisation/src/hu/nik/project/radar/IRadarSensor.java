@@ -1,6 +1,6 @@
 package hu.nik.project.radar;
 
-import hu.nik.project.utils.Vector2D;
+import hu.nik.project.environment.ScenePoint;
 
 
 /**
@@ -9,8 +9,8 @@ import hu.nik.project.utils.Vector2D;
 
 //this is the real output interface of modul "RADAR"
 public interface IRadarSensor {
-    Vector2D getRadarPosition();
+    ScenePoint getRadarPosition();
     Integer getRadarViewDistance();
     Float getAngelOfSight();
-    RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance();
+    RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance(double currentSpeed,int obsererRotation);
 }
