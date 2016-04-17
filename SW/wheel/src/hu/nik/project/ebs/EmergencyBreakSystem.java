@@ -25,7 +25,7 @@ package hu.nik.project.ebs;
             private ArrayList<SceneObject> jay_walkers;
 
             //output
-            private boolean EBSState;
+            private float EBSState;
 
             public void commBusDataArrived() {
 /*
@@ -119,6 +119,6 @@ package hu.nik.project.ebs;
                     }
                 }
 
-                EBSState = false;
+                EBSState = 0;
             }
         }
