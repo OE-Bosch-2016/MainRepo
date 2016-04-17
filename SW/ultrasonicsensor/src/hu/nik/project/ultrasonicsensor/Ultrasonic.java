@@ -5,6 +5,8 @@
  */
 package hu.nik.project.ultrasonicsensor;
 
+import hu.nik.project.communication.CommBus;
+import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.objects.AdvancedRoad;
 import hu.nik.project.environment.objects.CrossWalk;
@@ -14,6 +16,8 @@ import hu.nik.project.environment.objects.PrioritySign;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.environment.objects.SceneObjectException;
 import hu.nik.project.environment.objects.Tree;
+import hu.nik.project.environment.Scene;
+import hu.nik.project.environment.XMLParserException;
 import java.util.ArrayList;
 
 /**
@@ -22,7 +26,7 @@ import java.util.ArrayList;
  */
 public class Ultrasonic {
 
-    public static void main(String[] args) throws SceneObjectException {
+    public static void main(String[] args) throws SceneObjectException, XMLParserException {
 
         ScenePoint currPosition = new ScenePoint(0, 240);
         Sonar sonar = new Sonar(45, 0, currPosition);
@@ -94,6 +98,22 @@ public class Ultrasonic {
         }
         System.out.println("");
         System.out.println("Closest distance: "+sonar.getNearestObjectDistance(viewableObjs, currPosition));
+        
+        System.out.println("|----------------|");
+        CommBus cb = new CommBus();
+        CommBusConnectorType cmtype = CommBusConnectorType.Sender;
+        
+        UltrasonicModul um = new UltrasonicModul(cb,cmtype,currPosition);
+//      
+        um.getNearestObjectDistances(currPosition);
+        for (int i = 0; i < um.getClosestDistance().length ; i++) {
+            System.out.println("Closest distance in zone:" +i+ " ; " +um.getClosestDistance()[i]);
+        }
+//        um.SendToBus();
+        
+        
+        
+        
     }
 
 }

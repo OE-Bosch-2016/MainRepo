@@ -7,13 +7,13 @@ import java.util.Arrays;
  * @author Patrik
  */
 public class UltrasonicMessagePackage implements Serializable {
-    private int[] nearestObstacles;
-    public UltrasonicMessagePackage(int[] array) {
+    private double[] nearestObstacles;
+    public UltrasonicMessagePackage(double[] array) {
         this.nearestObstacles = Arrays.copyOf(array, array.length);
     }
 
     /** @return a copy of the array */
-    public int[] getNearestObstacles() {
+    public double[] getNearestObstacles() {
         return Arrays.copyOf(nearestObstacles, nearestObstacles.length);
     }
 }
