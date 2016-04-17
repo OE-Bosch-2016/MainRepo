@@ -11,10 +11,13 @@ public class CarController {
 
     // Car pedals
     private float gas = 0;
-    private float steeringWheel = 0;
-    private boolean gasPressed;
+    private float steeringWheel = 0; //+- 180
 
-    public static CarController newInstace() {
+    private boolean gasPressed;
+    private boolean leftRotate;
+    private boolean rightRotate;
+
+    public static CarController newInstance() {
         if (mInstance == null)
             mInstance = new CarController();
 
@@ -24,12 +27,20 @@ public class CarController {
     public void keyEvent(KeyEvent e, Car car) {
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            rightRotate = true;
+            if (steeringWheel < 180)
+                steeringWheel += 5;
 
+            car.rotation(steeringWheel);
         } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            leftRotate = true;
+            if (steeringWheel > -180)
+                steeringWheel -= 5;
 
+            car.rotation(steeringWheel);
         } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-            gas += 0.1;
             gasPressed = true;
+            gas += 0.1;
             car.move(gas);
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             if (gas > 0)
@@ -42,6 +53,14 @@ public class CarController {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             gasPressed = false;
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            rightRotate = false;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            leftRotate = false;
+        }
     }
 
     public void engineBrake(Car car) {
@@ -51,8 +70,27 @@ public class CarController {
         }
     }
 
+//    public void steeringWheelStabilizator(Car car) {
+//        if (steeringWheel > -10 && steeringWheel < 0 || steeringWheel < 10 && steeringWheel > 0)
+//            steeringWheel = 0;
+//        else {
+//            if (steeringWheel < 0)
+//                steeringWheel += 10;
+//            if (steeringWheel > 0)
+//                steeringWheel -= 10;
+//        }
+//    }
+
     // Getter ----------------------------------------------------------------------------------------------------------
     public boolean isGasPressed() {
         return gasPressed;
+    }
+
+    public boolean isLeftRotate() {
+        return leftRotate;
+    }
+
+    public boolean isRightRotate() {
+        return rightRotate;
     }
 }

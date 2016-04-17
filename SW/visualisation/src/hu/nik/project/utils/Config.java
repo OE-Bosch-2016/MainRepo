@@ -9,7 +9,7 @@ public class Config {
     public static int imageSizeY = 600;
     public static String pathMap = "visualisation/src/hu/nik/resources/maps/road_1.png";
 
-    public static String pathCar = "visualisation/src/hu/nik/resources/entities/car.png";
+    public static String pathCar = "visualisation/src/hu/nik/resources/entities/car2.png";
     public static int carImageSizeX = 24;
     public static int carImageSizeY = 24;
 

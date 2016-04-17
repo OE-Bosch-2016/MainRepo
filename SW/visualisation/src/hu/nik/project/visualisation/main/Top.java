@@ -98,7 +98,7 @@ public class Top extends JFrame { // implements KeyListener
 
 
     private void init() {
-        carController = CarController.newInstace();
+        carController = CarController.newInstance();
         parkingTimer = new Timer(42, parkingTimerListener);
         parkingPilot = new PPMain();
         moveTimer = new Timer(42, moveListener);
@@ -125,8 +125,13 @@ public class Top extends JFrame { // implements KeyListener
         timer = new Timer(42, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 vRenderer.render();
+
+                // Car control
                 if(!carController.isGasPressed())
                     carController.engineBrake(car);
+
+//                if(!carController.isLeftRotate() && !carController.isRightRotate())
+//                    carController.steeringWheelStabilizator(car);
             }
         });
 
