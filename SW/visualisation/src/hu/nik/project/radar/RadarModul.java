@@ -1,62 +1,71 @@
 package hu.nik.project.radar;
 
+import hu.nik.project.communication.CommBus;
+import hu.nik.project.communication.CommBusConnector;
+import hu.nik.project.communication.CommBusConnectorType;
+import hu.nik.project.communication.ICommBusDevice;
+import hu.nik.project.environment.ISensorScene;
+import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.utils.Vector2D;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
-import java.util.Timer;
 import java.util.HashMap;
 import java.util.ListIterator;
+import java.util.Timer;
 
 
 /**
  * Created by secured on 2016. 03. 19..
  */
-public class RadarModul implements IRadarData {
+public class RadarModul implements IRadarSensor, ICommBusDevice {
 
-    private IRadarInputData _radarInputData;
+    private CommBus _communicationBus;
+    private ISensorScene _sensorScene;
+    private CommBusConnector commBusConnector;
+
     private static final int _viewDistance = 200;
     private float _angelOfSight;
     private int _sampingTime;
-    private ArrayList<SpeedAndDistanceObj> _speedAndDistanceObjs;
+    private double _currentSpeed;
+    private Vector2D _currentPosition;
+
+    private ArrayList<RadarMessagePacket> _radarPackets;
     private Boolean _isRadarEnabled;
     private Timer _timer; //for sampling
 
     private HashMap<Integer, float[]> _previousVectorsHashMap;
-    private ObservableList<SpeedAndDistanceObj> _speedAndDistanceObjObservableList;
+    private ObservableList<RadarMessagePacket> _radarPacketObservableList;
     private OnRadarObjectsListener _radarObjectsListener;
 
-    public RadarModul(IRadarInputData radarInputData, float angelOfSight, int samplingTime) {
-        _radarInputData = radarInputData;
+    public RadarModul(ISensorScene sensorScene,CommBus commbus, float angelOfSight, int samplingTime,double currentSpeed,Vector2D currentPos ) {
+        _sensorScene = sensorScene;
+        _communicationBus=commbus;
         _angelOfSight = angelOfSight;
         _sampingTime = samplingTime;
+        _currentPosition=currentPos;
+        _currentSpeed=currentSpeed;
 
-        _speedAndDistanceObjs = null;
+        commBusConnector=commbus.createConnector(this,CommBusConnectorType.Sender);
+
         _isRadarEnabled = false;
         _previousVectorsHashMap = new HashMap<Integer, float[]>();
         _timer = new Timer();
 
-        _speedAndDistanceObjs = new ArrayList<SpeedAndDistanceObj>();
-        _speedAndDistanceObjObservableList = FXCollections.observableList(_speedAndDistanceObjs);
+        _radarPackets = new ArrayList<RadarMessagePacket>();
+        _radarPacketObservableList = FXCollections.observableList(_radarPackets);
 
-//        _speedAndDistanceObjObservableList.addListener(new ListChangeListener<SpeedAndDistanceObj>() {
-//            public void onChanged(Change<? extends SpeedAndDistanceObj> change) {
-//                if(_radarObjectsListener!=null){
-//                    _radarObjectsListener.objectListChanged(_speedAndDistanceObjObservableList);
-//                }
-//            }
-//        });
-
-        if (_radarObjectsListener != null)
-            _radarObjectsListener.objectListChanged(_speedAndDistanceObjObservableList);
     }
 
+    /*  if (_radarObjectsListener != null)
+            _radarObjectsListener.objectListChanged(_radarPacketObservableList);
+    * */
     //<editor-fold desc="Properties of radar Modul">
 
-
-    public Vector2D getRadarPosition() {  //change here, if the camera position is not the same as our current pos.
-        return _radarInputData.getOurCurrentPosition();
+    public Vector2D getRadarPosition() {
+        return null;
     }
 
     public Integer getRadarViewDistance() {
@@ -65,6 +74,10 @@ public class RadarModul implements IRadarData {
 
     public Float getAngelOfSight() {
         return _angelOfSight;
+    }
+
+    public RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance() {
+        return null;
     }
 
 
@@ -76,19 +89,21 @@ public class RadarModul implements IRadarData {
 
 
     //TODO: We need to clarify how we will know the OUR current speed and position
-    public ObservableList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance(ArrayList<Vector2D> incomingData) {
-        double currentSpeed = 20;
-        Vector2D currentPosition = new Vector2D(0, 4);
+    public ObservableList<RadarMessagePacket> getDetectedObjsRelativeSpeedAndDistance(ArrayList<Vector2D> incomingData) {
+        ArrayList<Vector2D> recent = getMostRecentVectorsFromEnv(incomingData);
+        _radarPacketObservableList = getDetectedObjsRelativeSpeedDistance(recent, _currentPosition, _currentSpeed);
 
-        ArrayList<Vector2D> recent = getMostRecentVectorsFromDataBus(incomingData);
-        _speedAndDistanceObjObservableList = getDetectedObjsRelativeSpeedDistance(recent, currentPosition, currentSpeed);
-
-        return _speedAndDistanceObjObservableList;
+        return _radarPacketObservableList;
     }
 
-    //into consttructor
-    public ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance() {
-        return null;
+
+    //currentspeed and position comes from outside
+    public RadarMessagePacket getDetectedObjRelativeSpeedAndDistance() {
+
+        ArrayList<Vector2D> incomingData = getSceeneObjectsInSpecificArea(_currentPosition,0,(int)_angelOfSight,_viewDistance);
+        ArrayList<Vector2D> recent = getMostRecentVectorsFromEnv(incomingData);
+        _radarPacketObservableList = getDetectedObjsRelativeSpeedDistance(recent, _currentPosition, _currentSpeed);
+        return getClosestObjectFromList(_radarPacketObservableList);
     }
 
 
@@ -98,55 +113,72 @@ public class RadarModul implements IRadarData {
     }
 
     //<editor-fold desc="Private methods">
+
+    //what is "int observerRotation"
+    private ArrayList<Vector2D> getSceeneObjectsInSpecificArea(Vector2D currentPos, int observerRotation, int viewAngle, int viewDistance){
+        ArrayList<SceneObject> sceneObjectArrayList =
+                _sensorScene.getVisibleSceneObjects(new ScenePoint((int) currentPos.get_coordinateX(), (int) currentPos.get_coordinateX()), observerRotation, viewAngle, viewDistance);
+
+        if(sceneObjectArrayList!=null) {
+            ArrayList<Vector2D> vector2DArrayList=new ArrayList<Vector2D>();
+            for(SceneObject item : sceneObjectArrayList){
+                vector2DArrayList.add(new Vector2D(item.getBasePosition().getX(), item.getBasePosition().getY()));
+            }
+            return vector2DArrayList;
+        }
+        else{
+            return null;
+        }
+    }
+
     //gives back speed and distance objects in terms of current vector values
-    private ObservableList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedDistance(ArrayList<Vector2D> recentVectorList, Vector2D ourCurrentPosition, double ourSpeed) {
-        if (_speedAndDistanceObjs != null && _speedAndDistanceObjs.size() != 0) {
+    private ObservableList<RadarMessagePacket> getDetectedObjsRelativeSpeedDistance(ArrayList<Vector2D> recentVectorList, Vector2D ourCurrentPosition, double ourSpeed) {
+        if (_radarPackets != null && _radarPackets.size() != 0) {
             if (recentVectorList.size() != 0) {
                 int itemIndex = 0;
                 while (itemIndex != recentVectorList.size()) {
                     Vector2D currentVector = recentVectorList.get(itemIndex);
-                    SpeedAndDistanceObj speedAndDistanceObj = IsVectorInSpeedandDistObjList(currentVector);
-                    if (speedAndDistanceObj != null) {
+                    RadarMessagePacket radarPacket = IsVectorInSpeedandDistObjList(currentVector);
+                    if (radarPacket != null) {
                         double distance = getDistance(ourCurrentPosition, currentVector);
                         if (isObjectMoving(currentVector)) {
-                            double itemSpeed = getCurrentSpeedOfSpecificObj(speedAndDistanceObj, currentVector);
+                            double itemSpeed = getCurrentSpeedOfSpecificObj(radarPacket, currentVector);
                             double relativeSpeed = calculateRelativeSpeed(ourSpeed, itemSpeed);
-                            speedAndDistanceObj.setRelativeSpeed(relativeSpeed);
-                            speedAndDistanceObj.setCurrentPosition(currentVector);
+                            radarPacket.setRelativeSpeed(relativeSpeed);
+                            radarPacket.setCurrentPosition(currentVector);
                             ChangePreviousHashMapValues(currentVector);
                         }
-                        speedAndDistanceObj.setCurrentDistance(distance);
+                        radarPacket.setCurrentDistance(distance);
                     } else {
-                        SpeedAndDistanceObj newSpeedDistObj = new SpeedAndDistanceObj(0, 0, currentVector);
-                        _speedAndDistanceObjObservableList.add(newSpeedDistObj);
+                        RadarMessagePacket newSpeedDistObj = new RadarMessagePacket(0, 0, currentVector);
+                        _radarPacketObservableList.add(newSpeedDistObj);
                     }
                     itemIndex++;
                 }
-                //REFACTOR THIS -> into another method, like: RemovingRemainingItems(int index)
 
-                ListIterator myListIterator = _speedAndDistanceObjs.listIterator(itemIndex);
+                ListIterator myListIterator = _radarPackets.listIterator(itemIndex);
                 while (myListIterator.hasNext()) {
-                    SpeedAndDistanceObj removableObj = ((SpeedAndDistanceObj) myListIterator.next());
+                    RadarMessagePacket removableObj = ((RadarMessagePacket) myListIterator.next());
                     myListIterator.remove();
                 }
             } else {
-                _speedAndDistanceObjObservableList = FXCollections.observableList(new ArrayList<SpeedAndDistanceObj>());
-                return _speedAndDistanceObjObservableList;
+                _radarPacketObservableList = FXCollections.observableList(new ArrayList<RadarMessagePacket>());
+                return _radarPacketObservableList;
             }
         } else {
             if (recentVectorList.size() != 0) {
                 for (int i = 0; i < recentVectorList.size(); i++) {
                     Vector2D item = recentVectorList.get(i);
-                    SpeedAndDistanceObj speedAndDistanceObj = new SpeedAndDistanceObj(0, 0, item);
-                    _speedAndDistanceObjObservableList.add(speedAndDistanceObj);
+                    RadarMessagePacket radarPacket = new RadarMessagePacket(0, 0, item);
+                    _radarPacketObservableList.add(radarPacket);
                 }
             }
         }
-        return _speedAndDistanceObjObservableList;
+        return _radarPacketObservableList;
     }
 
     //this function gets the incoming position data and creates a new list while checking the perviously saved positions
-    private ArrayList<Vector2D> getMostRecentVectorsFromDataBus(ArrayList<Vector2D> incomingVectorDataList) {
+    private ArrayList<Vector2D> getMostRecentVectorsFromEnv(ArrayList<Vector2D> incomingVectorDataList) {
         ArrayList<Vector2D> recentVectorsList = new ArrayList<Vector2D>();
         HashMap<Integer, float[]> actualHashMap = CreateHashMapFromArrayList(incomingVectorDataList);
 
@@ -155,13 +187,13 @@ public class RadarModul implements IRadarData {
             while (index != incomingVectorDataList.size()) {
                 Vector2D item = incomingVectorDataList.get(index);
                 if (!isItemInHashMap(item)) {
-                    float[] vector = {item.get_coordinateX(),item.get_coordinateY()};
+                    float[] vector = {item.get_coordinateX(), item.get_coordinateY()};
                     _previousVectorsHashMap.put(item.hashCode(), vector);
                 }
                 recentVectorsList.add(item);
                 index++;
             }
-            //TODO: REFACTOR MEEE PLSSS, IT HURTS MY BUTT
+            //TODO: refactor later
             ArrayList<Integer> hashMapKeyList = new ArrayList<Integer>();
             for (int key : _previousVectorsHashMap.keySet()) {
                 if (!actualHashMap.containsKey(key)) {
@@ -189,7 +221,7 @@ public class RadarModul implements IRadarData {
         return Math.sqrt(xCoordinate + yCoordinate);
     }
 
-    private double getCurrentSpeedOfSpecificObj(SpeedAndDistanceObj previous, Vector2D vector2D) {
+    private double getCurrentSpeedOfSpecificObj(RadarMessagePacket previous, Vector2D vector2D) {
         return getDistance(previous.getCurrentPosition(), vector2D) / _sampingTime;
     }
 
@@ -204,13 +236,12 @@ public class RadarModul implements IRadarData {
                 firstSpeedValue * seconedSpeedValue;
     }
 
-    //PROG 1 ROCKS BOYS!!!
-    private SpeedAndDistanceObj IsVectorInSpeedandDistObjList(Vector2D vector) {
+    private RadarMessagePacket IsVectorInSpeedandDistObjList(Vector2D vector) {
         int index = 0;
-        while (index != _speedAndDistanceObjs.size() && !vector.equals(_speedAndDistanceObjs.get(index).getCurrentPosition())) {
+        while (index != _radarPackets.size() && !vector.equals(_radarPackets.get(index).getCurrentPosition())) {
             index++;
         }
-        return (index < _speedAndDistanceObjs.size()) ? _speedAndDistanceObjs.get(index) : null;
+        return (index < _radarPackets.size()) ? _radarPackets.get(index) : null;
     }
 
     private boolean isObjectMoving(Vector2D current) {
@@ -231,10 +262,39 @@ public class RadarModul implements IRadarData {
     private boolean isItemInHashMap(Vector2D item) {
         return _previousVectorsHashMap.containsKey(item.hashCode());
     }
+
+    private RadarMessagePacket getClosestObjectFromList(ObservableList<RadarMessagePacket> radarPacketList) {
+        int min = 0;
+        if (IsAllDistanceZero()) {
+            for (int i = 1; i < radarPacketList.size(); i++) {
+                double current = radarPacketList.get(i).getCurrentDistance();
+                double minValue = radarPacketList.get(min).getCurrentDistance();
+                if (current < minValue) {
+                    min = i;
+                }
+            }
+        }
+        return radarPacketList.get(min);
+    }
+
+    private boolean IsAllDistanceZero() {
+        int index = 0;
+        double zero = 0;
+        while (index != _radarPacketObservableList.size() && _radarPacketObservableList.get(index).getCurrentDistance() == zero) {
+            index++;
+        }
+        return (index > _radarPacketObservableList.size());
+    }
+
+    public void commBusDataArrived() {
+
+    }
+
 //</editor-fold>
 
     // Listener --------------------------------------------------------------------------------------------------------
     public interface OnRadarObjectsListener {
-        void objectListChanged(ObservableList<SpeedAndDistanceObj> result);
+        void objectListChanged(ObservableList<RadarMessagePacket> result);
     }
+
 }

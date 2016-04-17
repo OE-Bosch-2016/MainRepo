@@ -1,7 +1,6 @@
 package hu.nik.project.radar;
 
 import hu.nik.project.utils.Vector2D;
-import java.util.ArrayList;
 
 
 /**
@@ -9,11 +8,9 @@ import java.util.ArrayList;
  */
 
 //this is the real output interface of modul "RADAR"
-public interface IRadarData {
+public interface IRadarSensor {
     Vector2D getRadarPosition();
     Integer getRadarViewDistance();
     Float getAngelOfSight();
-
-
-    ArrayList<SpeedAndDistanceObj> getDetectedObjsRelativeSpeedAndDistance();
+    RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance();
 }
