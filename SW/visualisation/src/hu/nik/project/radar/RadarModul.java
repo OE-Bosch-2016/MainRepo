@@ -1,9 +1,6 @@
 package hu.nik.project.radar;
 
-import hu.nik.project.communication.CommBus;
-import hu.nik.project.communication.CommBusConnector;
-import hu.nik.project.communication.CommBusConnectorType;
-import hu.nik.project.communication.ICommBusDevice;
+import hu.nik.project.communication.*;
 import hu.nik.project.environment.ISensorScene;
 import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.objects.Car;
@@ -85,7 +82,13 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
             if (incomingData != null) {
                 ArrayList<Vector2D> recent = getMostRecentVectorsFromEnv(incomingData);
                 _radarPacketObservableList = getDetectedObjsRelativeSpeedDistance(recent, _currentPosition, currentSpeed);
-                return getClosestObjectFromList(_radarPacketObservableList);
+                RadarMessagePacket packet= getClosestObjectFromList(_radarPacketObservableList);
+                try {
+                    SendPacketToDatabus(packet);
+                } catch (CommBusException e) {
+                    e.printStackTrace();
+                }
+                return packet;
             } else {
                 return null;
             }
@@ -102,6 +105,10 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     }
 
     //<editor-fold desc="Private methods">
+
+    private void SendPacketToDatabus(RadarMessagePacket packet) throws CommBusException {
+        commBusConnector.send(packet);
+    }
 
     private ArrayList<Vector2D> getSceneObjectsInSpecificArea(Vector2D currentPos, int observerRotation, int viewAngle, int viewDistance) {
         ArrayList<SceneObject> sceneObjectArrayList =
