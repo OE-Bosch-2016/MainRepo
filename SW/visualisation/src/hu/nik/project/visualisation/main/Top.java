@@ -133,6 +133,11 @@ public class Top extends JFrame { // implements KeyListener
 
         // Driver input
         engineButton.addActionListener(hmiButtons);
+        ACCButton.addActionListener(hmiButtons);
+        TSRButton.addActionListener(hmiButtons);
+        PPButton.addActionListener(hmiButtons);
+        AEBButton.addActionListener(hmiButtons);
+        LKAButton.addActionListener(hmiButtons);
 
         // Test
 //        test_slider.addChangeListener(new ChangeListener() {
@@ -358,7 +363,17 @@ public class Top extends JFrame { // implements KeyListener
 
     private ActionListener hmiButtons = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if(e.paramString().equals("")){
+            if (e.getActionCommand().equals("Engine")) {
+                // TODO: start engine
+            } else if (e.getActionCommand().equals("ACC")) {
+                // TODO: acc
+            } else if (e.getActionCommand().equals("TSR")) {
+
+            } else if (e.getActionCommand().equals("PP")) {
+
+            } else if (e.getActionCommand().equals("AEB")) {
+
+            } else {
 
             }
         }
