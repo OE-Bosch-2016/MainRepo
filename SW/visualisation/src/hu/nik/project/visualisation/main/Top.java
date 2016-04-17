@@ -13,6 +13,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
 import org.jfree.data.general.DefaultValueDataset;
+import sun.rmi.runtime.Log;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -45,8 +46,14 @@ public class Top extends JFrame { // implements KeyListener
     private JTextPane pTextPane;
     private JTextPane a1TextPane;
     private JTextPane a2TextPane;
-    private JComboBox comboBox1;
     private JLabel steeringWheelLabel;
+    private JPanel HMIButtons;
+    private JButton engineButton;
+    private JButton ACCButton;
+    private JButton TSRButton;
+    private JButton PPButton;
+    private JButton AEBButton;
+    private JButton LKAButton;
     private SteeringWheel steeringWheel;
 
     //Timer
@@ -124,20 +131,23 @@ public class Top extends JFrame { // implements KeyListener
         steeringWheel = new SteeringWheel(hmi, steeringWheelLabel);
         steeringWheelLabel.setIcon(steeringWheel.GetSteeringWheel(0));
 
-        // Test
-        test_slider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                int value = test_slider.getValue();
-                hmi.mileage(value);
-            }
-        });
+        // Driver input
+        engineButton.addActionListener(hmiButtons);
 
-        test_slider2.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                int value = test_slider2.getValue();
-                hmi.tachometer(value);
-            }
-        });
+        // Test
+//        test_slider.addChangeListener(new ChangeListener() {
+//            public void stateChanged(ChangeEvent e) {
+//                int value = test_slider.getValue();
+//                hmi.mileage(value);
+//            }
+//        });
+//
+//        test_slider2.addChangeListener(new ChangeListener() {
+//            public void stateChanged(ChangeEvent e) {
+//                int value = test_slider2.getValue();
+//                hmi.tachometer(value);
+//            }
+//        });
 
 //        comboBox1.addItem("1");
 //        comboBox1.addItem("2");
@@ -248,28 +258,6 @@ public class Top extends JFrame { // implements KeyListener
         }
     };
 
-    private KeyListener keyListener = new KeyListener() {
-        public void keyTyped(KeyEvent e) {
-        }
-
-        public void keyPressed(KeyEvent e) {
-            stage = 0;
-            rotate = 1;
-
-            if (e.getKeyChar() == 'p')
-                simulateMoving(HORIZONTAL_PARKING);
-            else if (e.getKeyChar() == 'o')
-                simulateMoving(VERTICAL_PARKING);
-            else if (e.getKeyChar() == 'r')
-                car.setPosition(new Vector2D(501, 90));
-
-        }
-
-        public void keyReleased(KeyEvent e) {
-            steeringWheel.control(e);
-        }
-    };
-
     private void simulateMoving(int type) {
         parkingType = type;
         moveTimer.start();
@@ -342,6 +330,37 @@ public class Top extends JFrame { // implements KeyListener
         public void changePosition(float front, float side) {
             car.setPosition(new Vector2D(car.getPosition().get_coordinateX() + side, car.getPosition().get_coordinateY() + front));
             parkingTimer.start();
+        }
+    };
+
+    // Driver input
+    private KeyListener keyListener = new KeyListener() {
+        public void keyTyped(KeyEvent e) {
+        }
+
+        public void keyPressed(KeyEvent e) {
+            stage = 0;
+            rotate = 1;
+
+            if (e.getKeyChar() == 'p')
+                simulateMoving(HORIZONTAL_PARKING);
+            else if (e.getKeyChar() == 'o')
+                simulateMoving(VERTICAL_PARKING);
+            else if (e.getKeyChar() == 'r')
+                car.setPosition(new Vector2D(501, 90));
+
+        }
+
+        public void keyReleased(KeyEvent e) {
+            steeringWheel.control(e);
+        }
+    };
+
+    private ActionListener hmiButtons = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if(e.paramString().equals("")){
+
+            }
         }
     };
 }
