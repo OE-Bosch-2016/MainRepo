@@ -5,7 +5,7 @@ import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
-//import hu.nik.project.hmi;
+//import hu.nik.project.visualisation.car.model;
 
 public class Wheels implements IWheels, ICommBusDevice {
 
@@ -64,8 +64,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 
 	@Override
 	public void calcOnTick()
-	{	//hmiWheel = hmi.getWheel();
-		//hmiBrake =hmi.getbrake();
+	{
 		calcDirection();    //calculates first because new direction is effected by last speed
 		calcSpeed();
 		SendToCom();
