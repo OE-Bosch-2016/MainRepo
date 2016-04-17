@@ -46,5 +46,7 @@ public class CarWithConcreteClassTest {
         Assert.assertEquals(500, car.getLeftPoint().getY());
         Assert.assertEquals(620, car.getRightPoint().getX());
         Assert.assertEquals(400, car.getRightPoint().getY());
+        Assert.assertEquals(620, car.getCenterPoint().getX());
+        Assert.assertEquals(450, car.getCenterPoint().getY());
     }
 }

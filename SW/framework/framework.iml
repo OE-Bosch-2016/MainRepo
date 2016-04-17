@@ -15,7 +15,7 @@
     <orderEntry type="module" module-name="ultrasonicsensor" exported="" />
     <orderEntry type="module" module-name="wheel" exported="" />
     <orderEntry type="module" module-name="visualisation" exported="" />
-    <orderEntry type="module" module-name="engine" />
-    <orderEntry type="module" module-name="gearbox" />
+    <orderEntry type="module" module-name="engine" exported="" />
+    <orderEntry type="module" module-name="gearbox" exported="" />
   </component>
 </module>
