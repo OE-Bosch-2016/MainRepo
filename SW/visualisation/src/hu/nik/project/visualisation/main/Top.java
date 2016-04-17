@@ -5,22 +5,19 @@ import hu.nik.project.parkingPilot.PPMain;
 import hu.nik.project.parkingPilot.util.ParkingCalculator;
 import hu.nik.project.utils.ImageLoader;
 import hu.nik.project.utils.Vector2D;
+import hu.nik.project.visualisation.VisualizationRenderer;
 import hu.nik.project.visualisation.car.AutonomousCar;
 import hu.nik.project.visualisation.car.SteeringWheel;
-import hu.nik.project.visualisation.VisualizationRenderer;
-
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
 import org.jfree.data.general.DefaultValueDataset;
+import org.jfree.util.Log;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 /**
  * Created by haxxi on 2016.03.01..
