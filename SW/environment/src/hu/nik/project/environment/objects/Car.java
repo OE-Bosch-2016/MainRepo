@@ -10,6 +10,7 @@ public class Car extends SceneObject {
     private static final int carHeight = 240;
     private static final int carWidth = 100;
 
+    private ScenePoint centerPoint;
     private ScenePoint topPoint;
     private ScenePoint bottomPoint;
     private ScenePoint leftPoint;
@@ -28,6 +29,7 @@ public class Car extends SceneObject {
         bottomPoint = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + carWidth / 2, basePosition.getY() + carHeight), rotation);
         leftPoint = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX(), basePosition.getY() + carHeight / 2), rotation);
         rightPoint = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + carWidth, basePosition.getY() + carHeight / 2), rotation);
+        centerPoint = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + carWidth / 2, basePosition.getY() + carHeight / 2), rotation);
     }
 
     @Override
@@ -43,6 +45,7 @@ public class Car extends SceneObject {
     public ScenePoint getBottomPoint() { return this.bottomPoint; }
     public ScenePoint getLeftPoint() { return this.leftPoint; }
     public ScenePoint getRightPoint() { return this.rightPoint; }
+    public ScenePoint getCenterPoint() { return this.centerPoint; }
 
     public CarType getObjectType() {
         return type;
