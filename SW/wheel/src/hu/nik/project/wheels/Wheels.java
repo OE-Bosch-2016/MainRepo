@@ -5,7 +5,9 @@ import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
-//import hu.nik.project.visualisation.car.model;
+
+import hu.nik.project.visualisation.car.model.DriverInputMessagePacket;
+import hu.nik.project.engine.EngineMessagePackage;
 
 public class Wheels implements IWheels, ICommBusDevice {
 
@@ -30,7 +32,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 
 	@Override
 	public void commBusDataArrived() {
-/* waiting for MeassagePackages engine.torque, driverinput
+
 			if (commBusConnector.getDataType() == EngineMessagePackage.class || commBusConnector.getDataType() == DriverInputMessagePacket.class ) {
 				if (commBusConnector.getDataType() == EngineMessagePackage.class) {
 					try {
@@ -44,14 +46,14 @@ public class Wheels implements IWheels, ICommBusDevice {
 
 				if (commBusConnector.getDataType() == DriverInputMessagePacket.class) {
 					try {
-						//hmiWheel = ((DriverInputMessagePacket.class)commBusConnector.receive()).wheelAngle;
-						//hmiBrake = ((DriverInputMessagePacket.class)commBusConnector.receive()).carBrake;
+						hmiWheel = ((DriverInputMessagePacket)commBusConnector.receive()).getWheelAngle();
+						hmiBrake = ((DriverInputMessagePacket)commBusConnector.receive()).getCarBreak();
 					} catch (CommBusException e) {
 						//stringData = e.getMessage();
 					}
 				}
 			}
-			*/
+
 	}
 
 	public Wheels(CommBus commBus, CommBusConnectorType commBusConnectorType)
