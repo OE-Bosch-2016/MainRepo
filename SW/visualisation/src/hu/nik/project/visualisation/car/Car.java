@@ -118,7 +118,7 @@ public abstract class Car {
         //TODO: We need to clarify this
         // speed is in km/h
         // 1km/h = 1px/render phase
-
+        speed *= -1;
         _position = new Vector2D(
                 (int)(_position.get_coordinateX() + speed *  _rotationVector.get_coordinateX()),
                 (int)(_position.get_coordinateY() + speed * _rotationVector.get_coordinateY())

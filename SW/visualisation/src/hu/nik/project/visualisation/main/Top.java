@@ -5,19 +5,16 @@ import hu.nik.project.parkingPilot.PPMain;
 import hu.nik.project.parkingPilot.util.ParkingCalculator;
 import hu.nik.project.utils.ImageLoader;
 import hu.nik.project.utils.Vector2D;
-import hu.nik.project.visualisation.car.AutonomousCar;
-import hu.nik.project.visualisation.car.SteeringWheel;
 import hu.nik.project.visualisation.VisualizationRenderer;
-
+import hu.nik.project.visualisation.car.AutonomousCar;
+import hu.nik.project.visualisation.car.CarController;
+import hu.nik.project.visualisation.car.SteeringWheel;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
 import org.jfree.data.general.DefaultValueDataset;
-import sun.rmi.runtime.Log;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -65,6 +62,9 @@ public class Top extends JFrame { // implements KeyListener
     // hmi elements
     private Hmi hmi;
 
+    // Driver input
+    private CarController carController;
+
     // Parking pilot
     private Timer moveTimer;
     private PPMain parkingPilot;
@@ -98,6 +98,7 @@ public class Top extends JFrame { // implements KeyListener
 
 
     private void init() {
+        carController = CarController.newInstace();
         parkingTimer = new Timer(42, parkingTimerListener);
         parkingPilot = new PPMain();
         moveTimer = new Timer(42, moveListener);
@@ -124,6 +125,8 @@ public class Top extends JFrame { // implements KeyListener
         timer = new Timer(42, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 vRenderer.render();
+                if(!carController.isGasPressed())
+                    carController.engineBrake(car);
             }
         });
 
@@ -273,7 +276,7 @@ public class Top extends JFrame { // implements KeyListener
     }
 
     private void horizontalParking() {
-        car.move(-1);
+        car.move(1);
         mapPanel.repaint();
 
         if (car.getPosition().get_coordinateY() < -156) {
@@ -284,7 +287,7 @@ public class Top extends JFrame { // implements KeyListener
 
     private void verticalParking() {
         if (stage == 0) {
-            car.move(-1);
+            car.move(1);
 
             if (car.getPosition().get_coordinateY() < 45)
                 stage++;
@@ -341,6 +344,7 @@ public class Top extends JFrame { // implements KeyListener
     // Driver input
     private KeyListener keyListener = new KeyListener() {
         public void keyTyped(KeyEvent e) {
+            steeringWheel.control(e);
         }
 
         public void keyPressed(KeyEvent e) {
@@ -354,10 +358,13 @@ public class Top extends JFrame { // implements KeyListener
             else if (e.getKeyChar() == 'r')
                 car.setPosition(new Vector2D(501, 90));
 
+            carController.keyEvent(e, car);
+
         }
 
         public void keyReleased(KeyEvent e) {
             steeringWheel.control(e);
+            carController.keyReleased(e);
         }
     };
 
