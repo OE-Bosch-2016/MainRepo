@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 public abstract class Car {
     private Vector2D _position;
     private Vector2D _rotationVector;
-    private float _degree;
+    private double _degree;
     private BufferedImage _image;
 
     public Car(Vector2D position, BufferedImage image) {
@@ -87,6 +87,7 @@ public abstract class Car {
     }
 
     public BufferedImage rotation(double degree){
+        _degree = degree;
         degree = Math.toRadians(degree);
         set_image(ImageLoader.getCarImage());
         int w = _image.getWidth(), h = _image.getHeight();
@@ -118,10 +119,14 @@ public abstract class Car {
         //TODO: We need to clarify this
         // speed is in km/h
         // 1km/h = 1px/render phase
+
+        double moveX = Math.sin(Math.toRadians(_degree)) * speed;
         speed *= -1;
+        double moveY = Math.cos(Math.toRadians(_degree)) * speed;
+
         _position = new Vector2D(
-                (int)(_position.get_coordinateX() + speed *  _rotationVector.get_coordinateX()),
-                (int)(_position.get_coordinateY() + speed * _rotationVector.get_coordinateY())
+                (int)(_position.get_coordinateX() + moveX),
+                (int)(_position.get_coordinateY() + moveY) // speed * _rotationVector.get_coordinateY()
         );
     }
 }
