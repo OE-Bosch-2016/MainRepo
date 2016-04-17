@@ -6,18 +6,18 @@ import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 
-//import hu.nik.project.camera.EngineMeassagePackage;
-//import hu.nik.project.camera.HMIMeassagePackage;
+import hu.nik.project.engine.EngineMessagePackage;
+//import hu.nik.project.hmi;
 
 public class Wheels implements IWheels, ICommBusDevice {
 
 	private CommBusConnector commBusConnector;
 
 	//imput buffers
-	private int EngineRPM;
-	private int EngineTorque;
-	private int HMIWheel;
-	private boolean HMIBrake;
+	private double EngineRPM;
+	private double EngineTorque;
+	private int HmiWheel;
+	private double HmiBrake;
 
 	//adjust these by testing
 	static private double turningAdjustment = 0.01;      //proportion to simulate turning realistically
@@ -32,30 +32,16 @@ public class Wheels implements IWheels, ICommBusDevice {
 
 	@Override
 	public void commBusDataArrived() {
-/*		This will have to wait until both the engine and the hmi make their packages
-		if (commBusConnector.getDataType() == EngineMessagePackage || commBusConnector.getDataType() == HMIMeassagePacket ) {
 
-			//dataType = commBusConnector.getDataType();
-			if (commBusConnector.getDataType() == EngineMessagePackage) {
+			if (commBusConnector.getDataType() == EngineMessagePackage.class) {
 				try {
-					EngineRPM = ((EngineMessagePackage)commBusConnector.receive()).RPM;
-					EngineTorque = ((EngineMessagePackage)commBusConnector.receive()).Torque;
+					EngineRPM = ((EngineMessagePackage) commBusConnector.receive()).getRpm();
+					//EngineTorque = ((EngineMessagePackage) commBusConnector.receive()).getTorque;
 
 				} catch (CommBusException e) {
 					//stringData = e.getMessage();
 				}
 			}
-
-			if (commBusConnector.getDataType() == HMIMeassagePacket) {
-				try {
-					HMIWheel = ((HMIMeassagePacket)commBusConnector.receive()).DriverWheelAngle;
-
-				} catch (CommBusException e) {
-					//stringData = e.getMessage();
-				}
-			}
-		}
-		*/
 	}
 
 	public Wheels(CommBus commBus, CommBusConnectorType commBusConnectorType)
@@ -67,16 +53,17 @@ public class Wheels implements IWheels, ICommBusDevice {
 	}
 
 	@Override
-	public void calcOnTick(double brakePedal)
-	{
+	public void calcOnTick()
+	{	//HmiWheel = hmi.getWheel();
+		//HmiBrake =hmi.getbrake();
 		calcDirection();    //calculates first because new direction is effected by last speed
-		calcSpeed(brakePedal);
+		calcSpeed();
 		SendToCom();
 	}
 
 	private void calcDirection()
 	{
-		double phiDirection=HMIWheel*speed*turningAdjustment/framerate;
+		double phiDirection=HmiWheel*speed*turningAdjustment/framerate;
 		direction += phiDirection;
 		direction = direction % 360;
 		if (direction<0)
@@ -85,7 +72,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 		}
 	}
 
-	private void calcSpeed(double brakePedal) {
+	private void calcSpeed() {
 		/*
 		Power (kW) = Torque (N.m) x Speed (RPM) /0.0095488
 		c=0.3
@@ -97,9 +84,9 @@ public class Wheels implements IWheels, ICommBusDevice {
 
 		speed = Math.pow((2 * (EngineTorque * EngineRPM / 0.0095488) / (natureBrake)), new Double("0.3333333"));
 		if (EngineTorque >= 0) {
-			speed -= brakeAdjustment * brakePedal; //have to change this to adjust for boolean brake variable
+			speed -= brakeAdjustment * HmiBrake; //have to change this to adjust for boolean brake variable
 		} else {
-			speed += brakeAdjustment * brakePedal;
+			speed += brakeAdjustment * HmiBrake;
 		}
 	}
 
@@ -116,13 +103,4 @@ public class Wheels implements IWheels, ICommBusDevice {
 			}
 		}
 	}
-	//Interface metodusok
-	public double Direction(){
-		return direction;
-	}
-
-	public double Speed(){
-		return speed;
-	}
-
 }

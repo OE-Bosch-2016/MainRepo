@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 
 import hu.nik.project.environment.Scene;
+import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.environment.objects.DirectionSign;
 import hu.nik.project.environment.objects.ParkingSign;
@@ -24,8 +25,9 @@ public class Camera implements ICamera, ICommBusDevice {
 	
 	SceneObject closestSign; 	//given in the object itself
 	double laneDistance;	//meters or pixels define which one! 
-	SceneObject laneType;	//given in degree 0-360
+	boolean IsLaneRestricted;	//given in degree 0-360
 	Scene currentScene;
+
 public	SceneObject[] visibleObjects;
 
 	private CommBusConnector commBusConnector;
@@ -35,7 +37,7 @@ public	SceneObject[] visibleObjects;
 
 	public void SendToCom() {
 		boolean sent = false;
-		CameraMessagePackage message = new CameraMessagePackage(closestSign,laneDistance,laneType,visibleObjects); //so it doesnt have to remake it every time
+		CameraMessagePackage message = new CameraMessagePackage(closestSign,laneDistance,IsLaneRestricted); //so it doesnt have to remake it every time
 		while(!sent)
 		{
 			try {
@@ -50,6 +52,11 @@ public	SceneObject[] visibleObjects;
 		}
 	}
 
+	public void calcOnTick()
+	{
+		//calcClosestSign();
+		//calcLaneDistance();
+	}
 
 	public Camera(CommBus commBus, CommBusConnectorType commBusConnectorType, Scene scene) //scene has to be given in pointer?
 	{
@@ -57,7 +64,7 @@ public	SceneObject[] visibleObjects;
 
 		closestSign=null;
 		laneDistance=-1;
-		laneType=null;
+		IsLaneRestricted=false;
 		currentScene =scene;
 	}
         
@@ -199,9 +206,9 @@ public	SceneObject[] visibleObjects;
         } 
         
         @Override
-	public SceneObject getLaneType()
+	public boolean getIsLaneRestricted()
         {
-            return laneType;
+            return IsLaneRestricted;
         }
 	
 }

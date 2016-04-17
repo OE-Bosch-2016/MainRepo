@@ -7,15 +7,13 @@ import java.io.Serializable;
 public class CameraMessagePackage implements Serializable {
 	public SceneObject ClosestSign;
 	public double LaneDistance;
-	public SceneObject LaneType;
+	public boolean IsLaneRestricted;
 	public SceneObject[] visibleObjects;
 	
-	public CameraMessagePackage(SceneObject closestSign, double laneDistance, SceneObject laneType, SceneObject[] visibleObjects)
+	public CameraMessagePackage(SceneObject closestSign, double laneDistance, boolean IsLaneRestricted)
 	{
 		this.ClosestSign = closestSign;
 		this.LaneDistance = laneDistance;
-		this.LaneType = laneType;
-		this.visibleObjects= visibleObjects;
-
+		this.IsLaneRestricted = IsLaneRestricted;
 	}
 }
