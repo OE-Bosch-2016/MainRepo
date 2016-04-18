@@ -2,7 +2,7 @@ package hu.nik.project.acc;
 
 import hu.nik.project.communication.*;
 //import hu.nik.project.HMI/RADAR! -> nearestObstacleDistance
-//import hu.nik.project.HMI! -> ACCState
+//import hu.nik.project.HMI! -> targetSpeed
 import hu.nik.project.wheels.WheelsMessagePackage; // -> wheelStateInDegrees, currentSpeed
 /**
  *

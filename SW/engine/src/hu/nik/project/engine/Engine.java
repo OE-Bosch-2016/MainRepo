@@ -2,7 +2,7 @@ package hu.nik.project.engine;
 
 import hu.nik.project.communication.*;
 import hu.nik.project.gearbox.GearboxMessagePackage;
-//import hu.nik.project.HMI!
+import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 //import hu.nik.project.SYSTEM!
 
 /*
@@ -14,7 +14,7 @@ public class Engine implements ICommBusDevice {
 	private String stringData = "";
 	
 	//input
-	boolean throttle;
+	double throttle;
 	int gearStage;
 	//deltatime time?
 	
@@ -53,16 +53,16 @@ public class Engine implements ICommBusDevice {
                 stringData = e.getMessage();
             }
 		}
-		/*else if(dataType == xxx.class) //throttle
+		else if(dataType == xxx.class) //throttle
 		{
 			try {
-                XXXX data = (XXXX) commBusConnector.receive();
-                throttle = data.getXXXX();
+                DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
+                throttle = (double)data.getCarGas();
 				//itt nem számolunk RPM-t mert nem tudjuk mennyi idő telt el -> negatív input lagg lesz
             } catch (CommBusException e) {
                 stringData = e.getMessage();
             }
-		}*/
+		}
 		/*else if(dataType == yyyy.class) //time
 		{
 			try {
@@ -115,6 +115,7 @@ public class Engine implements ICommBusDevice {
 		rpm = rpm;
     }
 
+	//bugfix needed
     private void calculateRpm() {
         double time = 5 * (Math.pow(Math.E, rpm / 1600) - 1);
         if (throttle) {

@@ -2,7 +2,7 @@ package hu.nik.project.gearbox;
 
 import hu.nik.project.communication.*;
 import hu.nik.project.engine.EngineMessagePackage;
-//import hu.nik.project.visualisation
+//import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 
 /**
  *
