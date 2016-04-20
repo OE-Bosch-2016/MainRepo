@@ -1,28 +1,20 @@
 package hu.nik.project.parkingPilot.model;
 
-import java.awt.*;
+import java.io.Serializable;
 
 /**
  * Created by haxxi on 2016.03.31..
  */
-public class SearchParkingPlace extends Parking {
+public class SearchParkingPlace implements Serializable{
 
-    public static int VERTICAL = 0;
-    public static int HORIZONTAL = 1;
+    private double[] distance;
 
-    private int typeOfParkingPlace;
-
-    public SearchParkingPlace(Point[] car1, Point[] car2, float edgeOfStreet) {
-        super(car1, car2, edgeOfStreet);
+    public SearchParkingPlace(double[] distance) {
+        this.distance = distance;
     }
 
     // Getter ----------------------------------------------------------------------------------------------------------
-    public int getTypeOfParkingPlace() {
-        return typeOfParkingPlace;
-    }
-
-    public float currentDistance(){
-        //TODO: actual distance between 2 cars
-        return 3f;
+    public double[] getDistance() {
+        return distance;
     }
 }

@@ -36,6 +36,7 @@ public abstract class Visualization implements IWheelVisualization {
     public void setCar(Car car) {
         _car = car;
         _drawingArea.add(_carLabel);
+        _drawingArea.setComponentZOrder(_carLabel, 0);
     }
 
     public void ModifyVehicleSpeed(float speed) {
