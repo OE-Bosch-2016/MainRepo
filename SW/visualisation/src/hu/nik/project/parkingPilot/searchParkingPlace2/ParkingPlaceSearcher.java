@@ -1,4 +1,4 @@
-package hu.nik.project.parkingPilot.searchParkingPlace;
+package hu.nik.project.parkingPilot.searchParkingPlace2;
 
 import hu.nik.project.communication.*;
 

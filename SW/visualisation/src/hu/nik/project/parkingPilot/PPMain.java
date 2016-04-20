@@ -2,7 +2,7 @@ package hu.nik.project.parkingPilot;
 
 import hu.nik.project.parkingPilot.manager.PPManager;
 import hu.nik.project.parkingPilot.model.Parking;
-import hu.nik.project.parkingPilot.searchParkingPlace.ParkingPlaceSearcher;
+import hu.nik.project.parkingPilot.searchParkingPlace2.ParkingPlaceSearcher;
 import hu.nik.project.parkingPilot.util.ParkingCalculator;
 import hu.nik.project.utils.Vector2D;
 
