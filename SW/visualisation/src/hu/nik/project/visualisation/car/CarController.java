@@ -30,9 +30,9 @@ public class CarController {
     public void keyEvent(KeyEvent e, Car car) {
 
         handle = false;
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT && gas != 0) {
             turnRight(car);
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+        } else if (e.getKeyCode() == KeyEvent.VK_LEFT && gas != 0) {
             turnLeft(car);
         }
 
@@ -60,7 +60,7 @@ public class CarController {
     public void turnLeft(Car car) {
         leftRotate = true;
         //if (steeringWheel > -180)
-            steeringWheel -= 5;
+        steeringWheel -= 5;
 
         car.rotation(steeringWheel);
 
@@ -76,7 +76,7 @@ public class CarController {
     public void turnRight(Car car) {
         rightRotate = true;
         //if (steeringWheel < 180)
-            steeringWheel += 5;
+        steeringWheel += 5;
 
         car.rotation(steeringWheel);
 
@@ -123,21 +123,19 @@ public class CarController {
 
     public void engineBrake(Car car) {
         if (gas > 0) {
-            gas -= 0.09;
+            if (gas - 0.09 < 0)
+                gas = 0;
+            else
+                gas -= 0.09;
+            car.move(gas);
+        } else {
+            if (gas + 0.09 > 0)
+                gas = 0;
+            else
+                gas += 0.09;
             car.move(gas);
         }
     }
-
-//    public void steeringWheelStabilizator(Car car) {
-//        if (steeringWheel > -10 && steeringWheel < 0 || steeringWheel < 10 && steeringWheel > 0)
-//            steeringWheel = 0;
-//        else {
-//            if (steeringWheel < 0)
-//                steeringWheel += 10;
-//            if (steeringWheel > 0)
-//                steeringWheel -= 10;
-//        }
-//    }
 
     // Getter ----------------------------------------------------------------------------------------------------------
     public boolean isGasPressed() {
