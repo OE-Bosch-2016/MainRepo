@@ -11,9 +11,6 @@ import java.io.*;
 
 public class CommBusConnector {
 
-    protected static final int WRITE_CHECK_WAIT_LOOP_MSECS = 50;
-    protected static final int WAIT_TIME_AFTER_SEND_MSECS = 100;
-
     private CommBus commBus;                    // the owner communication-bus object
     private ICommBusDevice device;              // embedded (connected) comm-bus device
     private CommBusConnectorType connectorType; // type of connection
@@ -23,23 +20,6 @@ public class CommBusConnector {
     private boolean isDataInBuffer = false;     // data available for read
     private boolean isDataOutBuffer = false;    // data available for write
     private CommBusConnector connector = this;
-
-    // listenerInvokerThread invokes active listeners
-    private WriterThreadBase writerThreadBase;
-    protected Thread writerThread;
-
-    private class WriterThreadBase implements Runnable {
-        private volatile boolean alive = true;
-
-        public void run() {
-            while (alive) {
-                writeToCommBus();
-                try { Thread.sleep(WRITE_CHECK_WAIT_LOOP_MSECS); } catch (InterruptedException ie) { alive = false; }
-            }
-        } // Write-Check-Wait-Loop
-
-        //public void shutdown() { alive = false; }
-    }
 
     private Exception exceptionThrown = null;   // last exception on this connector
 
@@ -77,18 +57,6 @@ public class CommBusConnector {
         this.commBus = commBus;
         this.device = device;
         this.connectorType = connectorType;
-
-        writerThreadBase = new WriterThreadBase();
-        writerThread = new Thread(writerThreadBase);
-    }
-
-    //--------------------- finalizer
-
-    @Override
-    protected void finalize() throws Throwable {
-        writerThread.interrupt();
-        commBus.removeConnector(this);
-        super.finalize();
     }
 
     //--------------------- send data
@@ -116,31 +84,27 @@ public class CommBusConnector {
             throw new CommBusException(exceptionMessagePrefix + e.getMessage());
         }
 
-        // start worker thread if not in RUNNABLE state
-        if (writerThread.getState() == Thread.State.NEW) {
-            writerThread.start();
-        }
-        else if ((writerThread.getState() != Thread.State.RUNNABLE) && (writerThread.getState() != Thread.State.TIMED_WAITING) && (writerThread.getState() != Thread.State.WAITING))
-        {
-            writerThread = new Thread(writerThreadBase);
-            writerThread.start();
-        }
-        try { Thread.sleep(WAIT_TIME_AFTER_SEND_MSECS); } catch (InterruptedException ie) { return false; }
+
+        writeToCommBus();
+
         return true;
     }
 
-    private void writeToCommBus() {
+    private boolean writeToCommBus() {
         if (isDataOutBuffer)
         try {
             if (commBus.write(connector, dataType, byteDataBuffer)) {
                 isDataOutBuffer = false;
                 exceptionThrown = null;
+                return true;
             }
         }
         catch (CommBusException e) {
             isDataOutBuffer = false;
             exceptionThrown = e;
+            return false;
         }
+        return false;
     }
 
     //--------------------- receive data

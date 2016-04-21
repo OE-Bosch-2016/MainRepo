@@ -25,9 +25,9 @@ import java.util.List;
  *
  * 2. Writing to the bus:
  *
- * connector.write( dataType, data ); // int dataType, byte[] data // return: boolean
+ * connector.write( dataType, data ); // Class dataType, Object data // return: boolean
  *
- * 3. ICommBusDevice get notification when commBusEvent is fired:
+ * 3. ICommBusDevice get notification with function call when write happens
  *
  * public void commBusEvent( int dataType ) {
  *     if (dataType is an interesting dataType) ...
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * 4. Reading from the bus:
  *
- * byte[] data = connector.read();
+ * Object data = connector.read();
  *
  *
  */
@@ -44,7 +44,6 @@ public class CommBus {
     protected static final int BUSREQUEST_WAIT_TIME_MSECS = 200;
     protected static final int MAX_BUFFER_LENGTH_IN_BYTES = 2048;
 
-    //private ByteArrayOutputStream outputStream = new ByteArrayOutputStream(MAX_BUFFER_LENGTH_BYTES);
     private byte[] byteDataBuffer;  // represents the bytes on the bus
     private Class dataType;
 
@@ -67,23 +66,17 @@ public class CommBus {
         return connectors.size();
     }
 
-    public boolean isBusFree() {
-        return (acceptedConnector == null);
-    }
-
     // writes data to bus and sends notifications to the connectors
     protected boolean write(CommBusConnector connector, Class dataType, byte[] data ) throws CommBusException {
         // validity checks
         if (!connectors.contains( connector )) throw new CommBusException("CommBus.write error: Unknown connector.");
         if (dataType == null) throw new CommBusException("CommBus.write error: The dataType is null.");
         if (connector == acceptedConnector) return true;   // already accepted
+
         // bus-allocation
-        if (acceptedConnector != null) { // the bus is busy, must wait...
-            try { Thread.sleep(BUSREQUEST_WAIT_TIME_MSECS); } catch (InterruptedException ie) { return false; }
-        }
         if (acceptedConnector != null) return false; // the bus is busy yet, sorry...
         // copy and store data into buffer
-        this.byteDataBuffer = data.clone();
+        this.byteDataBuffer = data;
         this.dataType = dataType;
         // set the sender
         acceptedConnector = connector;  // OK - this will be the connector which is enabled for write-operation
@@ -92,13 +85,8 @@ public class CommBus {
     }
 
     // invokeListeners passes the bus-content to the connected listeners
-
     // !!!!!!!!!!! When write occours THIS should invoke without THREAD !!!!!!!!!!!!!!!!!!
     private void invokeListeners() {
-
-            // HACK!!
-            // acceptedConnector.setDataBuffer(null);
-            // acceptedConnector.setDataType(null);
 
             // transmission handling
                 for (CommBusConnector connector : connectors) {
@@ -112,15 +100,9 @@ public class CommBus {
                         connector.getDevice().commBusDataArrived();
                     }
                 }
-                    // all listener were notified
+                // all listener were notified
 
                 byteDataBuffer = null; // dataBuffer is empty
-
                 if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
-
     }
-
-    /*public void shutdown() {
-        invokerThread.shutdown();
-    }*/
 }

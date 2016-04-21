@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="communication" exported="" />
     <orderEntry type="module" module-name="gearbox" exported="" />
+    <orderEntry type="module" module-name="visualisation" exported="" />
   </component>
 </module>
