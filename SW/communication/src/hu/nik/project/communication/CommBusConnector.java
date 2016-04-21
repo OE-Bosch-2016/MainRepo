@@ -11,35 +11,13 @@ import java.io.*;
 
 public class CommBusConnector {
 
-    protected static final int WRITE_CHECK_WAIT_LOOP_MSECS = 50;
-    protected static final int WAIT_TIME_AFTER_SEND_MSECS = 100;
-
     private CommBus commBus;                    // the owner communication-bus object
     private ICommBusDevice device;              // embedded (connected) comm-bus device
     private CommBusConnectorType connectorType; // type of connection
 
     private Class dataType;                   // type of data in the dataBuffer
     private byte[] byteDataBuffer;              // data on bus
-    private boolean isDataInBuffer = false;     // data available for read
-    private boolean isDataOutBuffer = false;    // data available for write
     private CommBusConnector connector = this;
-
-    // listenerInvokerThread invokes active listeners
-    private WriterThreadBase writerThreadBase;
-    protected Thread writerThread;
-
-    private class WriterThreadBase implements Runnable {
-        private volatile boolean alive = true;
-
-        public void run() {
-            while (alive) {
-                writeToCommBus();
-                try { Thread.sleep(WRITE_CHECK_WAIT_LOOP_MSECS); } catch (InterruptedException ie) { alive = false; }
-            }
-        } // Write-Check-Wait-Loop
-
-        //public void shutdown() { alive = false; }
-    }
 
     private Exception exceptionThrown = null;   // last exception on this connector
 
@@ -58,13 +36,12 @@ public class CommBusConnector {
     }
 
     public Class getDataType() {
-        if (!isDataInBuffer) return null;
+        if (dataType == null) return null;
         return dataType;
     }
 
     protected void setDataBuffer(byte[] dataBuffer) {
         this.byteDataBuffer = dataBuffer;
-        this.isDataInBuffer = (dataBuffer != null);
     }
 
     protected void setExceptionThrown(Exception exceptionThrown) {
@@ -77,18 +54,6 @@ public class CommBusConnector {
         this.commBus = commBus;
         this.device = device;
         this.connectorType = connectorType;
-
-        writerThreadBase = new WriterThreadBase();
-        writerThread = new Thread(writerThreadBase);
-    }
-
-    //--------------------- finalizer
-
-    @Override
-    protected void finalize() throws Throwable {
-        writerThread.interrupt();
-        commBus.removeConnector(this);
-        super.finalize();
     }
 
     //--------------------- send data
@@ -99,8 +64,6 @@ public class CommBusConnector {
         if (connectorType == CommBusConnectorType.Receiver) { throw new CommBusException(exceptionMessagePrefix + "Cannot send with this connector");}
         if (dataType == null) {throw new CommBusException(exceptionMessagePrefix + "Sent object type cannot be null"); }
         if (dataObject == null) {throw new CommBusException(exceptionMessagePrefix + "Sent object cannot be null"); }
-        if (isDataInBuffer) return false; // unreaded data in the buffer
-        if (isDataOutBuffer) return false; // unwritten data in the buffer
 
         // Make commbus compatible data (microcontroller model)
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -110,50 +73,46 @@ public class CommBusConnector {
             if (baos.size() > CommBus.MAX_BUFFER_LENGTH_IN_BYTES) throw new CommBusException(exceptionMessagePrefix + "Data-record is too long (size=" + baos.size() + " bytes)");
             this.byteDataBuffer = baos.toByteArray();
             this.dataType = dataType;
-            this.isDataOutBuffer = true; // data-block for write is in the buffer (writer thread will be submit it)
         }
         catch (IOException e) {
             throw new CommBusException(exceptionMessagePrefix + e.getMessage());
         }
 
-        // start worker thread if not in RUNNABLE state
-        if (writerThread.getState() == Thread.State.NEW) {
-            writerThread.start();
-        }
-        else if ((writerThread.getState() != Thread.State.RUNNABLE) && (writerThread.getState() != Thread.State.TIMED_WAITING) && (writerThread.getState() != Thread.State.WAITING))
-        {
-            writerThread = new Thread(writerThreadBase);
-            writerThread.start();
-        }
-        try { Thread.sleep(WAIT_TIME_AFTER_SEND_MSECS); } catch (InterruptedException ie) { return false; }
+        writeToCommBus();
+
         return true;
     }
 
-    private void writeToCommBus() {
-        if (isDataOutBuffer)
+    public boolean send(Object dataObject, boolean multipleSending) throws CommBusException {
+        commBus.setMultipleSending(multipleSending);
+        return send(dataObject);
+    }
+
+    private boolean writeToCommBus() {
         try {
             if (commBus.write(connector, dataType, byteDataBuffer)) {
-                isDataOutBuffer = false;
                 exceptionThrown = null;
+                return true;
             }
         }
         catch (CommBusException e) {
-            isDataOutBuffer = false;
             exceptionThrown = e;
+            return false;
         }
+        return false;
     }
 
     //--------------------- receive data
 
     public Object receive() throws CommBusException {
         if (connectorType == CommBusConnectorType.Sender) { throw  new CommBusException("Error in CommBusConnector receive: Cannot receive with this connector"); }
-        if (!isDataInBuffer) return null;
 
         // Convert object from commbus bytes
         try {
+            if (byteDataBuffer == null) return null;
             ObjectInput in = new ObjectInputStream(new ByteArrayInputStream(byteDataBuffer));
             Object object = in.readObject();
-            reset();
+            reset(commBus.getMultipleSending());
             return object;
         }
         catch (IOException|ClassNotFoundException e) {
@@ -161,9 +120,11 @@ public class CommBusConnector {
         }
     }
 
-    private void reset() {
-        isDataInBuffer = false; // read empties the buffer
+    private void reset(boolean multipleSending) {
         dataType = null;
+        byteDataBuffer = null;
+        if (!multipleSending)
+            commBus.clearBusData();
     }
 
 }

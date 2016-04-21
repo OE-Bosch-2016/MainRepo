@@ -34,7 +34,7 @@ public class CommBusIntegrationTest {
         // test devices (they implements the ICommBusDevice interface)
         testDevice1 = new TestDevice(commBus, Integer.class, CommBusConnectorType.SenderReceiver);
         testDevice2 = new TestDevice(commBus, String.class, CommBusConnectorType.Sender);
-        testDevice3 = new TestDevice(commBus, String.class, CommBusConnectorType.Receiver);
+        testDevice3 = new TestDevice(commBus, SimpleRoad.class, CommBusConnectorType.Receiver);
 
         // test data for write and read tests
         testIntByteData = ByteBuffer.allocate(4).putInt(22222).array();
@@ -70,6 +70,11 @@ public class CommBusIntegrationTest {
         Assert.assertEquals(Integer.class, testDevice1.getCommBusConnector().getDataType());
     }
 
+    @Test
+    public void testConnectorCount() throws Exception {
+        Assert.assertEquals(3, commBus.getConnectorCount());
+    }
+
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
 
@@ -89,18 +94,15 @@ public class CommBusIntegrationTest {
 
     @Test
     public void testSendAndReceive() throws Exception {
-        // Send testdata to device2
-        Assert.assertTrue(testDevice1.getCommBusConnector().send("DataArrived"));
-        Assert.assertFalse(testDevice2.getCommBusConnector().send("NewDataArrived1"));
+        // Send testdata to device1
+        Assert.assertTrue(testDevice2.getCommBusConnector().send(4444));
+
+        // Check the first send arrives
+        Assert.assertEquals(4444, testDevice1.getIntData());
         //
-        // Check the first send arrives data arrived
-        Assert.assertEquals("DataArrived", testDevice3.getStringData());
-        //
-        Assert.assertTrue(testDevice1.getCommBusConnector().send("NewDataArrived2"));
-        Assert.assertTrue(testDevice1.getCommBusConnector().send("NewestDataArrived"));
-        // Check the second send arrives data arrived
-        Assert.assertNotEquals("NewDataArrived2", testDevice2.getStringData()); // it was overwritten with ...
-        Assert.assertEquals("NewestDataArrived", testDevice3.getStringData()); // ... this one
+        // Check the second send arrives
+        Assert.assertTrue(testDevice1.getCommBusConnector().send(new SimpleRoad(new ScenePoint(444,555), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)));
+        Assert.assertEquals("ClassType: SimpleRoad ->  Position X: 444 Position Y: 555 Rotation: 90 SimpleRoadType: SIMPLE_STRAIGHT", testDevice3.getSimpleRoadData().toString());
         // Try to receive again, when there is no data on bus
         Assert.assertNull(testDevice3.getCommBusConnector().getDataType());
         Assert.assertNull(testDevice3.getCommBusConnector().receive());
@@ -108,10 +110,19 @@ public class CommBusIntegrationTest {
 
     @Test
     public void testStressCommunication() throws Exception{
+
+        //Remove old devices from the bus
+        commBus.removeConnector(testDevice1.getCommBusConnector());
+        commBus.removeConnector(testDevice2.getCommBusConnector());
+        commBus.removeConnector(testDevice3.getCommBusConnector());
+
         // Add new devices to the bus
         TestDevice deviceWithSimpleRoad = new TestDevice(commBus, SimpleRoad.class, CommBusConnectorType.SenderReceiver);
         TestDevice deviceWithInteger = new TestDevice(commBus, Integer.class, CommBusConnectorType.SenderReceiver);
         TestDevice deviceWithScenePoint = new TestDevice(commBus, ScenePoint.class, CommBusConnectorType.SenderReceiver);
+
+        // Test connectorCount
+        Assert.assertEquals(3, commBus.getConnectorCount());
 
         deviceWithInteger.getCommBusConnector().send(new ScenePoint(120, 110));
         deviceWithScenePoint.getCommBusConnector().send((int)52125);
