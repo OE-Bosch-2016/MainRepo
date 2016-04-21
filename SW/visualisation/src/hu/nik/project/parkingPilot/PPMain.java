@@ -28,7 +28,7 @@ public class PPMain {
     public void parkingPilotActivate(Vector2D point, int height, int width, ParkingCalculator.OnParkingListener parkingListener, int parkingType){
         calculateCorners(point, height, width);
         parkingCalculator.setParkingListener(parkingListener);
-        manager.sendPPData(40, 0f, point, parkingType);
+        manager.sendPPData(point, parkingType);
     }
 
     private void calculateCorners(Vector2D point, int height, int width){

@@ -27,7 +27,7 @@ public class PPManager {
             return mInstance = new PPManager();
     }
 
-    public void sendPPData(float distance, float angle, Vector2D coordinate, int parkingType) {
+    public void sendPPData(Vector2D coordinate, int parkingType) {
         //call Environment, using Bus
 
         if (senderListener != null) {
