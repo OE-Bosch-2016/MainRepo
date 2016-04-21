@@ -9,8 +9,8 @@ import hu.nik.project.environment.ScenePoint;
 
 //this is the real output interface of modul "RADAR"
 public interface IRadarSensor {
-    ScenePoint getRadarPosition();
+
     Integer getRadarViewDistance();
     Float getAngelOfSight();
-    RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance(double currentSpeed,int obsererRotation);
+    RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance(int observerRotation, ScenePoint currentPosition);
 }

@@ -1,59 +1,42 @@
 package hu.nik.project.radar;
 
 import hu.nik.project.communication.CommBus;
-import hu.nik.project.environment.ISensorScene;
 import hu.nik.project.environment.ScenePoint;
-import hu.nik.project.environment.objects.Car;
-import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.utils.Vector2D;
 import junit.framework.TestCase;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
-
-import static org.easymock.EasyMock.*;
 
 /**
  * Created by secured on 2016. 03. 20..
  */
 public class RadarModulTest extends TestCase {
 
-    private ISensorScene _sensorScene;
     private RadarModul _radarModul;
     private int _samplingTime = 2;
-    private int _angle = 30;
+    private float _angle = 30;
 
     private ArrayList<Vector2D> inputPositions;
     private CommBus combus;
     private ScenePoint currentPos;
+    private SensorSceneDummy sensorSceneDummy;
 
-    @Override
+    @Before
     public void setUp() {
-
+        currentPos=new ScenePoint(10,10);
+        sensorSceneDummy=new SensorSceneDummy();
+        combus=new CommBus();
+        _radarModul=new RadarModul(sensorSceneDummy,combus,_angle, _samplingTime);
     }
 
 
     @Test
     public void testRadarForSingeCycle() throws Exception {
 
-        combus = new CommBus();
-        currentPos = new ScenePoint(4, 4);
-         _sensorScene =  Mockito.mock(ISensorScene.class);
-        _radarModul = new RadarModul(_sensorScene,combus,_angle,_samplingTime,currentPos);
-
-        Car carOne = new Car(new ScenePoint(10,10),10);
-        Car carTwo = new Car(new ScenePoint(30,30),20);
-        ArrayList<SceneObject> cars = new ArrayList<SceneObject>();
-        cars.add(carOne);
-        cars.add(carTwo);
-
-        Mockito.doReturn(cars).when(_sensorScene).getVisibleSceneObjects(anyObject(ScenePoint.class), anyInt(), anyInt());
-
-        _radarModul.setIsRadarEnabled(true);
-        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, 15);
-
-        assertNull(result);
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
+        assertNotNull(result);
     }
 
     @Test
@@ -65,7 +48,7 @@ public class RadarModulTest extends TestCase {
         input.add(second);
 
 
-        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(20,20);
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(20,currentPos);
 
         //2 seconds later....
         input = new ArrayList<Vector2D>();
@@ -78,7 +61,7 @@ public class RadarModulTest extends TestCase {
         input.add(second);
 
 
-        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(30,20);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(30,currentPos);
 
 
         //assertEquals(expectedSize, actualSize);
@@ -94,7 +77,7 @@ public class RadarModulTest extends TestCase {
         input.add(second);
 
 
-        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(20,30);
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(20,currentPos);
 
 
         input = new ArrayList<Vector2D>();
@@ -152,7 +135,7 @@ public class RadarModulTest extends TestCase {
         inputPositions.add(new Vector2D(4, 3));
         inputPositions.add(new Vector2D(5, 3));
         inputPositions.add(new Vector2D(6, 3));
-        RadarMessagePacket test = _radarModul.getDetectedObjsRelativeSpeedAndDistance(30,30);
+        RadarMessagePacket test = _radarModul.getDetectedObjsRelativeSpeedAndDistance(30,currentPos);
 
         int expectedCount = 5;
         //int actual = test.size();
