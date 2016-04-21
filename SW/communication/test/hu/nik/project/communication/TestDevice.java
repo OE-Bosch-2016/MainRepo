@@ -1,6 +1,7 @@
 package hu.nik.project.communication;
 
 import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.environment.objects.SceneObjectException;
 import hu.nik.project.environment.objects.SimpleRoad;
 
 /**
@@ -33,6 +34,8 @@ class TestDevice implements ICommBusDevice {
             if (commBusConnector.getDataType() == Integer.class) {
                 try {
                     intData = (Integer) commBusConnector.receive();
+                    commBusConnector.send("InnerSend");
+                    return;
                 } catch (CommBusException e) {
                     stringData = e.getMessage();
                 }
@@ -40,6 +43,8 @@ class TestDevice implements ICommBusDevice {
             if (commBusConnector.getDataType() == String.class) {
                 try {
                     stringData = (String) commBusConnector.receive();
+                    commBusConnector.send(new ScenePoint(120, 110));
+                    return;
                 } catch (CommBusException e) {
                     stringData = e.getMessage();
                 }
@@ -47,6 +52,13 @@ class TestDevice implements ICommBusDevice {
             if (commBusConnector.getDataType() == ScenePoint.class) {
                 try {
                     scenePointData = (ScenePoint) commBusConnector.receive();
+                    try {
+                        commBusConnector.send(new SimpleRoad(new ScenePoint(200, 300), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT));
+                        return;
+                    } catch (SceneObjectException e) {
+
+                    }
+
                 } catch (CommBusException e) {
                     stringData = e.getMessage();
                 }

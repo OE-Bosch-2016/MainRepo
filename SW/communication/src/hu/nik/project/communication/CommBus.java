@@ -90,7 +90,7 @@ public class CommBus {
 
             // transmission handling
                 for (CommBusConnector connector : connectors) {
-                    if ((connector != acceptedConnector)) {
+                    if ((connector != acceptedConnector) && (byteDataBuffer != null)) {
 
                         //connector.setExceptionThrown(null);
                         connector.setDataBuffer(byteDataBuffer.clone());    // data will be passed to the connector in own local buffer
@@ -98,11 +98,16 @@ public class CommBus {
 
                         // the dataType will be passed as an argument of the event, so the connector can decide want to deal with it or not
                         connector.getDevice().commBusDataArrived();
+                        if (byteDataBuffer == null)
+                            break;
                     }
                 }
                 // all listener were notified
+    }
 
-                byteDataBuffer = null; // dataBuffer is empty
-                if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
+    protected void clearBusData() {
+        byteDataBuffer = null; // dataBuffer is empty
+        dataType = null;
+        if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
     }
 }
