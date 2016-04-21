@@ -88,14 +88,14 @@ public class ParkingCalculator {
         if (carAngle == degree)
             state++;
         if (parkingListener != null)
-            parkingListener.changePosition(0.3f, 0.2f, carAngle);
+            parkingListener.changePosition(-1, carAngle);
     }
 
     private void goBottom() {
         if (edgeOfStreet > 1) {
             edgeOfStreet--;
             if (parkingListener != null)
-                parkingListener.changePosition(0.5f, 0.5f);
+                parkingListener.changePosition(-1, carAngle);
         } else
             state++;
     }
@@ -105,7 +105,7 @@ public class ParkingCalculator {
         if (carAngle == degree)
             state++;
         if (parkingListener != null)
-            parkingListener.changePosition(0.3f, 0.2f, carAngle);
+            parkingListener.changePosition(-1, carAngle);
     }
     // Horizontal end
 
@@ -115,14 +115,14 @@ public class ParkingCalculator {
         if (carAngle == degree)
             state++;
         if (parkingListener != null)
-            parkingListener.changePosition(-0.3f, 0.3f, carAngle);
+            parkingListener.changePosition(1, carAngle);
     }
 
     private void goFront() {
         if (edgeOfStreet > 1) {
             edgeOfStreet--;
             if (parkingListener != null)
-                parkingListener.changePosition(-0.5f, 0);
+                parkingListener.changePosition(-0.5f, carAngle);
         } else
             state++;
     }
@@ -135,8 +135,6 @@ public class ParkingCalculator {
 
     // Interface -------------------------------------------------------------------------------------------------------
     public interface OnParkingListener {
-        void changePosition(float front, float side, float rotate);
-
-        void changePosition(float front, float side);
+        void changePosition(float speed, float rotate);
     }
 }

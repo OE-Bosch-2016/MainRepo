@@ -118,7 +118,7 @@ public class Top extends JFrame { // implements KeyListener
         pack();
 
         //visualisation.car.car setup
-        car = new AutonomousCar(new Vector2D(501, 90), ImageLoader.getCarImage());
+        car = new AutonomousCar(new Vector2D(515, 90), ImageLoader.getCarImage());
 
         //visualisation.Visualization renderer setup
         vRenderer = new VisualizationRenderer(mapPanel, hmi, car, mapPath);
@@ -343,8 +343,9 @@ public class Top extends JFrame { // implements KeyListener
             parkingTimer.start();
         }
 
-        public void changePosition(float front, float side) {
-            car.setPosition(new Vector2D(car.getPosition().get_coordinateX() + side, car.getPosition().get_coordinateY() + front));
+        public void changePosition(float speed, float angle) {
+            car.rotation(angle);
+            car.move(speed);
             parkingTimer.start();
         }
     };

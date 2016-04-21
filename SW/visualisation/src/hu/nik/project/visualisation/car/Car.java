@@ -125,8 +125,8 @@ public abstract class Car {
         double moveY = Math.cos(Math.toRadians(_degree)) * speed;
 
         _position = new Vector2D(
-                (int)(_position.get_coordinateX() + moveX),
-                (int)(_position.get_coordinateY() + moveY) // speed * _rotationVector.get_coordinateY()
+                (float)(_position.get_coordinateX() + moveX),
+                (float)(_position.get_coordinateY() + moveY)
         );
     }
 }
