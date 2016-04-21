@@ -1,14 +1,18 @@
 package hu.nik.project.parkingPilot.manager;
 
+import hu.nik.project.communication.CommBusConnector;
+import hu.nik.project.communication.CommBusException;
+import hu.nik.project.communication.ICommBusDevice;
 import hu.nik.project.parkingPilot.model.Parking;
 import hu.nik.project.parkingPilot.util.ParkingCalculator;
+import hu.nik.project.ultrasonicsensor.UltrasonicMessagePackage;
 import hu.nik.project.utils.Vector2D;
 import java.awt.*;
 
 /**
  * Created by haxxi on 2016.03.30..
  */
-public class PPManager {
+public class PPManager implements ICommBusDevice {
 
     // static
     private static PPManager mInstance;
@@ -19,6 +23,8 @@ public class PPManager {
 
     // local
     private Parking parking;
+    private CommBusConnector commBusConnector;
+    private String stringData = "";
 
     public static PPManager newInstance() {
         if (mInstance != null)
@@ -59,6 +65,8 @@ public class PPManager {
         }
     }
 
+
+
     // Getter ----------------------------------------------------------------------------------------------------------
     public Parking getParking() {
         return parking;
@@ -67,6 +75,18 @@ public class PPManager {
     // Setter ----------------------------------------------------------------------------------------------------------
     public void setSenderListener(ParkingPilotListener senderListener) {
         this.senderListener = senderListener;
+    }
+
+    public void commBusDataArrived() {
+        Class dataType = commBusConnector.getDataType();
+        if (dataType == UltrasonicMessagePackage.class) {
+            try {
+                UltrasonicMessagePackage data = (UltrasonicMessagePackage) commBusConnector.receive();
+
+            } catch (CommBusException e) {
+                stringData = e.getMessage();
+            }
+        }
     }
 
     // Interface -------------------------------------------------------------------------------------------------------
