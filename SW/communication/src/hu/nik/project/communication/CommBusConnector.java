@@ -83,6 +83,11 @@ public class CommBusConnector {
         return true;
     }
 
+    public boolean send(Object dataObject, boolean multipleSending) throws CommBusException {
+        commBus.setMultipleSending(multipleSending);
+        return send(dataObject);
+    }
+
     private boolean writeToCommBus() {
         try {
             if (commBus.write(connector, dataType, byteDataBuffer)) {
@@ -107,7 +112,7 @@ public class CommBusConnector {
             if (byteDataBuffer == null) return null;
             ObjectInput in = new ObjectInputStream(new ByteArrayInputStream(byteDataBuffer));
             Object object = in.readObject();
-            reset();
+            reset(commBus.getMultipleSending());
             return object;
         }
         catch (IOException|ClassNotFoundException e) {
@@ -115,10 +120,11 @@ public class CommBusConnector {
         }
     }
 
-    private void reset() {
+    private void reset(boolean multipleSending) {
         dataType = null;
         byteDataBuffer = null;
-        commBus.clearBusData();
+        if (!multipleSending)
+            commBus.clearBusData();
     }
 
 }

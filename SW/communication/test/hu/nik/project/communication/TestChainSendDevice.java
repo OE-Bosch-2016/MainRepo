@@ -1,6 +1,7 @@
 package hu.nik.project.communication;
 
 import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.environment.objects.SceneObjectException;
 import hu.nik.project.environment.objects.SimpleRoad;
 
 /**
@@ -8,18 +9,18 @@ import hu.nik.project.environment.objects.SimpleRoad;
  *
  *  It's a device with two-way connenction, it can write onto the bus and can receive messages with type=1
  */
-class TestDevice implements ICommBusDevice {
+class TestChainSendDevice implements ICommBusDevice {
 
     private Class dataType = null;
     private CommBusConnector commBusConnector;
     private Class neededDataType;
 
     private int intData = 0;
-    private String stringData = "";
+    private String stringData;
     private ScenePoint scenePointData;
     private SimpleRoad simpleRoadData;
 
-    public TestDevice(CommBus commBus, Class whatKindOfObjectIsNeededToTest, CommBusConnectorType commBusConnectorType) {
+    public TestChainSendDevice(CommBus commBus, Class whatKindOfObjectIsNeededToTest, CommBusConnectorType commBusConnectorType) {
         commBusConnector = commBus.createConnector(this, commBusConnectorType);
         neededDataType = whatKindOfObjectIsNeededToTest;
     }
@@ -33,6 +34,7 @@ class TestDevice implements ICommBusDevice {
             if (commBusConnector.getDataType() == Integer.class) {
                 try {
                     intData = (Integer) commBusConnector.receive();
+                    commBusConnector.send("InnerSend");
                 } catch (CommBusException e) {
                     stringData = e.getMessage();
                 }
@@ -40,6 +42,7 @@ class TestDevice implements ICommBusDevice {
             if (commBusConnector.getDataType() == String.class) {
                 try {
                     stringData = (String) commBusConnector.receive();
+                    commBusConnector.send(new ScenePoint(120, 110));
                 } catch (CommBusException e) {
                     stringData = e.getMessage();
                 }
@@ -47,6 +50,12 @@ class TestDevice implements ICommBusDevice {
             if (commBusConnector.getDataType() == ScenePoint.class) {
                 try {
                     scenePointData = (ScenePoint) commBusConnector.receive();
+                    try {
+                        commBusConnector.send(new SimpleRoad(new ScenePoint(200, 300), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT));
+                    } catch (SceneObjectException e) {
+
+                    }
+
                 } catch (CommBusException e) {
                     stringData = e.getMessage();
                 }

@@ -47,6 +47,8 @@ public class CommBus {
     private byte[] byteDataBuffer;  // represents the bytes on the bus
     private Class dataType;
 
+    private boolean multipleSending;
+
     private List<CommBusConnector> connectors = new ArrayList<>();
     private CommBusConnector acceptedConnector = null;
 
@@ -102,6 +104,10 @@ public class CommBus {
                             break;
                     }
                 }
+                if (multipleSending) {
+                    multipleSending = false;
+                    clearBusData();
+                }
                 // all listener were notified
     }
 
@@ -109,5 +115,13 @@ public class CommBus {
         byteDataBuffer = null; // dataBuffer is empty
         dataType = null;
         if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
+    }
+
+    protected void setMultipleSending(boolean multiple) {
+        multipleSending = multiple;
+    }
+
+    protected boolean getMultipleSending() {
+        return multipleSending;
     }
 }
