@@ -33,39 +33,19 @@ public class RadarModulTest extends TestCase {
 
 
     @Test
-    public void testRadarForSingeCycle() throws Exception {
+    public void testRadarForNoIncomingData() throws Exception {
 
         RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
-        assertNotNull(result);
+        assertNull(result);
     }
 
     @Test
-    public void testRadarForMultipleCycles() throws Exception {
-        ArrayList<Vector2D> input = new ArrayList<Vector2D>();
-        Vector2D first = new Vector2D(3, 3);
-        Vector2D second = new Vector2D(4, 4);
-        input.add(first);
-        input.add(second);
+    public void testRadarForFirstCycle() throws Exception {
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10,currentPos);
+        //next call
+        result =_radarModul.getDetectedObjsRelativeSpeedAndDistance(11,currentPos);
 
-
-        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(20,currentPos);
-
-        //2 seconds later....
-        input = new ArrayList<Vector2D>();
-        first.set_coordinateX(30);
-        first.set_coordinateY(30);
-
-        second.set_coordinateX(40);
-        second.set_coordinateY(40);
-        input.add(first);
-        input.add(second);
-
-
-        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(30,currentPos);
-
-
-        //assertEquals(expectedSize, actualSize);
-
+        assertNotNull(result);
     }
 
     @Test
