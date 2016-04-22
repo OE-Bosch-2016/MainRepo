@@ -62,6 +62,13 @@ public class Hmi implements IHmi {
             throw new NullPointerException("Hmi listener is missing");
     }
 
+    public void currentGearShiftPosition(int stage){
+        if (hmiListener != null)
+            hmiListener.gearShiftPositionChanged(stage);
+        else
+            throw new NullPointerException("Hmi listener is missing");
+    }
+
     // Setter ----------------------------------------------------------------------------------------------------------
     public void setHmiListener(OnHmiListener hmiListener) {
         this.hmiListener = hmiListener;
@@ -74,5 +81,7 @@ public class Hmi implements IHmi {
         void tachometerChanged(float tachometer);
 
         void gearshiftChanged(int gearshift);
+
+        void gearShiftPositionChanged(int position);
     }
 }

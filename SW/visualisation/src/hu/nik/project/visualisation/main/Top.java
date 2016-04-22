@@ -1,6 +1,7 @@
 package hu.nik.project.visualisation.main;
 
 import hu.nik.project.hmi.Hmi;
+import hu.nik.project.hmi.manager.HmiManager;
 import hu.nik.project.parkingPilot.PPMain;
 import hu.nik.project.parkingPilot.util.ParkingCalculator;
 import hu.nik.project.utils.ImageLoader;
@@ -10,6 +11,7 @@ import hu.nik.project.visualisation.car.CarController;
 import hu.nik.project.visualisation.car.SteeringWheel;
 import hu.nik.project.visualisation.VisualizationRenderer;
 
+import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
@@ -54,6 +56,12 @@ public class Top extends JFrame { // implements KeyListener
     private JButton PPButton;
     private JButton AEBButton;
     private JButton LKAButton;
+    private JLabel currentSpeed;
+    private JSpinner tempomatSpinner;
+    private JLabel tempomat;
+    private JButton tempomatButton;
+    private JPanel actualGearShiftPane;
+    private JTextPane actualGearShiftPosition;
     private SteeringWheel steeringWheel;
 
     //Timer
@@ -64,10 +72,12 @@ public class Top extends JFrame { // implements KeyListener
 
     // hmi elements
     private Hmi hmi;
+    private int tick;
+    private boolean[] hmiButtonArray = new boolean[7];
 
     // Driver input
     private CarController carController;
-
+    private HmiManager hmiManager;
     // Parking pilot
     private Timer moveTimer;
     private PPMain parkingPilot;
@@ -105,12 +115,15 @@ public class Top extends JFrame { // implements KeyListener
         parkingTimer = new Timer(42, parkingTimerListener);
         parkingPilot = new PPMain();
         moveTimer = new Timer(42, moveListener);
+
         hmi = Hmi.newInstance();
         hmi.setHmiListener(mileAgeListener);
+        hmiManager = HmiManager.newInstance();
         mileAgePanel.add(buildDialPlot(0, DISPLAY_MAX_KM, 20, mileAgeDataset, mileAgeDisplayDataset));
         tachometerPanel.add(buildDialPlot(0, DISPLAY_MAX_TACHO, 1000, tachoMeterDataset, tachoMeterDisplayDataset));
         setMileAgeValue(0);
         setTachometerValue(0);
+        tick = 0;
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -130,11 +143,12 @@ public class Top extends JFrame { // implements KeyListener
                 vRenderer.render();
 
                 // Car control
-                if(!carController.isGasPressed())
+                if (!carController.isGasPressed())
                     carController.engineBrake(car);
 
-//                if(!carController.isLeftRotate() && !carController.isRightRotate())
-//                    carController.steeringWheelStabilizator(car);
+                if(hmiButtonArray[0]) tick++;
+
+                hmiManager.createPackage((int) tempomatSpinner.getValue(), tick, hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
             }
         });
 
@@ -149,6 +163,9 @@ public class Top extends JFrame { // implements KeyListener
         PPButton.addActionListener(hmiButtons);
         AEBButton.addActionListener(hmiButtons);
         LKAButton.addActionListener(hmiButtons);
+        tempomatButton.addActionListener(hmiButtons);
+
+        tempomatSpinner.addChangeListener(tempomatChange);
 
         // Test
 //        test_slider.addChangeListener(new ChangeListener() {
@@ -223,6 +240,10 @@ public class Top extends JFrame { // implements KeyListener
             rTextPane.setText(setColor("R", true));
     }
 
+    private void setCurrentGearShiftPosition(int stage) {
+        actualGearShiftPosition.setText("<html><body><span style=\"color:red\"><b>" + stage + "</b></span></body></html>");
+    }
+
     private String setColor(String text, boolean activated) {
         builder = new StringBuilder();
         builder.append("<html><body>");
@@ -271,6 +292,10 @@ public class Top extends JFrame { // implements KeyListener
 
         public void gearshiftChanged(int gearshift) {
             setGearShiftStage(gearshift);
+        }
+
+        public void gearShiftPositionChanged(int position) {
+            setCurrentGearShiftPosition(position);
         }
     };
 
@@ -380,18 +405,26 @@ public class Top extends JFrame { // implements KeyListener
     private ActionListener hmiButtons = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("Engine")) {
-                // TODO: start engine
+                hmiButtonArray[0] = !hmiButtonArray[0];
             } else if (e.getActionCommand().equals("ACC")) {
-                // TODO: acc
+                hmiButtonArray[1] = !hmiButtonArray[1];
             } else if (e.getActionCommand().equals("TSR")) {
-
+                hmiButtonArray[2] = !hmiButtonArray[2];
             } else if (e.getActionCommand().equals("PP")) {
-
+                hmiButtonArray[3] = !hmiButtonArray[3];
             } else if (e.getActionCommand().equals("AEB")) {
-
+                hmiButtonArray[4] = !hmiButtonArray[4];
+            } else if (e.getActionCommand().equals("LKA")) {
+                hmiButtonArray[5] = !hmiButtonArray[5];
             } else {
-
+                hmiButtonArray[6] = !hmiButtonArray[6];
             }
+        }
+    };
+
+    private ChangeListener tempomatChange = new ChangeListener() {
+        public void stateChanged(ChangeEvent e) {
+
         }
     };
 }

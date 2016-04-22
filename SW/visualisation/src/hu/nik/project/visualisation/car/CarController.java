@@ -142,6 +142,14 @@ public class CarController {
         return gasPressed;
     }
 
+    public float getSteeringWheel() {
+        return steeringWheel;
+    }
+
+    public float getGas() {
+        return gas;
+    }
+
     public boolean isLeftRotate() {
         return leftRotate;
     }
