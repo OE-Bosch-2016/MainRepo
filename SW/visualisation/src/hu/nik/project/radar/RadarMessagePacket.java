@@ -1,6 +1,6 @@
 package hu.nik.project.radar;
 
-import hu.nik.project.utils.Vector2D;
+import hu.nik.project.environment.objects.Car;
 
 import java.io.Serializable;
 
@@ -10,17 +10,18 @@ import java.io.Serializable;
 public class RadarMessagePacket implements Serializable {
     private double _relativeSpeed;
     private double _currentDistance;
-    private Vector2D _currentPosition;
+    private Car _car;
 
-    public RadarMessagePacket(int relativeSpeed, double currentDistance, Vector2D currentPosition) {
+    public RadarMessagePacket(int relativeSpeed, double currentDistance,Car car) {
         _relativeSpeed = relativeSpeed;
         _currentDistance = currentDistance;
-        _currentPosition = currentPosition;
+        _car=car;
     }
 
     public double getRelativeSpeed() {
         return _relativeSpeed;
     }
+
     public void setRelativeSpeed(double relativeSpeed) {
         _relativeSpeed = relativeSpeed;
     }
@@ -28,14 +29,16 @@ public class RadarMessagePacket implements Serializable {
     public void setCurrentDistance(double currentDistance) {
         _currentDistance = currentDistance;
     }
+
     public double getCurrentDistance() {
         return _currentDistance;
     }
 
-    public Vector2D getCurrentPosition() {
-        return _currentPosition;
+    public Car get_car() {
+        return _car;
     }
-    public void setCurrentPosition(Vector2D currentPosition) {
-        _currentPosition = currentPosition;
+
+    public void set_car(Car _car) {
+        this._car = _car;
     }
 }

@@ -24,6 +24,7 @@ public class SensorSceneDummy implements ISensorScene {
 
     public ArrayList<SceneObject> getVisibleSceneObjects(ScenePoint observerBase, int observerRotation, int viewAngle, int viewDistance) {
         if(callCounter==0){
+            callCounter++;
             return null;
         }
         else if(callCounter==1){
