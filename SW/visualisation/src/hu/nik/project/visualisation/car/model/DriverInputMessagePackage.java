@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by haxxi on 2016.04.17..
  */
-public class DriverInputMessagePacket implements Serializable {
+public class DriverInputMessagePackage implements Serializable {
 
     private float carBrake;
     private float wheelAngle;
@@ -16,14 +16,19 @@ public class DriverInputMessagePacket implements Serializable {
     private boolean aeb;
     private boolean lka;
 
-    public DriverInputMessagePacket(float carBreak, float wheelAngle, float carGas) {
-        this.carBrake = carBreak;
+    public DriverInputMessagePackage(float carBrake, float wheelAngle, float carGas, boolean acc, boolean tsr, boolean pp, boolean aeb, boolean lka) {
+        this.carBrake = carBrake;
         this.wheelAngle = wheelAngle;
         this.carGas = carGas;
+        this.acc = acc;
+        this.tsr = tsr;
+        this.pp = pp;
+        this.aeb = aeb;
+        this.lka = lka;
     }
 
     // Getter ----------------------------------------------------------------------------------------------------------
-    public float getCarBrake() {
+    public float getCarBreak() {
         return carBrake;
     }
 
