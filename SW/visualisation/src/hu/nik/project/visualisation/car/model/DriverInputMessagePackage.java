@@ -58,6 +58,10 @@ public class DriverInputMessagePackage implements Serializable {
         return tempomat;
     }
 
+    public int getTick() {
+        return tick;
+    }
+
     public float getCarGas() {
         return carGas;
     }
