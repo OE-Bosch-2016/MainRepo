@@ -9,10 +9,7 @@ import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 import hu.nik.project.environment.ScenePoint;
-import hu.nik.project.environment.objects.AdvancedRoad;
 import hu.nik.project.environment.objects.CrossWalk;
-import hu.nik.project.environment.objects.Misc;
-import hu.nik.project.environment.objects.ParkingSign;
 import hu.nik.project.environment.objects.PrioritySign;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.environment.objects.SceneObjectException;
@@ -20,8 +17,6 @@ import hu.nik.project.environment.objects.Tree;
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.XMLParserException;
 import hu.nik.project.environment.objects.Car;
-import hu.nik.project.framework.BoschCar;
-import hu.nik.project.framework.main.Main;
 import java.util.ArrayList;
 
 /**
