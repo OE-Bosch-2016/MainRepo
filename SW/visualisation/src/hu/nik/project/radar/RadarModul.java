@@ -12,7 +12,6 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.ListIterator;
 
 
 /**
@@ -125,15 +124,9 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         if (sceneObjectArrayList != null) {
             ArrayList<Car> carArrayList = new ArrayList<Car>();
             for (SceneObject item : sceneObjectArrayList) {
-                if (item.getObjectType()== Car.CarType.CAR) {
-
+                if (item.getObjectType() == Car.CarType.CAR) {
                     Car car = (Car) item;
-                    int carHash = car.hashCode();
-                    //with creating new vectors, their hashes will never be the same.
                     carArrayList.add(car);
-                    /*
-                    1) megnézni, hogy a bejövő item hashe benne van-e az előzőekben.
-                    * */
                 }
             }
             return carArrayList;
@@ -152,8 +145,8 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
                     RadarMessagePacket radarPacket = IsCarInRadarPacketList(currentCar);
                     if (radarPacket != null) {
                         Vector2D carPosition = new Vector2D(
-                                (float)currentCar.getCenterPoint().getX(),
-                                (float)currentCar.getCenterPoint().getY());
+                                (float) currentCar.getCenterPoint().getX(),
+                                (float) currentCar.getCenterPoint().getY());
                         double distance = getDistance(ourCurrentPosition, carPosition);
                         if (isObjectMoving(currentCar)) {
                             double itemSpeed = getCurrentSpeedOfSpecificObj(radarPacket, currentCar);
@@ -163,16 +156,17 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
                         }
                         radarPacket.setCurrentDistance(distance);
                     } else {
-                        RadarMessagePacket newSpeedDistObj = new RadarMessagePacket(0, 0,currentCar);
+                        RadarMessagePacket newSpeedDistObj = new RadarMessagePacket(0, 0, currentCar);
                         _radarPacketObservableList.add(newSpeedDistObj);
                     }
                     itemIndex++;
                 }
 
-                ListIterator myListIterator = _radarPacketObservableList.listIterator(itemIndex);
-                while (myListIterator.hasNext()) {
-                    RadarMessagePacket removableObj = ((RadarMessagePacket) myListIterator.next());
-                    myListIterator.remove();
+                for (int i = 0; i < _radarPacketObservableList.size(); i++) {
+                    RadarMessagePacket msgPacket = _radarPacketObservableList.get(i);
+                    if (IsRadarMessagePacketDeletable(recentCarList, msgPacket)) {
+                        _radarPacketObservableList.remove(msgPacket);
+                    }
                 }
             } else {
                 _radarPacketObservableList = FXCollections.observableList(new ArrayList<RadarMessagePacket>());
@@ -182,7 +176,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
             if (recentCarList.size() != 0) {
                 for (int i = 0; i < recentCarList.size(); i++) {
                     Car car = recentCarList.get(i);
-                    RadarMessagePacket radarPacket = new RadarMessagePacket(0, 0,car);
+                    RadarMessagePacket radarPacket = new RadarMessagePacket(0, 0, car);
                     _radarPacketObservableList.add(radarPacket);
                 }
             }
@@ -200,7 +194,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
             while (index != incomingCarDataList.size()) {
                 Car car = incomingCarDataList.get(index);
                 if (!isItemInHashMap(car)) {
-                    float[] vector = {(float)car.getCenterPoint().getY(), (float)car.getCenterPoint().getY()};
+                    float[] vector = {(float) car.getCenterPoint().getY(), (float) car.getCenterPoint().getY()};
                     _previousVectorsHashMap.put(car.hashCode(), vector);
                 }
                 recentCarList.add(car);
@@ -220,7 +214,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
             _previousVectorsHashMap.clear();
             for (int i = 0; i < incomingCarDataList.size(); i++) {
                 Car car = incomingCarDataList.get(i);
-                float[] vectorValues = {(float)car.getCenterPoint().getX(), (float)car.getCenterPoint().getY()};
+                float[] vectorValues = {(float) car.getCenterPoint().getX(), (float) car.getCenterPoint().getY()};
                 _previousVectorsHashMap.put(car.hashCode(), vectorValues);
             }
             recentCarList = incomingCarDataList;
@@ -230,24 +224,24 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     private double getDistance(Vector2D x, Vector2D y) {
 
-        double pixelToMeterValue=0.08;
+        double pixelToMeterValue = 0.08;
         double xCoordinate = Math.pow(x.get_coordinateX() - y.get_coordinateX(), 2);
         double yCoordinate = Math.pow(x.get_coordinateY() - y.get_coordinateY(), 2);
-        return Math.sqrt(xCoordinate + yCoordinate)*pixelToMeterValue;
+        return Math.sqrt(xCoordinate + yCoordinate) * pixelToMeterValue;
     }
 
     private double getCurrentSpeedOfSpecificObj(RadarMessagePacket previous, Car car) {
-        Vector2D actualCarVector = new Vector2D((float)car.getCenterPoint().getX(),(float)car.getCenterPoint().getY());
+        Vector2D actualCarVector = new Vector2D((float) car.getCenterPoint().getX(), (float) car.getCenterPoint().getY());
         Vector2D previousCarVector = new Vector2D(
-                (float)previous.get_car().getCenterPoint().getX(),
-                (float)previous.get_car().getCenterPoint().getY());
+                (float) previous.get_car().getCenterPoint().getX(),
+                (float) previous.get_car().getCenterPoint().getY());
 
         return getDistance(previousCarVector, actualCarVector) / _sampingTime;
     }
 
     private void ChangePreviousHashMapValues(Car car) {
-        _previousVectorsHashMap.get(car.hashCode())[0] = (float)car.getCenterPoint().getX();
-        _previousVectorsHashMap.get(car.hashCode())[1] = (float)car.getCenterPoint().getY();
+        _previousVectorsHashMap.get(car.hashCode())[0] = (float) car.getCenterPoint().getX();
+        _previousVectorsHashMap.get(car.hashCode())[1] = (float) car.getCenterPoint().getY();
     }
 
     private double calculateRelativeSpeed(double firstSpeedValue, double seconedSpeedValue) { //A+B/1+AB
@@ -259,10 +253,20 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     private RadarMessagePacket IsCarInRadarPacketList(Car car) {
         int index = 0;
-        while (index != _radarPacketObservableList.size() && car.hashCode()!=_radarPacketObservableList.get(index).get_car().hashCode()) {
+        while (index != _radarPacketObservableList.size() && car.hashCode() != _radarPacketObservableList.get(index).get_car().hashCode()) {
             index++;
         }
         return (index < _radarPacketObservableList.size()) ? _radarPacketObservableList.get(index) : null;
+    }
+
+    private boolean IsRadarMessagePacketDeletable(ArrayList<Car> carList, RadarMessagePacket msgPacket) {
+        for (int i = 0; i < carList.size(); i++) {
+            if (msgPacket.get_car().hashCode() == carList.get(i).hashCode()) {
+                return false;
+            }
+        }
+        return true;
+
     }
 
     private boolean isObjectMoving(Car currentCar) {
@@ -299,6 +303,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         return null;
     }
 
+    //need to give something else than zero, like maxvalue or something
     private boolean IsAllDistanceZero() {
         int index = 0;
         double zero = 0;

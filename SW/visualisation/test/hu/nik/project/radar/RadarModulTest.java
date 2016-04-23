@@ -2,12 +2,9 @@ package hu.nik.project.radar;
 
 import hu.nik.project.communication.CommBus;
 import hu.nik.project.environment.ScenePoint;
-import hu.nik.project.utils.Vector2D;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
 
 /**
  * Created by secured on 2016. 03. 20..
@@ -18,7 +15,6 @@ public class RadarModulTest extends TestCase {
     private int _samplingTime = 2;
     private float _angle = 30;
 
-    private ArrayList<Vector2D> inputPositions;
     private CommBus combus;
     private ScenePoint currentPos;
     private SensorSceneDummy sensorSceneDummy;
@@ -31,7 +27,8 @@ public class RadarModulTest extends TestCase {
         _radarModul = new RadarModul(sensorSceneDummy, combus, _angle, _samplingTime);
     }
 
-
+    /*For no input, our packet is null
+    * */
     @Test
     public void testRadarForNoIncomingData() throws Exception {
 
@@ -39,8 +36,11 @@ public class RadarModulTest extends TestCase {
         assertNull(result);
     }
 
+    /*First iteration: we'have detected the incoming objects, still the result expected to be null, because we need two
+    positions of the same object to calculate speed and distance
+    */
     @Test
-    public void testRadarForFirstCycle() throws Exception {
+    public void testRadarForOneIteration() throws Exception {
         RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
         //next call, but we still expect the result to be null, because we only had 1 cycle of data
         result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(11, currentPos);
@@ -48,16 +48,34 @@ public class RadarModulTest extends TestCase {
         assertNull(result);
     }
 
+    /*Second iteration: Now we have a previous and actual position, now our packet is expected to be NOT null, and we
+    have a distance value of the closest object
+    * */
     @Test
-    public void testRadarForMultipleCyclesAndDeletion() throws Exception {
+    public void testRadarForTwoIteration() throws Exception {
         RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
         result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(11,currentPos);
 
         //now we expect some output with relative speed and distance of the closest object
         result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(12,currentPos);
         assertNotNull(result);
-        assertTrue(result.getCurrentDistance()>0);
+        assertTrue(result.getCurrentDistance() > 0);
     }
+
+    /*Test case: Now we have one object that has calculated distance, but we have a newly detected car object. The new
+    one gets rejected (distance 0), we give back the closest object
+    * */
+    @Test
+    public void testRadarForThreeIteration() throws Exception{
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(11,currentPos);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(12,currentPos);
+
+        result=_radarModul.getDetectedObjsRelativeSpeedAndDistance(13,currentPos);
+        assertNotNull(result);
+        assertTrue(result.getCurrentDistance() > 0); //gives back exactly 0, still buggy
+    }
+
 
 
     //<editor-fold desc="Private method unit tests; can be deleted later">
