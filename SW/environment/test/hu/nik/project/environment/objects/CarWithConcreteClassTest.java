@@ -49,4 +49,9 @@ public class CarWithConcreteClassTest {
         Assert.assertEquals(620, car.getCenterPoint().getX());
         Assert.assertEquals(450, car.getCenterPoint().getY());
     }
+
+    @Test
+    public void testToString() throws Exception {
+        Assert.assertEquals("ClassType: Car ->  Position X: 500 Position Y: 500 Rotation: 90 CarType: CAR", car.toString());
+    }
 }
