@@ -2,7 +2,7 @@ package hu.nik.project.gearbox;
 
 import hu.nik.project.communication.*;
 import hu.nik.project.engine.EngineMessagePackage;
-//import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
+import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 
 /**
  *
@@ -48,10 +48,10 @@ public class Gearbox implements ICommBusDevice {
                 stringData = e.getMessage();
             }
 		}
-		/*else if(dataType == xxx.class)
+		/*else if(dataType == DriverInputMessagePackage.class)
 		{
 			try {
-                XXXX data = (XXXX) commBusConnector.receive();
+                DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
                 gearLever = data.getXXXX();
 				operateGearbox();
             } catch (CommBusException e) {

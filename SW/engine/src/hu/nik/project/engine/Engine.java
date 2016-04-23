@@ -53,7 +53,7 @@ public class Engine implements ICommBusDevice {
                 stringData = e.getMessage();
             }
 		}
-		else if(dataType == xxx.class) //throttle
+		else if(dataType == DriverInputMessagePackage.class) //throttle
 		{
 			try {
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
