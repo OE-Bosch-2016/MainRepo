@@ -36,12 +36,12 @@ public class UltrasonicModul implements ICommBusDevice {
     }
     
 
-    public UltrasonicModul(CommBus commBus, CommBusConnectorType commBusConnectorType, ScenePoint currPos) {
+    public UltrasonicModul(CommBus commBus, CommBusConnectorType commBusConnectorType, ScenePoint currPos, Scene scene) {
         commBusConnector = commBus.createConnector(this, commBusConnectorType);
         closestDistance = new double[8];
         sonars = new Sonar[8];
         currPosition = currPos;
-        
+        this.scene = scene;
         for (int i = 0; i < sonars.length; i++) {
             sonars[i] = new Sonar(fov, startAngle, currPos);
             startAngle += fov;
@@ -52,32 +52,46 @@ public class UltrasonicModul implements ICommBusDevice {
     public void commBusDataArrived() {
     }
 
-    public void SendToBus() {
+//    public void SendToBus() {
+//        UltrasonicMessagePackage umsg = new UltrasonicMessagePackage(closestDistance);
+//        boolean sent = false;
+//        while (!sent) {
+//            try {
+//                if (commBusConnector.send(umsg)) {
+//                    sent = true;
+//                }
+//            } catch (CommBusException e) {
+//                break;
+//            }
+//        }
+//    }
+    public void SendToBus() throws CommBusException {
         UltrasonicMessagePackage umsg = new UltrasonicMessagePackage(closestDistance);
-        boolean sent = false;
-        while (!sent) {
-            try {
-                if (commBusConnector.send(umsg)) {
-                    sent = true;
-                }
-            } catch (CommBusException e) {
-                break;
-            }
-        }
+        commBusConnector.send(umsg);
     }
-    public void getNearestObjectDistances(ScenePoint currPos)
+    
+    public void getNearestObjectDistances(ScenePoint currPos) throws CommBusException
     {
-        ArrayList ures = new ArrayList();
-        for (int i = 0; i < sonars.length; i++) {
-            Sonar son = sonars[i];
-            closestDistance[i] = son.getNearestObjectDistance(ures, currPos);
-        }
-        
+//        System.out.println(currPosition);
+//        System.out.println(currPos);
+//        ArrayList ures = new ArrayList();
 //        for (int i = 0; i < sonars.length; i++) {
 //            Sonar son = sonars[i];
-//            closestDistance[i] = son.getNearestObjectDistance(scene.getVisibleSceneObjects(son.getSonarPos(), son.getStartAngle(), (int) son.getFov(), son.getSonarViewDis()), currPos);
-//            
+//            son.setCurrPosition(currPos);
+//            System.out.println(son.getSonarPos());
+//            closestDistance[i] = son.getNearestObjectDistance(ures, currPos);
 //        }
+        System.out.println(currPosition);
+//        System.out.println(currPos);
+        for (int i = 0; i < sonars.length; i++) {
+            Sonar son = sonars[i];
+            son.setCurrPosition(currPos);
+            System.out.println(son.getSonarPos());
+            closestDistance[i] = son.getNearestObjectDistance(scene.getVisibleSceneObjects(son.getSonarPos(), son.getStartAngle(), (int) son.getFov(), son.getSonarViewDis()), currPos);
+            
+        }
+        
+        SendToBus();
     }
 
 }

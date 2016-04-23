@@ -33,8 +33,8 @@ public class ObjPositions {
         positions = new Pos[4];
         positions[0] = basePos;
         positions[1] = new Pos(basePos.getPosX()+width, basePos.getPosY());
-        positions[2] = new Pos(basePos.getPosX()+width, basePos.getPosY()-height);
-        positions[3] = new Pos(basePos.getPosX(), basePos.getPosY()-height);
+        positions[2] = new Pos(basePos.getPosX()+width, basePos.getPosY()+height);
+        positions[3] = new Pos(basePos.getPosX(), basePos.getPosY()+height);
     }
     
     

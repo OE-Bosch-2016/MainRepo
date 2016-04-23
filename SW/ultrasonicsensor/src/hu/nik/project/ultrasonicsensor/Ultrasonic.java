@@ -7,6 +7,7 @@ package hu.nik.project.ultrasonicsensor;
 
 import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnectorType;
+import hu.nik.project.communication.CommBusException;
 import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.objects.AdvancedRoad;
 import hu.nik.project.environment.objects.CrossWalk;
@@ -18,6 +19,7 @@ import hu.nik.project.environment.objects.SceneObjectException;
 import hu.nik.project.environment.objects.Tree;
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.XMLParserException;
+import hu.nik.project.framework.main.Main;
 import java.util.ArrayList;
 
 /**
@@ -26,7 +28,7 @@ import java.util.ArrayList;
  */
 public class Ultrasonic {
 
-    public static void main(String[] args) throws SceneObjectException, XMLParserException {
+    public static void main(String[] args) throws SceneObjectException, XMLParserException, CommBusException {
 
         ScenePoint currPosition = new ScenePoint(0, 240);
         Sonar sonar = new Sonar(45, 0, currPosition);
@@ -102,14 +104,28 @@ public class Ultrasonic {
         System.out.println("|----------------|");
         CommBus cb = new CommBus();
         CommBusConnectorType cmtype = CommBusConnectorType.Sender;
+        Scene scene = new Scene("src\\hu\\nik\\project\\sceneroads\\road_1.xml");
         
-        UltrasonicModul um = new UltrasonicModul(cb,cmtype,currPosition);
+        for (int i = 0; i < scene.getSceneObjects().size(); i++) {
+            if(scene.getSceneObjects().get(i).getObjectType() == Tree.TreeType.TREE_TOP_VIEW)
+            {
+                ObjPositions oTree = new ObjPositions(new Pos(scene.getSceneObjects().get(i).getBasePosition().getX(), scene.getSceneObjects().get(i).getBasePosition().getY()), 80, 80);
+                System.out.print("Tree pos: ");
+                for (int j = 0; j < oTree.getPositions().length; j++) {
+                    System.out.print("{"+oTree.getPositions()[j].getPosX()+","+oTree.getPositions()[j].getPosY()+"} ");
+                }
+                System.out.println("");
+            }
+        }
+        
+        UltrasonicModul um = new UltrasonicModul(cb,cmtype,currPosition,scene);
 //      
-        um.getNearestObjectDistances(currPosition);
+        ScenePoint sce = new ScenePoint(400, 1800);
+        um.getNearestObjectDistances(sce);
         for (int i = 0; i < um.getClosestDistance().length ; i++) {
             System.out.println("Closest distance in zone:" +i+ " ; " +um.getClosestDistance()[i]);
         }
-//        um.SendToBus();
+        um.SendToBus();
         
         
         

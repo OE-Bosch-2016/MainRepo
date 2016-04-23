@@ -6,6 +6,8 @@
 package hu.nik.project.ultrasonicsensor;
 
 import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.environment.objects.Car;
+import hu.nik.project.environment.objects.Car.CarType;
 import hu.nik.project.environment.objects.DirectionSign;
 import hu.nik.project.environment.objects.Misc;
 import hu.nik.project.environment.objects.ParkingSign;
@@ -23,7 +25,7 @@ public class Sonar implements IUltrasonic {
 
     private int carWidth = 100;
     private int carHeight = 240;
-    private int viewDis = 5;
+    private int viewDis = 500;
     private double fov;
     private int startAngle;
     private ScenePoint currPosition;
@@ -45,12 +47,16 @@ public class Sonar implements IUltrasonic {
         return currPosition;
     }
 
+    public void setCurrPosition(ScenePoint currPosition) {
+        this.currPosition = currPosition;
+    }
+    
     public ScenePoint getSonarPos() {
         if (startAngle < 180) {
             sonarPosition = new ScenePoint(currPosition.getX() + (carWidth / 2), currPosition.getY()); //front bumper
             return sonarPosition;
         } else {
-            sonarPosition = new ScenePoint(currPosition.getX() + (carWidth / 2), currPosition.getY() - carHeight); //rear bumper
+            sonarPosition = new ScenePoint(currPosition.getX() + (carWidth / 2), currPosition.getY() + carHeight); //rear bumper
             return sonarPosition;
         }
     }
