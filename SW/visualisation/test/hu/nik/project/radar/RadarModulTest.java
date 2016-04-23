@@ -2,12 +2,9 @@ package hu.nik.project.radar;
 
 import hu.nik.project.communication.CommBus;
 import hu.nik.project.environment.ScenePoint;
-import hu.nik.project.utils.Vector2D;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.ArrayList;
 
 /**
  * Created by secured on 2016. 03. 20..
@@ -18,20 +15,21 @@ public class RadarModulTest extends TestCase {
     private int _samplingTime = 2;
     private float _angle = 30;
 
-    private ArrayList<Vector2D> inputPositions;
     private CommBus combus;
     private ScenePoint currentPos;
     private SensorSceneDummy sensorSceneDummy;
 
     @Before
     public void setUp() {
-        currentPos=new ScenePoint(10,10);
-        sensorSceneDummy=new SensorSceneDummy();
-        combus=new CommBus();
-        _radarModul=new RadarModul(sensorSceneDummy,combus,_angle, _samplingTime);
+        currentPos = new ScenePoint(10, 10);
+        sensorSceneDummy = new SensorSceneDummy();
+        combus = new CommBus();
+        _radarModul = new RadarModul(sensorSceneDummy, combus, _angle, _samplingTime);
+
     }
 
-
+    /*For no input, our packet is null
+    * */
     @Test
     public void testRadarForNoIncomingData() throws Exception {
 
@@ -39,99 +37,60 @@ public class RadarModulTest extends TestCase {
         assertNull(result);
     }
 
+    /*First iteration: we'have detected the incoming objects, still the result expected to be null, because we need two
+    positions of the same object to calculate speed and distance
+    */
     @Test
-    public void testRadarForFirstCycle() throws Exception {
-        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10,currentPos);
-        //next call
-        result =_radarModul.getDetectedObjsRelativeSpeedAndDistance(11,currentPos);
+    public void testRadarForOneIteration() throws Exception {
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
+        //next call, but we still expect the result to be null, because we only had 1 cycle of data
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(11, currentPos);
 
+        assertNull(result);
+    }
+
+    /*Second iteration: Now we have a previous and actual position, now our packet is expected to be NOT null, and we
+    have a distance value of the closest object
+    * */
+    @Test
+    public void testRadarForTwoIteration() throws Exception {
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(11,currentPos);
+
+        //now we expect some output with relative speed and distance of the closest object
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(12,currentPos);
         assertNotNull(result);
+        assertTrue(result.getCurrentDistance() > 0);
     }
 
+    /*Test case: Now we have one object that has calculated distance, but we have a newly detected car object. The new
+    one gets rejected (distance 0), we give back the closest object
+    * */
     @Test
-    public void testRadarForMultipleCyclesAndDeletion() throws Exception {
-        ArrayList<Vector2D> input = new ArrayList<Vector2D>();
-        Vector2D first = new Vector2D(3, 3);
-        Vector2D second = new Vector2D(4, 4);
-        input.add(first);
-        input.add(second);
+    public void testRadarForThreeIteration() throws Exception{
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(11,currentPos);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(12,currentPos);
 
-
-        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(20,currentPos);
-
-
-        input = new ArrayList<Vector2D>();
-        first.set_coordinateX(30);
-        first.set_coordinateY(30);
-
-        second.set_coordinateX(40);
-        second.set_coordinateY(40);
-        input.add(first);
-        input.add(second);
-        input.add(new Vector2D(6, 6));
-        input.add(new Vector2D(7, 7));
-
-
-        //result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
-/*
-        int expectedSize = 4;
-        int actualSize = result.size();
-        for (RadarMessagePacket item : result) {
-            assertNotNull(item.getCurrentPosition());
-            assertTrue(4 < item.getCurrentPosition().get_coordinateX());
-            assertTrue(4 < item.getCurrentPosition().get_coordinateY());
-        }
-        assertEquals(expectedSize, actualSize);
-*/
-        //2 seconds later
-
-        input = new ArrayList<Vector2D>();
-        first.set_coordinateX(3);
-        first.set_coordinateY(5);
-
-        input.add(first);
-
-       // result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(input);
-/*
-        expectedSize = 1;
-        actualSize = result.size();
-
-        assertEquals(expectedSize, actualSize);
-        for (RadarMessagePacket item : result) {
-            assertNotNull(item.getCurrentPosition());
-            assertEquals(3f, item.getCurrentPosition().get_coordinateX());
-            assertEquals(5f, item.getCurrentPosition().get_coordinateY());
-            assertTrue(0 != item.getCurrentDistance());
-            assertTrue(0 != item.getRelativeSpeed());
-        }
-*/
+        result=_radarModul.getDetectedObjsRelativeSpeedAndDistance(13,currentPos);
+        assertNotNull(result);
+        assertTrue(result.getCurrentDistance() > 0);
     }
 
+    /*Test case: After some data, now we detect nothing, so our input is null. we expect the output to be null, and
+    previously stored data to be empty
+    * */
     @Test
-    public void testGetMostRecentVectorsDeletingItems() throws Exception {
-        inputPositions = new ArrayList<Vector2D>();
-        inputPositions.add(new Vector2D(2, 2));
-        inputPositions.add(new Vector2D(3, 3));
-        inputPositions.add(new Vector2D(4, 3));
-        inputPositions.add(new Vector2D(5, 3));
-        inputPositions.add(new Vector2D(6, 3));
-        RadarMessagePacket test = _radarModul.getDetectedObjsRelativeSpeedAndDistance(30,currentPos);
+    public void testRadarForFourIteration() throws Exception{
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(11,currentPos);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(12,currentPos);
+        result=_radarModul.getDetectedObjsRelativeSpeedAndDistance(13,currentPos);
 
-        int expectedCount = 5;
-        //int actual = test.size();
-        //assertEquals(expectedCount, actual);
-
-        inputPositions = new ArrayList<Vector2D>();
-        inputPositions.add(new Vector2D(11, 11));
-        inputPositions.add(new Vector2D(10, 10));
-
-        //test = _radarModul.getDetectedObjsRelativeSpeedAndDistance(inputPositions);
-        expectedCount = 2;
-       // actual = test.size();
-
-        //assertEquals(expectedCount, actual);
-
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(14,currentPos);
+        assertNull(result);
     }
+
 
     //<editor-fold desc="Private method unit tests; can be deleted later">
     /*
