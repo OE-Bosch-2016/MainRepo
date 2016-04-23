@@ -56,33 +56,9 @@ public class RadarModulTest extends TestCase {
         //now we expect some output with relative speed and distance of the closest object
         result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(12,currentPos);
         assertNotNull(result);
+        assertTrue(result.getCurrentDistance()>0);
     }
 
-    @Test
-    public void testGetMostRecentVectorsDeletingItems() throws Exception {
-        inputPositions = new ArrayList<Vector2D>();
-        inputPositions.add(new Vector2D(2, 2));
-        inputPositions.add(new Vector2D(3, 3));
-        inputPositions.add(new Vector2D(4, 3));
-        inputPositions.add(new Vector2D(5, 3));
-        inputPositions.add(new Vector2D(6, 3));
-        RadarMessagePacket test = _radarModul.getDetectedObjsRelativeSpeedAndDistance(30, currentPos);
-
-        int expectedCount = 5;
-        //int actual = test.size();
-        //assertEquals(expectedCount, actual);
-
-        inputPositions = new ArrayList<Vector2D>();
-        inputPositions.add(new Vector2D(11, 11));
-        inputPositions.add(new Vector2D(10, 10));
-
-        //test = _radarModul.getDetectedObjsRelativeSpeedAndDistance(inputPositions);
-        expectedCount = 2;
-        // actual = test.size();
-
-        //assertEquals(expectedCount, actual);
-
-    }
 
     //<editor-fold desc="Private method unit tests; can be deleted later">
     /*

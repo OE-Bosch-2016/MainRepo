@@ -26,17 +26,22 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     private static final int _viewDistance = 200;
     private float _angelOfSight;
-    private int _sampingTime;
+    private int _sampingTime;  //must be in Milisec
 
     private double _currentSpeed;
 
-    private ArrayList<RadarMessagePacket> _radarPackets;
     private Boolean _isRadarEnabled;
 
     private HashMap<Integer, float[]> _previousVectorsHashMap;
     private ObservableList<RadarMessagePacket> _radarPacketObservableList;
     private OnRadarObjectsListener _radarObjectsListener;
 
+    /*
+    @param sensorScene : ISensorScene interface from module enviroment
+    @param commbus: Communication bus from module communication
+    @param angelOfSight: the alpha value of our Radar [view angle]
+    @param samplingTime: we use this time to calculate relative speed, MUST BE IN MILISEC!!
+    * */
     public RadarModul(ISensorScene sensorScene, CommBus commbus, float angelOfSight, int samplingTime) {
         _sensorScene = sensorScene;
         _communicationBus = commbus;
@@ -48,7 +53,6 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         _isRadarEnabled = false;
         _previousVectorsHashMap = new HashMap<Integer, float[]>();
 
-        _radarPackets = new ArrayList<RadarMessagePacket>();
         _radarPacketObservableList = FXCollections.observableList(new ArrayList<RadarMessagePacket>());
 
     }
@@ -89,7 +93,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     public RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance(int observerRotation, ScenePoint currentPosition) {
         Vector2D currentPos = new Vector2D((float) currentPosition.getX(), (float) currentPosition.getY());
 
-        ArrayList<Car> incomingData = getSceneObjectsInSpecificArea(currentPos, observerRotation, (int) _angelOfSight, _viewDistance);
+        ArrayList<Car> incomingData = getSceneObjectsInSpecificArea(currentPos, observerRotation, (int) _angelOfSight);
         if (incomingData != null) {
             ArrayList<Car> recent = getMostRecentVectorsFromEnv(incomingData);
             _radarPacketObservableList = getDetectedObjsRelativeSpeedDistance(recent, currentPos, _currentSpeed);
@@ -114,17 +118,22 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     }
 
 
-    private ArrayList<Car> getSceneObjectsInSpecificArea(Vector2D currentPos, int observerRotation, int viewAngle, int viewDistance) {
+    private ArrayList<Car> getSceneObjectsInSpecificArea(Vector2D currentPos, int observerRotation, int viewAngle) {
         ArrayList<SceneObject> sceneObjectArrayList =
-                _sensorScene.getVisibleSceneObjects(new ScenePoint((int) currentPos.get_coordinateX(), (int) currentPos.get_coordinateX()), observerRotation, viewAngle, viewDistance);
+                _sensorScene.getVisibleSceneObjects(new ScenePoint((int) currentPos.get_coordinateX(), (int) currentPos.get_coordinateX()), observerRotation, viewAngle, _viewDistance);
 
         if (sceneObjectArrayList != null) {
             ArrayList<Car> carArrayList = new ArrayList<Car>();
             for (SceneObject item : sceneObjectArrayList) {
                 if (item.getObjectType()== Car.CarType.CAR) {
+
                     Car car = (Car) item;
+                    int carHash = car.hashCode();
                     //with creating new vectors, their hashes will never be the same.
                     carArrayList.add(car);
+                    /*
+                    1) megnézni, hogy a bejövő item hashe benne van-e az előzőekben.
+                    * */
                 }
             }
             return carArrayList;
@@ -220,9 +229,11 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     }
 
     private double getDistance(Vector2D x, Vector2D y) {
+
+        double pixelToMeterValue=0.08;
         double xCoordinate = Math.pow(x.get_coordinateX() - y.get_coordinateX(), 2);
         double yCoordinate = Math.pow(x.get_coordinateY() - y.get_coordinateY(), 2);
-        return Math.sqrt(xCoordinate + yCoordinate);
+        return Math.sqrt(xCoordinate + yCoordinate)*pixelToMeterValue;
     }
 
     private double getCurrentSpeedOfSpecificObj(RadarMessagePacket previous, Car car) {
@@ -248,10 +259,10 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     private RadarMessagePacket IsCarInRadarPacketList(Car car) {
         int index = 0;
-        while (index != _radarPackets.size() && car.hashCode()!=_radarPackets.get(index).get_car().hashCode()) {
+        while (index != _radarPacketObservableList.size() && car.hashCode()!=_radarPacketObservableList.get(index).get_car().hashCode()) {
             index++;
         }
-        return (index < _radarPackets.size()) ? _radarPackets.get(index) : null;
+        return (index < _radarPacketObservableList.size()) ? _radarPacketObservableList.get(index) : null;
     }
 
     private boolean isObjectMoving(Car currentCar) {
@@ -294,7 +305,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         while (index != _radarPacketObservableList.size() && _radarPacketObservableList.get(index).getCurrentDistance() == zero) {
             index++;
         }
-        return (index > _radarPacketObservableList.size());
+        return (index < _radarPacketObservableList.size());  //if we exited from the loop before the size, that means we have a non zero value
     }
 
 

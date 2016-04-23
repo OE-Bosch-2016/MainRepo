@@ -13,10 +13,19 @@ import java.util.ArrayList;
  */
 public class SensorSceneDummy implements ISensorScene {
 
-    Car carOne = null;
-    Car carTwo = null;
+    Car carOne;
+    Car carTwo;
 
     private int callCounter=0; //tells, which arraylist to be returned
+
+    public SensorSceneDummy() {
+        try {
+            carOne = new Car(new ScenePoint(10,10),5);
+            carTwo=new Car(new ScenePoint(100,100),10);
+        } catch (SceneObjectException e) {
+            e.printStackTrace();
+        }
+    }
 
     public ArrayList<SceneObject> getVisibleSceneObjects(ScenePoint observerBase, int observerRotation, int viewAngle) {
         return null;
@@ -44,13 +53,6 @@ public class SensorSceneDummy implements ISensorScene {
 
     private ArrayList<SceneObject> getCarsFirstCycle() {
 
-        try {
-            carOne = new Car(new ScenePoint(5, 5), 15);
-            carTwo = new Car(new ScenePoint(30, 30), 20);
-        } catch (SceneObjectException e) {
-            e.printStackTrace();
-        }
-
         ArrayList<SceneObject> cars = new ArrayList<SceneObject>();
         cars.add(carOne);
         cars.add(carTwo);
@@ -62,13 +64,6 @@ public class SensorSceneDummy implements ISensorScene {
 
     //changing the values of car 1 and 2, like they were moving
     private ArrayList<SceneObject> getCarsSecondCycle(){
-        try {
-            carOne = new Car(new ScenePoint(10, 10),10);
-            carTwo = new Car(new ScenePoint(34, 39), 20);
-        } catch (SceneObjectException e) {
-            e.printStackTrace();
-        }
-
         ArrayList<SceneObject> cars = new ArrayList<SceneObject>();
         cars.add(carOne);
         cars.add(carTwo);
