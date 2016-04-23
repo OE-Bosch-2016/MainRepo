@@ -106,17 +106,17 @@ public class Ultrasonic {
         CommBusConnectorType cmtype = CommBusConnectorType.Sender;
         Scene scene = new Scene("src\\hu\\nik\\project\\sceneroads\\road_1.xml");
         
-        for (int i = 0; i < scene.getSceneObjects().size(); i++) {
-            if(scene.getSceneObjects().get(i).getObjectType() == Tree.TreeType.TREE_TOP_VIEW)
-            {
-                ObjPositions oTree = new ObjPositions(new Pos(scene.getSceneObjects().get(i).getBasePosition().getX(), scene.getSceneObjects().get(i).getBasePosition().getY()), 80, 80);
-                System.out.print("Tree pos: ");
-                for (int j = 0; j < oTree.getPositions().length; j++) {
-                    System.out.print("{"+oTree.getPositions()[j].getPosX()+","+oTree.getPositions()[j].getPosY()+"} ");
-                }
-                System.out.println("");
-            }
-        }
+//        for (int i = 0; i < scene.getSceneObjects().size(); i++) {
+//            if(scene.getSceneObjects().get(i).getObjectType() == Tree.TreeType.TREE_TOP_VIEW)
+//            {
+//                ObjPositions oTree = new ObjPositions(new Pos(scene.getSceneObjects().get(i).getBasePosition().getX(), scene.getSceneObjects().get(i).getBasePosition().getY()), 80, 80);
+//                System.out.print("Tree pos: ");
+//                for (int j = 0; j < oTree.getPositions().length; j++) {
+//                    System.out.print("{"+oTree.getPositions()[j].getPosX()+","+oTree.getPositions()[j].getPosY()+"} ");
+//                }
+//                System.out.println("");
+//            }
+//        }
         
         UltrasonicModul um = new UltrasonicModul(cb,cmtype,currPosition,scene);
 //      
