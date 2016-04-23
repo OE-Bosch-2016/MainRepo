@@ -25,6 +25,7 @@ public class RadarModulTest extends TestCase {
         sensorSceneDummy = new SensorSceneDummy();
         combus = new CommBus();
         _radarModul = new RadarModul(sensorSceneDummy, combus, _angle, _samplingTime);
+
     }
 
     /*For no input, our packet is null
@@ -73,9 +74,22 @@ public class RadarModulTest extends TestCase {
 
         result=_radarModul.getDetectedObjsRelativeSpeedAndDistance(13,currentPos);
         assertNotNull(result);
-        assertTrue(result.getCurrentDistance() > 0); //gives back exactly 0, still buggy
+        assertTrue(result.getCurrentDistance() > 0);
     }
 
+    /*Test case: After some data, now we detect nothing, so our input is null. we expect the output to be null, and
+    previously stored data to be empty
+    * */
+    @Test
+    public void testRadarForFourIteration() throws Exception{
+        RadarMessagePacket result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(10, currentPos);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(11,currentPos);
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(12,currentPos);
+        result=_radarModul.getDetectedObjsRelativeSpeedAndDistance(13,currentPos);
+
+        result = _radarModul.getDetectedObjsRelativeSpeedAndDistance(14,currentPos);
+        assertNull(result);
+    }
 
 
     //<editor-fold desc="Private method unit tests; can be deleted later">

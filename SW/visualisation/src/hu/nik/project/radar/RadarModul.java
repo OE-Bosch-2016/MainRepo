@@ -29,18 +29,16 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     private double _currentSpeed;
 
-    private Boolean _isRadarEnabled;
-
     private HashMap<Integer, float[]> _previousVectorsHashMap;
     private ObservableList<RadarMessagePacket> _radarPacketObservableList;
     private OnRadarObjectsListener _radarObjectsListener;
 
-    /*
-    @param sensorScene : ISensorScene interface from module enviroment
-    @param commbus: Communication bus from module communication
-    @param angelOfSight: the alpha value of our Radar [view angle]
-    @param samplingTime: we use this time to calculate relative speed, MUST BE IN MILISEC!!
-    * */
+    /**
+     * @param sensorScene ISensorScene interface from module enviroment
+     * @param commbus Communication bus from module communication
+     * @param angelOfSight the alpha value of our Radar [view angle]
+     * @param samplingTime we use this time to calculate relative speed, MUST BE IN MILISEC!!
+     */
     public RadarModul(ISensorScene sensorScene, CommBus commbus, float angelOfSight, int samplingTime) {
         _sensorScene = sensorScene;
         _communicationBus = commbus;
@@ -49,7 +47,6 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
         _commBusConnector = commbus.createConnector(this, CommBusConnectorType.Sender);
 
-        _isRadarEnabled = false;
         _previousVectorsHashMap = new HashMap<Integer, float[]>();
 
         _radarPacketObservableList = FXCollections.observableList(new ArrayList<RadarMessagePacket>());
@@ -66,14 +63,6 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         return _angelOfSight;
     }
 
-    public void setIsRadarEnabled(Boolean _isRadarEnabled) {
-        this._isRadarEnabled = _isRadarEnabled;
-    }
-
-    public Boolean isRadarEnabled() {
-        return _isRadarEnabled;
-    }
-
     //</editor-fold>
 
     public void commBusDataArrived() {
@@ -82,7 +71,9 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         if (wheelMessagePacket == WheelsMessagePackage.class) {
             try {
                 msgPacket = (WheelsMessagePackage) _commBusConnector.receive();
-                _currentSpeed = msgPacket.speed;
+                if(msgPacket!=null){
+                    _currentSpeed = msgPacket.speed;
+                }
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
@@ -97,7 +88,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
             ArrayList<Car> recent = getMostRecentVectorsFromEnv(incomingData);
             _radarPacketObservableList = getDetectedObjsRelativeSpeedDistance(recent, currentPos, _currentSpeed);
             RadarMessagePacket packet = getClosestObjectFromList(_radarPacketObservableList);
-            //send packet here
+            //send packet here if packet is not null
             return packet;
         } else {
             return null;
@@ -131,6 +122,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
             }
             return carArrayList;
         } else {
+            EmtyAllArrayLists();
             return null;
         }
     }
@@ -156,7 +148,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
                         }
                         radarPacket.setCurrentDistance(distance);
                     } else {
-                        RadarMessagePacket newSpeedDistObj = new RadarMessagePacket(0, 0, currentCar);
+                        RadarMessagePacket newSpeedDistObj = new RadarMessagePacket(Double.NaN, Double.NaN, currentCar);
                         _radarPacketObservableList.add(newSpeedDistObj);
                     }
                     itemIndex++;
@@ -176,7 +168,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
             if (recentCarList.size() != 0) {
                 for (int i = 0; i < recentCarList.size(); i++) {
                     Car car = recentCarList.get(i);
-                    RadarMessagePacket radarPacket = new RadarMessagePacket(0, 0, car);
+                    RadarMessagePacket radarPacket = new RadarMessagePacket(Double.NaN, Double.NaN, car);
                     _radarPacketObservableList.add(radarPacket);
                 }
             }
@@ -223,11 +215,12 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     }
 
     private double getDistance(Vector2D x, Vector2D y) {
-
         double pixelToMeterValue = 0.08;
+        double carWidth=2;
+
         double xCoordinate = Math.pow(x.get_coordinateX() - y.get_coordinateX(), 2);
         double yCoordinate = Math.pow(x.get_coordinateY() - y.get_coordinateY(), 2);
-        return Math.sqrt(xCoordinate + yCoordinate) * pixelToMeterValue;
+        return Math.sqrt(xCoordinate + yCoordinate) * pixelToMeterValue-carWidth/2;
     }
 
     private double getCurrentSpeedOfSpecificObj(RadarMessagePacket previous, Car car) {
@@ -290,7 +283,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     private RadarMessagePacket getClosestObjectFromList(ObservableList<RadarMessagePacket> radarPacketList) {
         int min = 0;
-        if (IsAllDistanceZero()) {
+        if (IsAllDistanceNotZeros()) {
             for (int i = 1; i < radarPacketList.size(); i++) {
                 double current = radarPacketList.get(i).getCurrentDistance();
                 double minValue = radarPacketList.get(min).getCurrentDistance();
@@ -303,16 +296,19 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         return null;
     }
 
-    //need to give something else than zero, like maxvalue or something
-    private boolean IsAllDistanceZero() {
+    private boolean IsAllDistanceNotZeros() {
         int index = 0;
-        double zero = 0;
-        while (index != _radarPacketObservableList.size() && _radarPacketObservableList.get(index).getCurrentDistance() == zero) {
+
+        while (index != _radarPacketObservableList.size() && Double.isNaN(_radarPacketObservableList.get(index).getCurrentDistance())) {
             index++;
         }
         return (index < _radarPacketObservableList.size());  //if we exited from the loop before the size, that means we have a non zero value
     }
 
+    private void EmtyAllArrayLists(){
+        _previousVectorsHashMap.clear();
+        _radarPacketObservableList.clear();
+    }
 
 //</editor-fold>
 
