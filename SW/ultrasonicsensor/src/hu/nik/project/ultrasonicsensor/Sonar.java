@@ -69,20 +69,20 @@ public class Sonar implements IUltrasonic {
         return fov;
     }
 
-    public double getNearestObjectDistance(ArrayList<SceneObject> viewableObjList, ScenePoint currPos) {
+    public double getNearestObjectDistance(ArrayList<SceneObject> viewableObjList, ScenePoint currSonarPos) {
 
         filteredObjs = filterObjects(viewableObjList);
-        currPosition = currPos;
+        
         SceneObject closestObj;
         double closestObjDistance = -1;
 
         if (filteredObjs != null && filteredObjs.size() > 0) {
             closestObj = filteredObjs.get(0);  //first object
-            closestObjDistance = getDistance(getSonarPos(), filteredObjs.get(0).getBasePosition()); //first corner checking
+            closestObjDistance = getDistance(currSonarPos, filteredObjs.get(0).getBasePosition()); //first corner checking
             ObjPositions o = new ObjPositions(new Pos(closestObj.getBasePosition().getX(),closestObj.getBasePosition().getY()), 80, 80); //4 corners
             for (int i = 1; i < o.getPositions().length; i++) //other corners checking
             {
-                double cornerPointDistance = getDistance(getSonarPos(), new ScenePoint(o.getPositions()[i].getPosX(),o.getPositions()[i].getPosY()));
+                double cornerPointDistance = getDistance(currSonarPos, new ScenePoint(o.getPositions()[i].getPosX(),o.getPositions()[i].getPosY()));
                 if(cornerPointDistance < closestObjDistance)
                 {
                     closestObjDistance = cornerPointDistance;
@@ -92,7 +92,7 @@ public class Sonar implements IUltrasonic {
             {
                 o = new ObjPositions(new Pos(filteredObjs.get(i).getBasePosition().getX(),filteredObjs.get(i).getBasePosition().getY()), 80, 80); //4corner
                 for (int j = 0; j < o.getPositions().length; j++) {
-                    double cornerPointDistance = getDistance(getSonarPos(), new ScenePoint(o.getPositions()[j].getPosX(),o.getPositions()[j].getPosY()));
+                    double cornerPointDistance = getDistance(currSonarPos, new ScenePoint(o.getPositions()[j].getPosX(),o.getPositions()[j].getPosY()));
                     if (cornerPointDistance < closestObjDistance) {
                     closestObj = filteredObjs.get(i);
                     closestObjDistance = cornerPointDistance; 

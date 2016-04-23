@@ -70,24 +70,17 @@ public class UltrasonicModul implements ICommBusDevice {
         commBusConnector.send(umsg);
     }
     
-    public void getNearestObjectDistances(ScenePoint currPos) throws CommBusException
+    public void getNearestObjectDistances(ScenePoint currPos, int rotation) throws CommBusException
     {
-//        System.out.println(currPosition);
-//        System.out.println(currPos);
-//        ArrayList ures = new ArrayList();
-//        for (int i = 0; i < sonars.length; i++) {
-//            Sonar son = sonars[i];
-//            son.setCurrPosition(currPos);
-//            System.out.println(son.getSonarPos());
-//            closestDistance[i] = son.getNearestObjectDistance(ures, currPos);
-//        }
-        System.out.println(currPosition);
-//        System.out.println(currPos);
+
+        
+        
         for (int i = 0; i < sonars.length; i++) {
             Sonar son = sonars[i];
             son.setCurrPosition(currPos);
-            System.out.println(son.getSonarPos());
-            closestDistance[i] = son.getNearestObjectDistance(scene.getVisibleSceneObjects(son.getSonarPos(), son.getStartAngle(), (int) son.getFov(), son.getSonarViewDis()), currPos);
+            ScenePoint newSonarPos = ScenePoint.rotatePointAroundPoint(currPos, son.getSonarPos(), rotation);
+//            System.out.println(son.getSonarPos()+"; "+newSonarPos+ " ;"+son.getStartAngle()+"; "+(son.getStartAngle()+rotation));
+            closestDistance[i] = son.getNearestObjectDistance(scene.getVisibleSceneObjects(newSonarPos,(son.getStartAngle()+rotation), (int) son.getFov(), son.getSonarViewDis()), newSonarPos);
             
         }
         

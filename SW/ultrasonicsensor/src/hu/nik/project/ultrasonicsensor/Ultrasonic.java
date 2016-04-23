@@ -19,6 +19,8 @@ import hu.nik.project.environment.objects.SceneObjectException;
 import hu.nik.project.environment.objects.Tree;
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.XMLParserException;
+import hu.nik.project.environment.objects.Car;
+import hu.nik.project.framework.BoschCar;
 import hu.nik.project.framework.main.Main;
 import java.util.ArrayList;
 
@@ -106,22 +108,27 @@ public class Ultrasonic {
         CommBusConnectorType cmtype = CommBusConnectorType.Sender;
         Scene scene = new Scene("src\\hu\\nik\\project\\sceneroads\\road_1.xml");
         
-//        for (int i = 0; i < scene.getSceneObjects().size(); i++) {
-//            if(scene.getSceneObjects().get(i).getObjectType() == Tree.TreeType.TREE_TOP_VIEW)
-//            {
-//                ObjPositions oTree = new ObjPositions(new Pos(scene.getSceneObjects().get(i).getBasePosition().getX(), scene.getSceneObjects().get(i).getBasePosition().getY()), 80, 80);
-//                System.out.print("Tree pos: ");
-//                for (int j = 0; j < oTree.getPositions().length; j++) {
-//                    System.out.print("{"+oTree.getPositions()[j].getPosX()+","+oTree.getPositions()[j].getPosY()+"} ");
-//                }
-//                System.out.println("");
-//            }
-//        }
+////        for (int i = 0; i < scene.getSceneObjects().size(); i++) {
+////            if(scene.getSceneObjects().get(i).getObjectType() == Tree.TreeType.TREE_TOP_VIEW)
+////            {
+////                ObjPositions oTree = new ObjPositions(new Pos(scene.getSceneObjects().get(i).getBasePosition().getX(), scene.getSceneObjects().get(i).getBasePosition().getY()), 80, 80);
+////                System.out.print("Tree pos: ");
+////                for (int j = 0; j < oTree.getPositions().length; j++) {
+////                    System.out.print("{"+oTree.getPositions()[j].getPosX()+","+oTree.getPositions()[j].getPosY()+"} ");
+////                }
+////                System.out.println("");
+////            }
+////        }
         
         UltrasonicModul um = new UltrasonicModul(cb,cmtype,currPosition,scene);
 //      
-        ScenePoint sce = new ScenePoint(400, 1800);
-        um.getNearestObjectDistances(sce);
+        int rot = 270;
+        int rot2 =180; 
+        ScenePoint sce = new ScenePoint(3100, 500);
+        Car car = new Car(sce, rot);
+        System.out.println("car base: " +car.getBasePosition());
+        System.out.println("car centre: "+car.getCenterPoint());
+        um.getNearestObjectDistances(sce,rot);
         for (int i = 0; i < um.getClosestDistance().length ; i++) {
             System.out.println("Closest distance in zone:" +i+ " ; " +um.getClosestDistance()[i]);
         }
