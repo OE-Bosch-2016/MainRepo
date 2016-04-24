@@ -45,7 +45,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         _angelOfSight = angelOfSight;
         _sampingTime = samplingTime;
 
-        _commBusConnector = commbus.createConnector(this, CommBusConnectorType.Sender);
+        _commBusConnector = commbus.createConnector(this, CommBusConnectorType.SenderReceiver);
 
         _previousVectorsHashMap = new HashMap<Integer, float[]>();
 
