@@ -6,19 +6,19 @@ import java.io.Serializable;
  * @author Patrik
  */
 public class ACCMessagePackage implements Serializable {
- 	private boolean gasPedal;
- 	private boolean breakPedal;
+ 	private float gasPedal;
+ 	private float breakPedal;
  
-	public ACCMessagePackage(boolean gasPedal, boolean breakPedal){
+	public ACCMessagePackage(float gasPedal, float breakPedal){
 		this.gasPedal = gasPedal;
 		this.breakPedal = breakPedal;
 	}
  
-    public boolean getGasPedal(){
+    public float getGasPedal(){
 		return gasPedal;
 	}
  
-	public boolean getBreakPedal(){
+	public float getBreakPedal(){
 		return breakPedal;
 	}
 }
