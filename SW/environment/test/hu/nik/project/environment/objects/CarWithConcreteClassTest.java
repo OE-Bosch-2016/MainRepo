@@ -54,4 +54,18 @@ public class CarWithConcreteClassTest {
     public void testToString() throws Exception {
         Assert.assertEquals("ClassType: Car ->  Position X: 500 Position Y: 500 Rotation: 90 CarType: CAR", car.toString());
     }
+
+    @Test(expected = NullPointerException.class)
+    public void testToStringNullPointerTest() throws Exception{
+        //outside of enviroment package i had to surround the newly created car obj with try catch
+        try{
+            //Exception thrown in super class, debug- step into and
+            //u will see the exception there.
+            Car newCar = new Car(new ScenePoint(10,10),20);
+            newCar.toString();
+        }
+        catch (SceneObjectException ex){
+            ex.printStackTrace();
+        }
+    }
 }
