@@ -21,6 +21,7 @@ import hu.nik.project.visualisation.interfaces.OnBreakSteeringWheelListener;
  */
 public class SteeringWheel {
 
+    float gas;
     JLabel label;
     Hmi hmi;
     BufferedImage scaledImage;
@@ -32,7 +33,7 @@ public class SteeringWheel {
             listeners.add(toAdd);
     }
 
-    public SteeringWheel(Hmi hmi,JLabel label) {
+    public SteeringWheel(JLabel label) {
         this.hmi = Hmi.newInstance();
         this.label = label;
     }
@@ -54,19 +55,21 @@ public class SteeringWheel {
         return new ImageIcon(scaledImage);
     }
 
-    public void control(KeyEvent e)
+    public void control(float gas,float rotate,int e)
     {
-        if(e.getKeyCode()== KeyEvent.VK_RIGHT)
-            label.setIcon(this.GetSteeringWheel(365));
-        else if(e.getKeyCode()== KeyEvent.VK_LEFT)
-            label.setIcon(this.GetSteeringWheel(-365));
-        else if(e.getKeyCode() == KeyEvent.VK_UP) {
+        //rotate not syncronized with car yet
+        this.gas = 10*gas;
+        if(e == KeyEvent.VK_RIGHT)
+            label.setIcon(GetSteeringWheel(-5));
+        else if(e == KeyEvent.VK_LEFT)
+            label.setIcon(GetSteeringWheel(+5));
+        else if(e == KeyEvent.VK_UP) {
             if(hmi.getKhm() < 195)
             {
-                int rpm = hmi.getRpm() + 600;
+                int rpm = hmi.getRpm() + 100;
                 hmi.setRpm(rpm);
 
-                int kmh = hmi.getKhm() + 8;
+                int kmh = (int)this.gas;
                 hmi.setKhm(kmh);
 
             }
@@ -76,45 +79,40 @@ public class SteeringWheel {
                 int rpm = hmi.getRpm() - 2400;
                 hmi.setRpm(rpm);
 
-                int kmh = hmi.getKhm() - 1;
+                int kmh = (int)this.gas;
                 hmi.setKhm(kmh);
             }
-
-            hmi.mileage(hmi.getKhm());
-            hmi.tachometer((float) hmi.getRpm());
-
         }
-        else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+        else if(e == KeyEvent.VK_DOWN)
         {
-            if(hmi.getKhm() > 10) {
-                int rpm = hmi.getRpm() - 600;
+            if(hmi.getRpm()>800) {
+                int rpm = hmi.getRpm() - 40;
                 hmi.setRpm(rpm);
-
-                int kmh = hmi.getKhm() - 8;
-                hmi.setKhm(kmh);
-
             }
-            else
-            {
-                hmi.setRpm(600);
-            }
+                if(hmi.getRpm() < 1200)
+                {
+                    if(hmi.getKhm()>50)
+                    {
+                        int mod = hmi.getRpm() + 2400;
+                        hmi.setRpm(mod);
+                    }else
+                    {
+                        int mod = hmi.getRpm() + 20;
+                        hmi.setRpm(mod);
+                    }
+                }
 
-            if(hmi.getRpm() < 600)
-            {
-                int rpm = hmi.getRpm() + 2400;
-                hmi.setRpm(rpm);
 
-                int kmh = hmi.getKhm() - 1;
-                hmi.setKhm(kmh);
-            }
-
-
-            hmi.tachometer((float) hmi.getRpm());
-            hmi.mileage(hmi.getKhm());
+            int kmh = (int)this.gas;
+            hmi.setKhm(kmh);
 
         }
+        hmi.tachometer((float) hmi.getRpm());
+        hmi.mileage(hmi.getKhm());
         label.repaint();
     }
+
+
     public BufferedImage rotate(BufferedImage image, double angle) {
         double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
         int w = image.getWidth(), h = image.getHeight();
@@ -123,7 +121,7 @@ public class SteeringWheel {
         BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
         Graphics2D g = result.createGraphics();
         g.translate((neww-w)/2, (newh-h)/2);
-        g.rotate(angle, w/2, h/2);
+        g.rotate(angle, w / 2, h / 2);
         g.drawRenderedImage(image, null);
         g.dispose();
         return result;
@@ -133,5 +131,17 @@ public class SteeringWheel {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         return gd.getDefaultConfiguration();
+    }
+
+    public void setDefaultRpm(float gas) {
+
+        if(hmi.getRpm()>600)
+        {
+            int rpm = hmi.getRpm() - 20;
+            hmi.setRpm(rpm);
+
+        }
+        hmi.tachometer((float) hmi.getRpm());
+        hmi.mileage(hmi.getKhm());
     }
 }
