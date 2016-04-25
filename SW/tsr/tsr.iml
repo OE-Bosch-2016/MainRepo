@@ -20,5 +20,6 @@
     </orderEntry>
     <orderEntry type="module" module-name="environment" exported="" />
     <orderEntry type="module" module-name="communication" exported="" />
+    <orderEntry type="module" module-name="visualisation" exported="" />
   </component>
 </module>

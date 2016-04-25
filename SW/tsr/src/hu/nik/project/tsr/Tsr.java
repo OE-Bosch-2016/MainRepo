@@ -4,6 +4,7 @@ import hu.nik.project.communication.*;
 import hu.nik.project.environment.objects.DirectionSign;
 import hu.nik.project.environment.objects.PrioritySign;
 import hu.nik.project.environment.objects.SpeedSign;
+import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 
 /**
  * Created by CyberZero on 2016. 04. 07..
@@ -12,6 +13,7 @@ public class Tsr implements ICommBusDevice{
 
     private CommBusConnector commBusConnector;
     private String stringData = "";
+    private boolean enabled;
 
     public Tsr(CommBus commBus, CommBusConnectorType commBusConnectorType) {
         commBusConnector = commBus.createConnector(this, commBusConnectorType);
@@ -20,6 +22,16 @@ public class Tsr implements ICommBusDevice{
     @Override
     public void commBusDataArrived() {
         Class dataType = commBusConnector.getDataType();
+
+        if (dataType == DriverInputMessagePackage.class) {
+            try {
+                DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
+                enabled = data.tsrIsActive();
+            } catch (CommBusException e) {
+
+            }
+
+        } else
         if (dataType == PrioritySign.class) {
             try {
                 //send only giveaway and stop sign

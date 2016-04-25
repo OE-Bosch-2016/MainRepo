@@ -12,6 +12,7 @@ public class ACC implements ICommBusDevice {
 
     private CommBusConnector commBusConnector;
     private String stringData = "";
+    private boolean enabled;
 
     //input
     private double wheelStateInDegrees;
@@ -54,6 +55,7 @@ public class ACC implements ICommBusDevice {
         } else if (dataType == DriverInputMessagePackage.class) {
             try {
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
+                enabled = data.accIsActive();
                 targetSpeed = data.getTempomatSpeed();
                 gasPedal = data.getCarGas();
                 breakPedal = data.getCarBreak();

@@ -7,12 +7,14 @@ package hu.nik.project.ebs;
         import hu.nik.project.communication.CommBusConnectorType;
         import hu.nik.project.communication.CommBusException;
         import hu.nik.project.environment.objects.SceneObject;
+        import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 
-        //import hu.nik.project.radar.RadarMessagePackage;
+//import hu.nik.project.radar.RadarMessagePackage;
 
         //should implement interface, does not yet
         public class EmergencyBreakSystem implements ICommBusDevice {
 
+            private boolean enabled;
             //communications
             private CommBusConnector commBusConnector;
             public SceneObject[] visibleObjectArray;
@@ -28,6 +30,16 @@ package hu.nik.project.ebs;
             private float EBSState;
 
             public void commBusDataArrived() {
+                Class dataType = commBusConnector.getDataType();
+
+                if (dataType == DriverInputMessagePackage.class) {
+                    try {
+                        DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
+                        enabled = data.aebIsActive();
+                    } catch (CommBusException e) {
+
+                    }
+                }
 /*
                 if (commBusConnector.getDataType() == RadarMessagePackage.class) {
 
