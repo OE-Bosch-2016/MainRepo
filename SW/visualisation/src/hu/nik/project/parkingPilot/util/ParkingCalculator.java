@@ -88,14 +88,14 @@ public class ParkingCalculator {
         if (carAngle == degree)
             state++;
         if (parkingListener != null)
-            parkingListener.changePosition(-1, carAngle);
+            parkingListener.changePosition(-0.3f, carAngle);
     }
 
     private void goBottom() {
         if (edgeOfStreet > 1) {
             edgeOfStreet--;
             if (parkingListener != null)
-                parkingListener.changePosition(-1, carAngle);
+                parkingListener.changePosition(-1f, carAngle);
         } else
             state++;
     }
@@ -105,7 +105,7 @@ public class ParkingCalculator {
         if (carAngle == degree)
             state++;
         if (parkingListener != null)
-            parkingListener.changePosition(-1, carAngle);
+            parkingListener.changePosition(-0.3f, carAngle);
     }
     // Horizontal end
 

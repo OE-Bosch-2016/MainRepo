@@ -137,6 +137,11 @@ public class CarController {
         }
     }
 
+    public void autonomousController(int carAngle, float speed){
+
+
+    }
+
     // Getter ----------------------------------------------------------------------------------------------------------
     public boolean isGasPressed() {
         return gasPressed;
