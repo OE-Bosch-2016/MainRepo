@@ -124,6 +124,7 @@ public class Top extends JFrame { // implements KeyListener
         setMileAgeValue(0);
         setTachometerValue(0);
         tick = 0;
+        hmi.gearshift(Hmi.GEAR_SHIFT_P);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -295,7 +296,7 @@ public class Top extends JFrame { // implements KeyListener
             setGearShiftStage(gearshift);
         }
 
-        public void gearShiftPositionChanged(int position) {
+        public void numberedGearShiftChanged(int position) {
             setCurrentGearShiftPosition(position);
         }
     };
@@ -407,6 +408,12 @@ public class Top extends JFrame { // implements KeyListener
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("Engine")) {
                 hmiButtonArray[0] = !hmiButtonArray[0];
+
+                if(hmiButtonArray[0])
+                    hmi.gearshift(Hmi.GEAR_SHIFT_D);
+                else
+                    hmi.gearshift(Hmi.GEAR_SHIFT_P);
+
             } else if (e.getActionCommand().equals("ACC")) {
                 hmiButtonArray[1] = !hmiButtonArray[1];
             } else if (e.getActionCommand().equals("TSR")) {
