@@ -132,6 +132,7 @@ public class Top extends JFrame { // implements KeyListener
 
         //visualisation.car.car setup
         car = new AutonomousCar(new Vector2D(515, 90), ImageLoader.getCarImage());
+        carController.setCar(car);
 
         //visualisation.Visualization renderer setup
         vRenderer = new VisualizationRenderer(mapPanel, hmi, car, mapPath);
@@ -144,7 +145,7 @@ public class Top extends JFrame { // implements KeyListener
 
                 // Car control
                 if (!carController.isGasPressed())
-                    carController.engineBrake(car);
+                    carController.engineBrake();
 
                 if(hmiButtonArray[0]) tick++;
 
@@ -392,7 +393,7 @@ public class Top extends JFrame { // implements KeyListener
             else if (e.getKeyChar() == 'r')
                 car.setPosition(new Vector2D(501, 90));
 
-            carController.keyEvent(e, car);
+            carController.keyEvent(e);
 
         }
 

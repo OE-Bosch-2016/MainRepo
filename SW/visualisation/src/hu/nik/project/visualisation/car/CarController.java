@@ -1,5 +1,7 @@
 package hu.nik.project.visualisation.car;
 
+import hu.nik.project.utils.Vector2D;
+
 import java.awt.event.KeyEvent;
 
 /**
@@ -17,6 +19,7 @@ public class CarController {
     private boolean shuntPressed;
     private boolean leftRotate;
     private boolean rightRotate;
+    private Car car;
 
     private boolean handle;
 
@@ -27,79 +30,77 @@ public class CarController {
         return mInstance;
     }
 
-    public void keyEvent(KeyEvent e, Car car) {
+    public void keyEvent(KeyEvent e) {
 
-        handle = false;
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && gas != 0) {
-            turnRight(car);
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT && gas != 0) {
-            turnLeft(car);
-        }
+        if(car != null) {
+            handle = false;
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT && gas != 0) {
+                turnRight();
+            } else if (e.getKeyCode() == KeyEvent.VK_LEFT && gas != 0) {
+                turnLeft();
+            }
 
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
-            goAhead(car);
-        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            shunt(car);
+            if (e.getKeyCode() == KeyEvent.VK_UP) {
+                goAhead();
+            } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                shunt();
+            }
         }
     }
 
-    public void goAhead(Car car) {
+    private void goAhead() {
         gasPressed = true;
         gas += 0.1;
         car.move(gas);
 
-        if (!handle) {
-            handle = true;
-            if (leftRotate)
-                turnLeft(car);
-            else if (rightRotate)
-                turnRight(car);
-        }
+        handleSecondButtonLeftOrRight();
     }
 
-    public void turnLeft(Car car) {
+    private void turnLeft() {
         leftRotate = true;
         //if (steeringWheel > -180)
         steeringWheel -= 5;
 
         car.rotation(steeringWheel);
 
-        if (!handle) {
-            handle = true;
-            if (gasPressed)
-                goAhead(car);
-            else if (shuntPressed)
-                shunt(car);
-        }
+        handleSecondButtonUpOrDown();
     }
 
-    public void turnRight(Car car) {
+    private void turnRight() {
         rightRotate = true;
         //if (steeringWheel < 180)
         steeringWheel += 5;
 
         car.rotation(steeringWheel);
 
-        if (!handle) {
-            handle = true;
-            if (gasPressed)
-                goAhead(car);
-            else if (shuntPressed)
-                shunt(car);
-        }
+        handleSecondButtonUpOrDown();
     }
 
-    public void shunt(Car car) {
+    private void shunt() {
         shuntPressed = true;
         gas -= 0.3;
         car.move(gas);
 
+        handleSecondButtonLeftOrRight();
+    }
+
+    private void handleSecondButtonUpOrDown(){
+        if (!handle) {
+            handle = true;
+            if (gasPressed)
+                goAhead();
+            else if (shuntPressed)
+                shunt();
+        }
+    }
+
+    private void handleSecondButtonLeftOrRight(){
         if (!handle) {
             handle = true;
             if (leftRotate)
-                turnLeft(car);
+                turnLeft();
             else if (rightRotate)
-                turnRight(car);
+                turnRight();
         }
     }
 
@@ -121,7 +122,7 @@ public class CarController {
         }
     }
 
-    public void engineBrake(Car car) {
+    public void engineBrake() {
         if (gas > 0) {
             if (gas - 0.09 < 0)
                 gas = 0;
@@ -138,8 +139,10 @@ public class CarController {
     }
 
     public void autonomousController(int carAngle, float speed){
-
-
+        if(car != null){
+            car.rotation(carAngle);
+            car.move(speed);
+        }
     }
 
     // Getter ----------------------------------------------------------------------------------------------------------
@@ -161,5 +164,14 @@ public class CarController {
 
     public boolean isRightRotate() {
         return rightRotate;
+    }
+
+    public Vector2D getCarPosition(){
+        return car.getPosition();
+    }
+
+    // Setter ----------------------------------------------------------------------------------------------------------
+    public void setCar(Car car) {
+        this.car = car;
     }
 }
