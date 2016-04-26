@@ -10,6 +10,7 @@ import hu.nik.project.gearbox.Gearbox;
 import hu.nik.project.gearbox.GearboxMessagePackage;
 import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 import hu.nik.project.engine.EngineMessagePackage;
+import hu.nik.project.visualisation.car.CarController;
 
 public class Wheels implements IWheels, ICommBusDevice {
 
@@ -79,7 +80,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 	{
 		calcDirection();    //calculates first because new direction is effected by last speed
 		calcSpeed();
-		SendToCom();
+		CarController.newInstance().autonomousController((int)direction,(float)speed);
 	}
 
 	private void calcDirection()
@@ -108,20 +109,6 @@ public class Wheels implements IWheels, ICommBusDevice {
 			speed -= brakeAdjustment * hmiBrake; //have to change this to adjust for boolean brake variable
 		} else {
 			speed += brakeAdjustment * hmiBrake;
-		}
-	}
-
-	public void SendToCom() {
-		boolean sent = false;
-		WheelsMessagePackage message = new WheelsMessagePackage(speed,direction); //so it doesnt have to remake it every time
-		while(!sent) {
-			try {
-				if (commBusConnector.send(message)) {
-					sent = true;
-				}
-			} catch (CommBusException e) {
-			//sad times
-			}
 		}
 	}
 }

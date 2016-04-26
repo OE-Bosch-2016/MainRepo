@@ -1,8 +1,5 @@
 package hu.nik.project.camera;
 
-import java.util.ArrayList;
-
-
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.objects.*;
@@ -80,24 +77,23 @@ public	SceneObject[] visibleObjects;
 		
 		distY =	(visibleObjects[i].getBasePosition().getY()- currentCar.getBasePosition().getY())*
 		(visibleObjects[i].getBasePosition().getY()- currentCar.getBasePosition().getY());
-		
-                if (visibleObjects[1].getObjectType() == DirectionSign.DirectionType.FORWARD) 
+
                 
 			if(Math.sqrt(distX+distY)<min && 
 				(
-				visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.FORWARD ||
-                                visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.FORWARD_LEFT ||
-                                visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.FORWARD_RIGHT ||
+				 visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.FORWARD ||
+                 visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.FORWARD_LEFT ||
+				 visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.FORWARD_RIGHT ||
                                 visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.LEFT ||
                                 visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.RIGHT ||
                                 visibleObjects[i].getObjectType() ==DirectionSign.DirectionType.ROUNDABOUT ||
-				visibleObjects[i].getObjectType() ==ParkingSign.ParkingSignType.PARKING_BOLLARD ||
+								visibleObjects[i].getObjectType() ==ParkingSign.ParkingSignType.PARKING_BOLLARD ||
                                 visibleObjects[i].getObjectType() ==ParkingSign.ParkingSignType.PARKING_LEFT ||
                                 visibleObjects[i].getObjectType() ==ParkingSign.ParkingSignType.PARKING_RIGHT ||
-				visibleObjects[i].getObjectType() ==PrioritySign.PrioritySignType.GIVEAWAY ||
+								visibleObjects[i].getObjectType() ==PrioritySign.PrioritySignType.GIVEAWAY ||
                                 visibleObjects[i].getObjectType() ==PrioritySign.PrioritySignType.PRIORITY_ROAD ||
                                 visibleObjects[i].getObjectType() ==PrioritySign.PrioritySignType.STOP ||
-				visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_10 ||
+								visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_10 ||
                                 visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_70 ||
                                 visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_100 ||
                                 visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_20 ||
@@ -105,7 +101,8 @@ public	SceneObject[] visibleObjects;
                                 visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_50 ||
                                 visibleObjects[i].getObjectType() ==SpeedSign.SpeedSignType.LIMIT_90
                                 
-				))
+				)
+			)
 			{
 				min=Math.sqrt(distX+distY);
 				minIndex=i;
