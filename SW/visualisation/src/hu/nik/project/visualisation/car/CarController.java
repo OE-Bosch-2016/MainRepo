@@ -48,43 +48,43 @@ public class CarController {
         }
     }
 
-    public void goAhead() {
+    private void goAhead() {
         gasPressed = true;
         gas += 0.1;
         car.move(gas);
 
-        if (!handle) {
-            handle = true;
-            if (leftRotate)
-                turnLeft();
-            else if (rightRotate)
-                turnRight();
-        }
+        handleSecondButtonLeftOrRight();
     }
 
-    public void turnLeft() {
+    private void turnLeft() {
         leftRotate = true;
         //if (steeringWheel > -180)
         steeringWheel -= 5;
 
         car.rotation(steeringWheel);
 
-        if (!handle) {
-            handle = true;
-            if (gasPressed)
-                goAhead();
-            else if (shuntPressed)
-                shunt();
-        }
+        handleSecondButtonUpOrDown();
     }
 
-    public void turnRight() {
+    private void turnRight() {
         rightRotate = true;
         //if (steeringWheel < 180)
         steeringWheel += 5;
 
         car.rotation(steeringWheel);
 
+        handleSecondButtonUpOrDown();
+    }
+
+    private void shunt() {
+        shuntPressed = true;
+        gas -= 0.3;
+        car.move(gas);
+
+        handleSecondButtonLeftOrRight();
+    }
+
+    private void handleSecondButtonUpOrDown(){
         if (!handle) {
             handle = true;
             if (gasPressed)
@@ -94,11 +94,7 @@ public class CarController {
         }
     }
 
-    public void shunt() {
-        shuntPressed = true;
-        gas -= 0.3;
-        car.move(gas);
-
+    private void handleSecondButtonLeftOrRight(){
         if (!handle) {
             handle = true;
             if (leftRotate)
@@ -126,7 +122,7 @@ public class CarController {
         }
     }
 
-    public void engineBrake(Car car) {
+    public void engineBrake() {
         if (gas > 0) {
             if (gas - 0.09 < 0)
                 gas = 0;
@@ -143,8 +139,10 @@ public class CarController {
     }
 
     public void autonomousController(int carAngle, float speed){
-
-
+        if(car != null){
+            car.rotation(carAngle);
+            car.move(speed);
+        }
     }
 
     // Getter ----------------------------------------------------------------------------------------------------------

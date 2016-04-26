@@ -145,7 +145,7 @@ public class Top extends JFrame { // implements KeyListener
 
                 // Car control
                 if (!carController.isGasPressed())
-                    carController.engineBrake(car);
+                    carController.engineBrake();
 
                 if(hmiButtonArray[0]) tick++;
 
