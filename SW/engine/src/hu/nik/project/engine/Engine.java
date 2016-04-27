@@ -141,4 +141,11 @@ public class Engine implements ICommBusDevice {
             }
         }
     }
+
+    public void start() {
+        try {
+            commBusConnector.send(new EngineMessagePackage(rpm));
+        } catch (CommBusException e){
+        }
+    }
 }

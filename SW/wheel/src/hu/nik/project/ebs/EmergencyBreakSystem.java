@@ -30,8 +30,7 @@ package hu.nik.project.ebs;
                     try {
                         DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
                         enabled = data.aebIsActive();
-
-                         driverWheel= ((DriverInputMessagePackage) commBusConnector.receive()).getWheelAngle();
+                        driverWheel = data.getWheelAngle();
                     } catch (CommBusException e) {
 
                     }
