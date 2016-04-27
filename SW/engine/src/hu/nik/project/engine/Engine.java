@@ -22,6 +22,7 @@ public class Engine implements ICommBusDevice {
     final int minRpm = 500;
     private int lastGearStage;
     int lasttime;
+    boolean started;
 
     //output
     private double rpm;
@@ -143,9 +144,13 @@ public class Engine implements ICommBusDevice {
     }
 
     public void start() {
-        try {
-            commBusConnector.send(new EngineMessagePackage(rpm));
-        } catch (CommBusException e){
+        if (started) return;
+        else {
+            try {
+                started = true;
+                commBusConnector.send(new EngineMessagePackage(rpm));
+            } catch (CommBusException e) {
+            }
         }
     }
 }
