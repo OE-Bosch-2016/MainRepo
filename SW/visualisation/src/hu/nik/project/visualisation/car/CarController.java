@@ -46,7 +46,7 @@ public class CarController {
                 shunt();
             }
         }
-        steeringWheelClass.control(gas, steeringWheel, e.getKeyCode());
+        //steeringWheelClass.control(gas, steeringWheel, e.getKeyCode());
     }
 
     private void goAhead() {
