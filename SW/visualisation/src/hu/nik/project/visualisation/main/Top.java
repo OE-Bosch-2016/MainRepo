@@ -125,6 +125,9 @@ public class Top extends JFrame { // implements KeyListener
         setTachometerValue(0);
         tick = 0;
 
+        //Steering Wheel setup
+        steeringWheel = new SteeringWheel(steeringWheelLabel);
+        steeringWheelLabel.setIcon(steeringWheel.GetSteeringWheel(0));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         setContentPane(rootPanel);
@@ -133,7 +136,7 @@ public class Top extends JFrame { // implements KeyListener
         //visualisation.car.car setup
         car = new AutonomousCar(new Vector2D(515, 90), ImageLoader.getCarImage());
         carController.setCar(car);
-
+        carController.initSteeringWheel(steeringWheel);
         //visualisation.Visualization renderer setup
         vRenderer = new VisualizationRenderer(mapPanel, hmi, car, mapPath);
 
@@ -152,10 +155,6 @@ public class Top extends JFrame { // implements KeyListener
                 hmiManager.createPackage((int) tempomatSpinner.getValue(), tick, hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
             }
         });
-
-        //Steering Wheel setup
-        steeringWheel = new SteeringWheel(hmi, steeringWheelLabel);
-        steeringWheelLabel.setIcon(steeringWheel.GetSteeringWheel(0));
 
         // Driver input
         engineButton.addActionListener(hmiButtons);
@@ -379,7 +378,7 @@ public class Top extends JFrame { // implements KeyListener
     // Driver input
     private KeyListener keyListener = new KeyListener() {
         public void keyTyped(KeyEvent e) {
-            steeringWheel.control(e);
+
         }
 
         public void keyPressed(KeyEvent e) {
@@ -394,11 +393,12 @@ public class Top extends JFrame { // implements KeyListener
                 car.setPosition(new Vector2D(501, 90));
 
             carController.keyEvent(e);
+           // steeringWheel.control(e);
 
         }
 
         public void keyReleased(KeyEvent e) {
-            steeringWheel.control(e);
+           // steeringWheel.control(e);
             carController.keyReleased(e);
         }
     };

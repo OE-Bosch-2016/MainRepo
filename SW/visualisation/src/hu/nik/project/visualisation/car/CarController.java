@@ -14,7 +14,7 @@ public class CarController {
     // Car pedals
     private float gas = 0;
     private float steeringWheel = 0; //+- 180
-
+    SteeringWheel steeringWheelClass;
     private boolean gasPressed;
     private boolean shuntPressed;
     private boolean leftRotate;
@@ -46,6 +46,7 @@ public class CarController {
                 shunt();
             }
         }
+        steeringWheelClass.control(gas, steeringWheel, e.getKeyCode());
     }
 
     private void goAhead() {
@@ -135,7 +136,16 @@ public class CarController {
             else
                 gas += 0.09;
             car.move(gas);
+            steeringWheelClass.control(gas,steeringWheel,KeyEvent.VK_DOWN);
         }
+        if(gas < 30){
+            steeringWheelClass.setDefaultRpm(gas);
+        }
+    }
+
+    public void initSteeringWheel(SteeringWheel steeringWheel)
+    {
+        this.steeringWheelClass = steeringWheel;
     }
 
     public void autonomousController(int carAngle, float speed){
