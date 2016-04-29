@@ -72,7 +72,7 @@ public class Engine implements ICommBusDevice {
         } else if (gearStage < lastGearStage) { //shift down
             onShiftDown();
         }
-        SendToCom();
+        //SendToCom(); //disabled this func to avoid cyclic call btw eng and gb
     }
 
     private void onShiftUp() {
