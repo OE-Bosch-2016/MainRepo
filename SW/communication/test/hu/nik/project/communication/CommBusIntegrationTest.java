@@ -24,8 +24,6 @@ public class CommBusIntegrationTest {
 
     private static byte[] testIntByteData;
 
-    private static String testStringData = "TESTDATA";
-    private static byte[] testStringByteData;
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -38,7 +36,6 @@ public class CommBusIntegrationTest {
 
         // test data for write and read tests
         testIntByteData = ByteBuffer.allocate(4).putInt(22222).array();
-        testStringByteData = testStringData.getBytes();
     }
 
     @Test
@@ -120,16 +117,25 @@ public class CommBusIntegrationTest {
         TestDevice deviceWithSimpleRoad = new TestDevice(commBus, SimpleRoad.class, CommBusConnectorType.SenderReceiver);
         TestDevice deviceWithInteger = new TestDevice(commBus, Integer.class, CommBusConnectorType.SenderReceiver);
         TestDevice deviceWithScenePoint = new TestDevice(commBus, ScenePoint.class, CommBusConnectorType.SenderReceiver);
+        TestDevice deviceWithOtherInteger = new TestDevice(commBus, Integer.class, CommBusConnectorType.Receiver);
+        TestDevice deviceWithString = new TestDevice(commBus, String.class, CommBusConnectorType.Receiver);
 
         // Test connectorCount
-        Assert.assertEquals(3, commBus.getConnectorCount());
+        Assert.assertEquals(5, commBus.getConnectorCount());
 
         deviceWithInteger.getCommBusConnector().send(new ScenePoint(120, 110));
-        deviceWithScenePoint.getCommBusConnector().send((int)52125);
+        deviceWithScenePoint.getCommBusConnector().send(52125);
         deviceWithScenePoint.getCommBusConnector().send(new SimpleRoad(new ScenePoint(222,111), 90, SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT ));
+        deviceWithSimpleRoad.getCommBusConnector().send("String Data");
 
         Assert.assertEquals(120, deviceWithScenePoint.getScenePointData().getX());
         Assert.assertEquals(52125, deviceWithInteger.getIntData());
         Assert.assertEquals(SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT, deviceWithSimpleRoad.getSimpleRoadData().getObjectType());
+        Assert.assertEquals(52125, deviceWithOtherInteger.getIntData());
+        Assert.assertEquals("String Data", deviceWithString.getStringData());
+
+        // Remove new connectors
+        commBus.removeConnector(deviceWithOtherInteger.getCommBusConnector());
+        commBus.removeConnector(deviceWithString.getCommBusConnector());
     }
 }

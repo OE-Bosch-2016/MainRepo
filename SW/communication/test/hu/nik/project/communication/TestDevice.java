@@ -10,9 +10,8 @@ import hu.nik.project.environment.objects.SimpleRoad;
  */
 class TestDevice implements ICommBusDevice {
 
-    private Class dataType = null;
-    private CommBusConnector commBusConnector;
-    private Class neededDataType;
+    private final CommBusConnector commBusConnector;
+    private final Class neededDataType;
 
     private int intData = 0;
     private String stringData = "";
@@ -29,7 +28,6 @@ class TestDevice implements ICommBusDevice {
 
         if (commBusConnector.getDataType() == neededDataType) {
 
-            dataType = commBusConnector.getDataType();
             if (commBusConnector.getDataType() == Integer.class) {
                 try {
                     intData = (Integer) commBusConnector.receive();
