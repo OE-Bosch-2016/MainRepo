@@ -10,6 +10,7 @@
       <module fileurl="file://$PROJECT_DIR$/framework/framework.iml" filepath="$PROJECT_DIR$/framework/framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/gearbox/gearbox.iml" filepath="$PROJECT_DIR$/gearbox/gearbox.iml" />
       <module fileurl="file://$PROJECT_DIR$/lka/lka.iml" filepath="$PROJECT_DIR$/lka/lka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lka/lka.iml" filepath="$PROJECT_DIR$/lka/lka.iml" />
       <module fileurl="file://$PROJECT_DIR$/tsr/tsr.iml" filepath="$PROJECT_DIR$/tsr/tsr.iml" />
       <module fileurl="file://$PROJECT_DIR$/ultrasonicsensor/ultrasonicsensor.iml" filepath="$PROJECT_DIR$/ultrasonicsensor/ultrasonicsensor.iml" />
       <module fileurl="file://$PROJECT_DIR$/visualisation/visualisation.iml" filepath="$PROJECT_DIR$/visualisation/visualisation.iml" />
