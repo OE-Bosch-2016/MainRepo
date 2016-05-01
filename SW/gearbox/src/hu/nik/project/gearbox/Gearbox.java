@@ -46,16 +46,16 @@ public class Gearbox implements ICommBusDevice {
                 stringData = e.getMessage();
             }
         }
-        /*else if(dataType == DriverInputMessagePackage.class)
+        else if(dataType == DriverInputMessagePackage.class)
 		{
 			try {
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
-                gearLever = data.getXXXX();
+                gearLever = data.getGearLeverPosition();
 				operateGearbox();
             } catch (CommBusException e) {
                 stringData = e.getMessage();
             }
-		}*/
+		}
     }
 
     public void operateGearbox() {
