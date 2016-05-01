@@ -52,6 +52,10 @@ public class DriverInputMessagePackage implements Serializable {
         return tempomatSpeed;
     }
 
+    public int getGearLeverPosition() {
+        return gearLeverPosition;
+    }
+
     public boolean engineIsActive() {
         return engine;
     }

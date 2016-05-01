@@ -180,6 +180,10 @@ public class CarController {
         return gas;
     }
 
+    public float getBrake() {
+        return brake;
+    }
+
     public boolean isLeftRotate() {
         return leftRotate;
     }
