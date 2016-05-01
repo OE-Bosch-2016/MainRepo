@@ -139,7 +139,7 @@ public class Top extends JFrame { // implements KeyListener
         pack();
 
         //visualisation.car.car setup
-        car = new AutonomousCar(new Vector2D(515, 90), ImageLoader.getCarImage());
+        car = new AutonomousCar(new Vector2D(bCar.getBasePosition().getX(), bCar.getBasePosition().getY()), ImageLoader.getCarImage());
         carController.setCar(car);
         carController.initSteeringWheel(steeringWheel);
         //visualisation.Visualization renderer setup
@@ -157,7 +157,7 @@ public class Top extends JFrame { // implements KeyListener
 
                 if(hmiButtonArray[0]) tick++;
 
-                bCar.setDriverInput((int) tempomatSpinner.getValue(), tick, hmi.getGearLever() ,hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
+                bCar.setDriverInput((int)tempomatSpinner.getValue(), tick, hmi.getGearLever(), hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
                 bCar.doWork();
 
                 steeringWheelLabel.grabFocus();

@@ -49,7 +49,7 @@ public class Main {
         // Create the car
         programLogger.log("Creating car...");
         try {
-            car = new BoschCar(new ScenePoint(500, 500), 0);
+            car = new BoschCar(new ScenePoint(3250, 2500), 0);
             programLogger.log("Car created!");
             // Cars can be created and added to the scene here
             // programLogger.log("Adding car to the scene...");
