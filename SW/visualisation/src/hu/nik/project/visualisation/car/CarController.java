@@ -1,5 +1,6 @@
 package hu.nik.project.visualisation.car;
 
+import hu.nik.project.utils.Transformation;
 import hu.nik.project.utils.Vector2D;
 
 import java.awt.event.KeyEvent;
@@ -193,7 +194,7 @@ public class CarController {
     }
 
     public Vector2D getCarPosition() {
-        return car.getPosition();
+        return Transformation.transformFromVector2D(car.getPosition());
     }
 
     // Setter ----------------------------------------------------------------------------------------------------------

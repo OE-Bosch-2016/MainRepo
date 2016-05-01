@@ -7,6 +7,10 @@ public class Config {
 
     public static int imageSizeX = 800;
     public static int imageSizeY = 600;
+
+    public static int originalX = 5000;
+    public static int originalY = 4000;
+
     public static String pathMap = "visualisation/src/hu/nik/resources/maps/road_1.png";
 
     public static String pathCar = "visualisation/src/hu/nik/resources/entities/car2.png";
