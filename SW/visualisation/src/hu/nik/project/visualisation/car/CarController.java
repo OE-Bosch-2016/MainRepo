@@ -19,6 +19,8 @@ public class CarController {
     private float brake = 0;
     private float steeringWheel = 0; //+- 180
     SteeringWheel steeringWheelClass;
+    private int carRotation = 0;
+
     private boolean gasPressed;
     private boolean shuntPressed;
     private boolean leftRotate;
@@ -166,6 +168,7 @@ public class CarController {
 
     public void autonomousController(int carAngle, float speed) {
         if (car != null) {
+            carRotation = carAngle;
             car.rotation(carAngle);
             car.move(speed);
         }
@@ -186,6 +189,10 @@ public class CarController {
 
     public float getBrake() {
         return brake;
+    }
+
+    public int getCarRotation() {
+        return carRotation;
     }
 
     public boolean isLeftRotate() {
