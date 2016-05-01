@@ -5,7 +5,9 @@ import hu.nik.project.hmi.Hmi;
 import hu.nik.project.hmi.manager.HmiManager;
 import hu.nik.project.parkingPilot.PPMain;
 import hu.nik.project.parkingPilot.util.ParkingCalculator;
+import hu.nik.project.utils.Config;
 import hu.nik.project.utils.ImageLoader;
+import hu.nik.project.utils.Transformation;
 import hu.nik.project.utils.Vector2D;
 import hu.nik.project.visualisation.car.AutonomousCar;
 import hu.nik.project.visualisation.car.CarController;
@@ -107,9 +109,11 @@ public class Top extends JFrame { // implements KeyListener
     // BoschCar
     private BoschCar bCar;
 
-    public Top(String mapPath, BoschCar bCar) {
+    public Top(String mapPath, BoschCar bCar, int originalX, int originalY) {
         this.mapPath = mapPath;
         this.bCar = bCar;
+        Config.originalX = originalX;
+        Config.originalY = originalY;
         init();
     }
 
@@ -139,7 +143,8 @@ public class Top extends JFrame { // implements KeyListener
         pack();
 
         //visualisation.car.car setup
-        car = new AutonomousCar(new Vector2D(bCar.getBasePosition().getX(), bCar.getBasePosition().getY()), ImageLoader.getCarImage());
+        Vector2D position = Transformation.transformToVector2D(bCar.getBasePosition());
+        car = new AutonomousCar(position, ImageLoader.getCarImage());
         carController.setCar(car);
         carController.initSteeringWheel(steeringWheel);
         //visualisation.Visualization renderer setup

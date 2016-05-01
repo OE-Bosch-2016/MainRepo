@@ -65,7 +65,7 @@ public class Main {
         // Start the visualisation
         programLogger.log("Starting visualisation...");
         try {
-            top = new Top("sceneroads\\road_1.png", car);
+            top = new Top("sceneroads\\road_1.png", car, scene.getSceneWidth(), scene.getSceneHeight());
         }catch (Exception e) {
             System.out.println("Error in visualisation: " + e.getMessage());
             programLogger.log("Error in visualisation: " + e.getMessage());

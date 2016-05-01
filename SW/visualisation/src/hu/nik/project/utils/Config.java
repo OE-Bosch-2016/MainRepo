@@ -7,6 +7,8 @@ public class Config {
 
     public static int imageSizeX = 800;
     public static int imageSizeY = 600;
+    public static int realSizeX = 776;
+    public static int realSizeY = 312;
 
     public static int originalX = 5000;
     public static int originalY = 4000;

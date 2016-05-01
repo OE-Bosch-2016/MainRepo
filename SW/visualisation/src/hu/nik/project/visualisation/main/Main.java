@@ -7,6 +7,6 @@ public class Main {
 
     public static void main(String[] args) {
         //Top top = new Top("");
-        Top top = new Top("sceneroads\\road_1.png", null);
+        Top top = new Top("sceneroads\\road_1.png", null, 5000, 4000);
     }
 }
