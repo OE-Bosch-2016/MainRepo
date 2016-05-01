@@ -69,4 +69,9 @@ public abstract class SceneObject<T> implements Serializable {
         aOutputStream.writeInt(rotation);
     }
 
+    protected void setBasePositonAndRotation(ScenePoint position, int rotation) {
+        this.basePosition = position;
+        this.rotation = rotation;
+    }
+
 }
