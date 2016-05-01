@@ -13,6 +13,7 @@ public class CarController {
 
     // Car pedals
     private float gas = 0;
+    private float brake = 0;
     private float steeringWheel = 0; //+- 180
     SteeringWheel steeringWheelClass;
     private boolean gasPressed;
@@ -20,6 +21,7 @@ public class CarController {
     private boolean leftRotate;
     private boolean rightRotate;
     private Car car;
+    private boolean shunt;
 
     private boolean handle;
 
@@ -30,9 +32,9 @@ public class CarController {
         return mInstance;
     }
 
-    public void keyEvent(KeyEvent e) {
-
-        if(car != null) {
+    public void keyEvent(KeyEvent e, boolean shunt) {
+        this.shunt = shunt;
+        if (car != null) {
             handle = false;
             if (e.getKeyCode() == KeyEvent.VK_RIGHT && gas != 0) {
                 turnRight();
@@ -43,7 +45,7 @@ public class CarController {
             if (e.getKeyCode() == KeyEvent.VK_UP) {
                 goAhead();
             } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                shunt();
+                brake();
             }
         }
         //steeringWheelClass.control(gas, steeringWheel, e.getKeyCode());
@@ -51,7 +53,9 @@ public class CarController {
 
     private void goAhead() {
         gasPressed = true;
-        gas += 0.1;
+        brake = 0;
+        if (this.shunt) gas -= 0.1;
+        else gas += 0.1;
         car.move(gas);
 
         handleSecondButtonLeftOrRight();
@@ -77,25 +81,34 @@ public class CarController {
         handleSecondButtonUpOrDown();
     }
 
-    private void shunt() {
+    private void brake() {
         shuntPressed = true;
-        gas -= 0.3;
+
+        if (brake < 9)
+            brake += 0.1;
+
+        if (gas > brake && !shunt)
+            gas -= brake;
+        else if (gas < brake && gas < 0 && shunt)
+            gas += brake;
+        else
+            gas = 0;
         car.move(gas);
 
         handleSecondButtonLeftOrRight();
     }
 
-    private void handleSecondButtonUpOrDown(){
+    private void handleSecondButtonUpOrDown() {
         if (!handle) {
             handle = true;
             if (gasPressed)
                 goAhead();
             else if (shuntPressed)
-                shunt();
+                brake();
         }
     }
 
-    private void handleSecondButtonLeftOrRight(){
+    private void handleSecondButtonLeftOrRight() {
         if (!handle) {
             handle = true;
             if (leftRotate)
@@ -136,20 +149,19 @@ public class CarController {
             else
                 gas += 0.09;
             car.move(gas);
-            steeringWheelClass.control(gas,steeringWheel,KeyEvent.VK_DOWN);
+            steeringWheelClass.control(gas, steeringWheel, KeyEvent.VK_DOWN);
         }
-        if(gas < 30){
+        if (gas < 30) {
             steeringWheelClass.setDefaultRpm(gas);
         }
     }
 
-    public void initSteeringWheel(SteeringWheel steeringWheel)
-    {
+    public void initSteeringWheel(SteeringWheel steeringWheel) {
         this.steeringWheelClass = steeringWheel;
     }
 
-    public void autonomousController(int carAngle, float speed){
-        if(car != null){
+    public void autonomousController(int carAngle, float speed) {
+        if (car != null) {
             car.rotation(carAngle);
             car.move(speed);
         }
@@ -176,7 +188,7 @@ public class CarController {
         return rightRotate;
     }
 
-    public Vector2D getCarPosition(){
+    public Vector2D getCarPosition() {
         return car.getPosition();
     }
 

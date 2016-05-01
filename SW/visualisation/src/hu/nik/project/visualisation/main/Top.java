@@ -153,7 +153,8 @@ public class Top extends JFrame { // implements KeyListener
 
                 if(hmiButtonArray[0]) tick++;
 
-                hmiManager.createPackage((int) tempomatSpinner.getValue(), tick, hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
+                hmiManager.createPackage((int) tempomatSpinner.getValue(), tick, hmi.getGearLever() ,hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
+                steeringWheelLabel.grabFocus();
             }
         });
 
@@ -166,44 +167,13 @@ public class Top extends JFrame { // implements KeyListener
         LKAButton.addActionListener(hmiButtons);
         tempomatButton.addActionListener(hmiButtons);
 
-        tempomatSpinner.addChangeListener(tempomatChange);
-
-        // Test
-//        test_slider.addChangeListener(new ChangeListener() {
-//            public void stateChanged(ChangeEvent e) {
-//                int value = test_slider.getValue();
-//                hmi.mileage(value);
-//            }
-//        });
-//
-//        test_slider2.addChangeListener(new ChangeListener() {
-//            public void stateChanged(ChangeEvent e) {
-//                int value = test_slider2.getValue();
-//                hmi.tachometer(value);
-//            }
-//        });
-
-//        comboBox1.addItem("1");
-//        comboBox1.addItem("2");
-//        comboBox1.addItem("3");
-//        comboBox1.addItem("4");
-//        comboBox1.addItem("5");
-//        comboBox1.addItem("6");
-
-
-//        comboBox1.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                          }
-//        });
-
         steeringWheelLabel.addKeyListener(keyListener);
         steeringWheelLabel.setFocusable(true);
         steeringWheelLabel.setFocusTraversalKeysEnabled(false);
         steeringWheelLabel.requestFocus();
-        //comboBox1.setSelectedIndex(0);
         steeringWheelLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        tempomatSpinner.setValue(50);
 
-        // Test end
 
         //Start timer
         timer.start();
@@ -393,7 +363,7 @@ public class Top extends JFrame { // implements KeyListener
             else if (e.getKeyChar() == 'r')
                 car.setPosition(new Vector2D(501, 90));
 
-            carController.keyEvent(e);
+            carController.keyEvent(e, hmi.getGearLever() == Hmi.getGearShiftR());
            // steeringWheel.control(e);
 
         }
@@ -420,6 +390,11 @@ public class Top extends JFrame { // implements KeyListener
                 hmiButtonArray[2] = !hmiButtonArray[2];
             } else if (e.getActionCommand().equals("PP")) {
                 hmiButtonArray[3] = !hmiButtonArray[3];
+
+                if(hmiButtonArray[3])
+                    hmi.gearshift(Hmi.GEAR_SHIFT_R);
+                else
+                    hmi.gearshift(Hmi.GEAR_SHIFT_D);
             } else if (e.getActionCommand().equals("AEB")) {
                 hmiButtonArray[4] = !hmiButtonArray[4];
             } else if (e.getActionCommand().equals("LKA")) {
@@ -427,12 +402,6 @@ public class Top extends JFrame { // implements KeyListener
             } else {
                 hmiButtonArray[6] = !hmiButtonArray[6];
             }
-        }
-    };
-
-    private ChangeListener tempomatChange = new ChangeListener() {
-        public void stateChanged(ChangeEvent e) {
-
         }
     };
 }

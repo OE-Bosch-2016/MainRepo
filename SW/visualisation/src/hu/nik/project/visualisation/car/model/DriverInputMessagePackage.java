@@ -12,6 +12,7 @@ public class DriverInputMessagePackage implements Serializable {
     private float carGas;
     private int tempomatSpeed;
     private int tick;
+    int gearLeverPosition;
 
     private boolean engine;
     private boolean acc;
@@ -21,12 +22,13 @@ public class DriverInputMessagePackage implements Serializable {
     private boolean lka;
     private boolean tempomat;
 
-    public DriverInputMessagePackage(float carBrake, float wheelAngle, float carGas, int tempomatSpeed, int tick, boolean engine, boolean acc,
+    public DriverInputMessagePackage(float carBrake, float wheelAngle, float carGas, int tempomatSpeed, int gearLeverPosition, int tick, boolean engine, boolean acc,
                                      boolean tsr, boolean pp, boolean aeb, boolean lka, boolean tempomat) {
         this.carBrake = carBrake;
         this.wheelAngle = wheelAngle;
         this.carGas = carGas;
         this.tempomatSpeed = tempomatSpeed;
+        this.gearLeverPosition = gearLeverPosition;
         this.tick = tick;
         this.engine = engine;
         this.acc = acc;

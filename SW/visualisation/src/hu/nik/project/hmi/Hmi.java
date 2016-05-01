@@ -16,6 +16,7 @@ public class Hmi implements IHmi {
 
     private int kmh = 0;
     private int rpm = 800;
+    private int gearLever;
 
     OnHmiListener hmiListener;
 
@@ -23,22 +24,6 @@ public class Hmi implements IHmi {
         if (mInstance == null)
             mInstance = new Hmi();
         return mInstance;
-    }
-
-    public void setKhm(int kmh) {
-        this.kmh = kmh;
-    }
-
-    public void setRpm(int rpm) {
-        this.rpm = rpm;
-    }
-
-    public int getKhm() {
-        return kmh;
-    }
-
-    public int getRpm() {
-        return rpm;
     }
 
     public void mileage(float mile) {
@@ -56,8 +41,10 @@ public class Hmi implements IHmi {
     }
 
     public void gearshift(int stage) {
-        if (hmiListener != null)
+        if (hmiListener != null) {
             hmiListener.gearshiftChanged(stage);
+            gearLever = stage;
+        }
         else
             throw new NullPointerException("Hmi listener is missing");
     }
@@ -69,9 +56,34 @@ public class Hmi implements IHmi {
             throw new NullPointerException("Hmi listener is missing");
     }
 
+    // Getter ----------------------------------------------------------------------------------------------------------
+    public int getKhm() {
+        return kmh;
+    }
+
+    public int getRpm() {
+        return rpm;
+    }
+
+    public int getGearLever() {
+        return gearLever;
+    }
+
+    public static int getGearShiftR() {
+        return GEAR_SHIFT_R;
+    }
+
     // Setter ----------------------------------------------------------------------------------------------------------
     public void setHmiListener(OnHmiListener hmiListener) {
         this.hmiListener = hmiListener;
+    }
+
+    public void setKhm(int kmh) {
+        this.kmh = kmh;
+    }
+
+    public void setRpm(int rpm) {
+        this.rpm = rpm;
     }
 
     // Listener --------------------------------------------------------------------------------------------------------
