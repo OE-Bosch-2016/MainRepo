@@ -13,10 +13,12 @@ import org.junit.Test;
 public class CarWithConcreteClassTest {
 
     private static Car car;
+    private static Car modifyPositionAndRoatation;
 
     @BeforeClass
     public static void setUp() throws Exception {
         car = new Car(new ScenePoint(500, 500), 90);
+        modifyPositionAndRoatation = new Car(new ScenePoint(600, 600), 85);
     }
 
     @Test
@@ -53,5 +55,13 @@ public class CarWithConcreteClassTest {
     @Test
     public void testToString() throws Exception {
         Assert.assertEquals("ClassType: Car ->  Position X: 500 Position Y: 500 Rotation: 90 CarType: CAR", car.toString());
+    }
+
+    @Test
+    public void testModifyBasePositionAndRotation() {
+        modifyPositionAndRoatation.setBasePositonAndRotation(new ScenePoint(1000, 1000), 90);
+        Assert.assertEquals(1000, modifyPositionAndRoatation.getBasePosition().getX());
+        Assert.assertEquals(1000, modifyPositionAndRoatation.getBasePosition().getY());
+        Assert.assertEquals(90, modifyPositionAndRoatation.getRotation());
     }
 }
