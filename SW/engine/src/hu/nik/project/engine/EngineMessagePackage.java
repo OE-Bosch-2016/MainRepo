@@ -15,5 +15,4 @@ public class EngineMessagePackage implements Serializable {
 	public double getRpm(){
 		return rpm;
 	}
-	
 }
