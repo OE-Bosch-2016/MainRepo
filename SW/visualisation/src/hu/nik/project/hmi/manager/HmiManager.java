@@ -10,40 +10,35 @@ import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 public class HmiManager implements ICommBusDevice{
 
     private static HmiManager mInstance;
-    private CommBusConnector connector;
-    private CommBus commBus;
+    private CommBusConnector commBusConnector;
     private CarController carController = CarController.newInstance();
     private DriverInputMessagePackage messagePackage;
 
 
-    public static HmiManager newInstance(){
+    public static HmiManager newInstance(CommBus commBus, CommBusConnectorType commBusConnectorType){
         if(mInstance == null)
-            mInstance = new HmiManager();
+            mInstance = new HmiManager(commBus, commBusConnectorType);
         return mInstance;
     }
 
-    public void createPackage(int tempomatSpeed, int tick, int gearLeverPosition, boolean engine, boolean acc,
-                              boolean tsr, boolean pp, boolean aeb, boolean lka, boolean tempomat){
+    private HmiManager(CommBus commBus, CommBusConnectorType commBusConnectorType) {
+        this.commBusConnector = commBus.createConnector(this, commBusConnectorType);
+    }
+
+    public void setDriverInputMessagePackage(int tempomatSpeed, int tick, int gearLeverPosition, boolean engine, boolean acc,
+                              boolean tsr, boolean pp, boolean aeb, boolean lka, boolean tempomat) {
 
         messagePackage = new DriverInputMessagePackage(carController.getBrake(), carController.getSteeringWheel(), carController.getGas(),
                 tempomatSpeed, gearLeverPosition, tick, engine, acc, tsr, pp, aeb, lka, tempomat);
-        sendHmiValues(messagePackage);
-
     }
 
-    private void sendHmiValues(DriverInputMessagePackage messagePackage){
-        if(connector == null) {
-            commBus = new CommBus();
-            connector = commBus.createConnector(this, CommBusConnectorType.Sender);
-        }
-
+    public void doWork() {
         try {
-            connector.send(messagePackage);
+            commBusConnector.send(messagePackage);
         } catch (CommBusException e) {
             e.printStackTrace();
         }
     }
-
 
     public void commBusDataArrived() {
     }

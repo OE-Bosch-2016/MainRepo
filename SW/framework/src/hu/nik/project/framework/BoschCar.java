@@ -5,6 +5,7 @@ import hu.nik.project.gearbox.Gearbox;
 import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.objects.Car;
 import hu.nik.project.environment.objects.SceneObjectException;
+import hu.nik.project.hmi.manager.HmiManager;
 import hu.nik.project.tsr.Tsr;
 import hu.nik.project.wheels.Wheels;
 import hu.nik.project.acc.ACC;
@@ -26,6 +27,7 @@ public class BoschCar extends Car {
     Tsr tsr;
     Ultrasonicsensor ultrasonicsensor; // The constructor is not straightforward, have to discuss it with the team
     Wheels wheels;
+    HmiManager hmiManager;
 
 
     public BoschCar(ScenePoint basePosition, int rotation) throws SceneObjectException {
@@ -37,11 +39,21 @@ public class BoschCar extends Car {
         gearbox = new Gearbox(0, commBus, CommBusConnectorType.SenderReceiver);
         tsr = new Tsr(commBus, CommBusConnectorType.SenderReceiver);
         wheels = new Wheels(commBus, CommBusConnectorType.SenderReceiver);
+        hmiManager = hmiManager.newInstance(commBus, CommBusConnectorType.Sender);
     }
 
-    public void start() {
-
+    public void doWork() {
+        hmiManager.doWork();
+        engine.doWork();
+        gearbox.doWork();
+        wheels.doWork();
     }
+
+    public void setDriverInput(int tempomatSpeed, int tick, int gearLeverPosition, boolean engine, boolean acc,
+                               boolean tsr, boolean pp, boolean aeb, boolean lka, boolean tempomat) {
+        hmiManager.setDriverInputMessagePackage(tempomatSpeed, tick, gearLeverPosition, engine, acc, tsr, pp, aeb, lka, tempomat);
+    }
+
 
     // Need to consult with visualization to continue!!!!!!!!!!!!!!
 }

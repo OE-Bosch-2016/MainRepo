@@ -24,6 +24,9 @@ public class Lka implements ICommBusDevice {
     private double previousLaneDistance;
     private boolean enabled;
 
+    private int requestedSteeringWheelAngle;
+    private int maximumSpeedForKeepingLane;
+
     public Lka(CommBus commBus, CommBusConnectorType commBusConnectorType) {
         commBusConnector = commBus.createConnector(this, commBusConnectorType);
         previousLaneDistance = HALF_TRACK_WIDTH;
@@ -55,8 +58,8 @@ public class Lka implements ICommBusDevice {
 
                 if (enabled) {
 
-                    int requestedSteeringWheelAngle = 0; // no correction
-                    int maximumSpeedForKeepingLane = 130; // no speed limit
+                    requestedSteeringWheelAngle = 0; // no correction
+                    maximumSpeedForKeepingLane = 130; // no speed limit
 
                     // TODO: processing input messages and calculate PRECISE (EXACT) output values
                     //       it is possible only if we get relative car-angle rel lane-direction (from camera)
@@ -80,8 +83,6 @@ public class Lka implements ICommBusDevice {
                     }
                     previousLaneDistance = data.LaneDistance;
 
-                    // send response message onto the bus (if necessary)
-                    commBusConnector.send(new LkaMessagePackage(requestedSteeringWheelAngle, maximumSpeedForKeepingLane));
                 }
             } catch (CommBusException e) {
                 lastErrorMessage = e.getMessage();
@@ -99,6 +100,16 @@ public class Lka implements ICommBusDevice {
 
     public boolean getEnabled() {
         return enabled;
+    }
+
+    public void doWork() {
+        // send response message onto the bus (if necessary)
+        try {
+            commBusConnector.send(new LkaMessagePackage(requestedSteeringWheelAngle, maximumSpeedForKeepingLane));
+        }
+        catch (CommBusException e) {
+            //sad times
+        }
     }
 
 }

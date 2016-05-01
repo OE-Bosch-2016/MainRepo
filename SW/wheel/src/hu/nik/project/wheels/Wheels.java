@@ -6,7 +6,6 @@ import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 
-import hu.nik.project.gearbox.Gearbox;
 import hu.nik.project.gearbox.GearboxMessagePackage;
 import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 import hu.nik.project.engine.EngineMessagePackage;
@@ -36,35 +35,34 @@ public class Wheels implements IWheels, ICommBusDevice {
 	@Override
 	public void commBusDataArrived() {
 
-			if (commBusConnector.getDataType() == EngineMessagePackage.class || commBusConnector.getDataType() == DriverInputMessagePackage.class || commBusConnector.getDataType() == GearboxMessagePackage.class ) {
-				if (commBusConnector.getDataType() == EngineMessagePackage.class) {
-					try {
-						engineRPM = ((EngineMessagePackage) commBusConnector.receive()).getRpm();
+		Class dataType = commBusConnector.getDataType();
 
-					} catch (CommBusException e) {
-						//stringData = e.getMessage();
-					}
-				}
-
-				if (commBusConnector.getDataType() == DriverInputMessagePackage.class) {
-					try {
-						hmiWheel = ((DriverInputMessagePackage)commBusConnector.receive()).getWheelAngle();
-						hmiBrake = ((DriverInputMessagePackage)commBusConnector.receive()).getCarBreak();
-					} catch (CommBusException e) {
-						//stringData = e.getMessage();
-					}
-				}
-
-				if (commBusConnector.getDataType() == GearboxMessagePackage.class) {
-					try {
-						engineTorque = ((GearboxMessagePackage)commBusConnector.receive()).getTorque();
-
-					} catch (CommBusException e) {
-						//stringData = e.getMessage();
-					}
-				}
+		if (dataType == EngineMessagePackage.class) {
+			try {
+				engineRPM = ((EngineMessagePackage) commBusConnector.receive()).getRpm();
+			} catch (CommBusException e) {
+				//stringData = e.getMessage();
 			}
+		}
 
+		if (dataType == DriverInputMessagePackage.class) {
+			try {
+				DriverInputMessagePackage data = (DriverInputMessagePackage)commBusConnector.receive();
+				hmiWheel = data.getWheelAngle();
+				hmiBrake = data.getCarBreak();
+			} catch (CommBusException e) {
+				//stringData = e.getMessage();
+			}
+		}
+
+		if (dataType == GearboxMessagePackage.class) {
+			try {
+				engineTorque = ((GearboxMessagePackage)commBusConnector.receive()).getTorque();
+
+			} catch (CommBusException e) {
+				//stringData = e.getMessage();
+			}
+		}
 	}
 
 	public Wheels(CommBus commBus, CommBusConnectorType commBusConnectorType)
@@ -76,7 +74,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 	}
 
 	@Override
-	public void calcOnTick()
+	public void doWork()
 	{
 		calcDirection();    //calculates first because new direction is effected by last speed
 		calcSpeed();

@@ -27,5 +27,6 @@
     <orderEntry type="module" module-name="communication" exported="" />
     <orderEntry type="module" module-name="environment" exported="" />
     <orderEntry type="module" module-name="wheel" exported="" />
+    <orderEntry type="module" module-name="framework" exported="" />
   </component>
 </module>

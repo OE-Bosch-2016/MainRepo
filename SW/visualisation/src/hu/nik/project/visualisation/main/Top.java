@@ -1,5 +1,6 @@
 package hu.nik.project.visualisation.main;
 
+import hu.nik.project.framework.BoschCar;
 import hu.nik.project.hmi.Hmi;
 import hu.nik.project.hmi.manager.HmiManager;
 import hu.nik.project.parkingPilot.PPMain;
@@ -77,7 +78,6 @@ public class Top extends JFrame { // implements KeyListener
 
     // Driver input
     private CarController carController;
-    private HmiManager hmiManager;
     // Parking pilot
     private Timer moveTimer;
     private PPMain parkingPilot;
@@ -104,8 +104,12 @@ public class Top extends JFrame { // implements KeyListener
     // mapPath
     private String mapPath;
 
-    public Top(String mapPath) {
+    // BoschCar
+    private BoschCar bCar;
+
+    public Top(String mapPath, BoschCar bCar) {
         this.mapPath = mapPath;
+        this.bCar = bCar;
         init();
     }
 
@@ -118,7 +122,7 @@ public class Top extends JFrame { // implements KeyListener
 
         hmi = Hmi.newInstance();
         hmi.setHmiListener(mileAgeListener);
-        hmiManager = HmiManager.newInstance();
+
         mileAgePanel.add(buildDialPlot(0, DISPLAY_MAX_KM, 20, mileAgeDataset, mileAgeDisplayDataset));
         tachometerPanel.add(buildDialPlot(0, DISPLAY_MAX_TACHO, 1000, tachoMeterDataset, tachoMeterDisplayDataset));
         setMileAgeValue(0);
@@ -153,7 +157,9 @@ public class Top extends JFrame { // implements KeyListener
 
                 if(hmiButtonArray[0]) tick++;
 
-                hmiManager.createPackage((int) tempomatSpinner.getValue(), tick, hmi.getGearLever() ,hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
+                bCar.setDriverInput((int) tempomatSpinner.getValue(), tick, hmi.getGearLever() ,hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
+                bCar.doWork();
+
                 steeringWheelLabel.grabFocus();
             }
         });

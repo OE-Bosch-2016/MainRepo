@@ -41,8 +41,9 @@ package hu.nik.project.ebs;
                     //dataType = commBusConnector.getDataType();
                     if (commBusConnector.getDataType() == RadarMessagePacket.class) {
                         try {
-                            currDist = ((RadarMessagePacket) commBusConnector.receive()).getCurrentDistance() ;
-                            currRelSpeed = ((RadarMessagePacket) commBusConnector.receive()).getRelativeSpeed() ;
+                            RadarMessagePacket data = (RadarMessagePacket) commBusConnector.receive();
+                            currDist = data.getCurrentDistance() ;
+                            currRelSpeed = data.getRelativeSpeed() ;
                         } catch (CommBusException e) {
                             //stringData = e.getMessage();
                         }
@@ -50,7 +51,7 @@ package hu.nik.project.ebs;
                 }
             }
 
-            public void SendToCom() {
+            public void doWork() {
                 if (enabled) {
                     boolean sent = false;
                     EmergencyBreakSystemMessagePackage message = new EmergencyBreakSystemMessagePackage(EBSState); //so it doesnt have to remake it every time

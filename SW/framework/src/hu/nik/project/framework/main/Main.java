@@ -51,9 +51,10 @@ public class Main {
         try {
             car = new BoschCar(new ScenePoint(500, 500), 0);
             programLogger.log("Car created!");
-            programLogger.log("Adding car to the scene...");
-            scene.addCarToScene(car);
-            programLogger.log("Car added!");
+            // Cars can be created and added to the scene here
+            // programLogger.log("Adding car to the scene...");
+            // scene.addCarToScene();
+            // programLogger.log("Car added!");
 
         } catch (SceneObjectException e) {
             System.out.println("Error during the car creation: " + e.getMessage());
@@ -64,7 +65,7 @@ public class Main {
         // Start the visualisation
         programLogger.log("Starting visualisation...");
         try {
-            top = new Top("sceneroads\\road_1.png");
+            top = new Top("sceneroads\\road_1.png", car);
         }catch (Exception e) {
             System.out.println("Error in visualisation: " + e.getMessage());
             programLogger.log("Error in visualisation: " + e.getMessage());

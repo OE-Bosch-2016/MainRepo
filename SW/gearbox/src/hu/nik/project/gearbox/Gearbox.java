@@ -95,20 +95,15 @@ public class Gearbox implements ICommBusDevice {
                 torque = rpm / 10 - gearStage * 20;
                 break;
         }
-        SendToCom();
     }
 
-    public void SendToCom() {
-        boolean sent = false;
+    public void doWork() {
         GearboxMessagePackage message = new GearboxMessagePackage(gearStage, torque); //so it doesnt have to remake it every time
-        while (!sent) {
-            try {
-                if (commBusConnector.send(message)) {
-                    sent = true;
-                }
-            } catch (CommBusException e) {
+        try {
+            commBusConnector.send(message);
+        }
+        catch (CommBusException e) {
                 //sad times
-            }
         }
     }
 }

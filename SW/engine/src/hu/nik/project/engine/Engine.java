@@ -56,6 +56,7 @@ public class Engine implements ICommBusDevice {
         {
             try {
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
+                started = data.engineIsActive();
                 throttle = (double) data.getCarGas();
                 time = (int) data.getTick();
                 calculateRpm();
@@ -64,7 +65,6 @@ public class Engine implements ICommBusDevice {
             }
         }
     }
-
 
     public void operateShift() {
         if (gearStage > lastGearStage) { //shift up
@@ -126,31 +126,14 @@ public class Engine implements ICommBusDevice {
             }
         }
         lasttime = time;
-        SendToCom();
     }
 
-    public void SendToCom() {
-        boolean sent = false;
+    public void doWork() {
         EngineMessagePackage message = new EngineMessagePackage(rpm); //so it doesnt have to remake it every time
-        while (!sent) {
-            try {
-                if (commBusConnector.send(message)) {
-                    sent = true;
-                }
-            } catch (CommBusException e) {
-                //sad times
-            }
-        }
-    }
-
-    public void start() {
-        if (started) return;
-        else {
-            try {
-                started = true;
-                commBusConnector.send(new EngineMessagePackage(rpm));
-            } catch (CommBusException e) {
-            }
+        try {
+            commBusConnector.send(message);
+        } catch (CommBusException e) {
+            //sad times
         }
     }
 }

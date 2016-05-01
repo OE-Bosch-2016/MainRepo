@@ -26,7 +26,7 @@ public	SceneObject[] visibleObjects;
 	@Override
 	public void commBusDataArrived(){}
 
-	public void SendToCom() {
+	public void doWork() {
 		boolean sent = false;
 		CameraMessagePackage message = new CameraMessagePackage(closestSign,laneDistance,IsLaneRestricted); //so it doesnt have to remake it every time
 		while(!sent)
