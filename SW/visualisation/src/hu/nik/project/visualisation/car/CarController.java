@@ -59,7 +59,8 @@ public class CarController {
         brake = 0;
         if (this.shunt) gas -= 0.1;
         else gas += 0.1;
-        car.move(gas);
+
+        //car.move(gas);
 
         handleSecondButtonLeftOrRight();
     }
@@ -96,7 +97,7 @@ public class CarController {
             gas += brake;
         else
             gas = 0;
-        car.move(gas);
+        //car.move(gas);
 
         handleSecondButtonLeftOrRight();
     }
@@ -145,13 +146,13 @@ public class CarController {
                 gas = 0;
             else
                 gas -= 0.09;
-            car.move(gas);
+            //car.move(gas);
         } else {
             if (gas + 0.09 > 0)
                 gas = 0;
             else
                 gas += 0.09;
-            car.move(gas);
+            //car.move(gas);
             steeringWheelClass.control(gas, steeringWheel, KeyEvent.VK_DOWN);
         }
         if (gas < 30) {

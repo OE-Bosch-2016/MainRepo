@@ -14,6 +14,7 @@ import hu.nik.project.visualisation.car.CarController;
 public class Wheels implements IWheels, ICommBusDevice {
 
 	private CommBusConnector commBusConnector;
+	private CarController carController;
 
 	//imput buffers
 	private double engineRPM;
@@ -68,6 +69,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 	public Wheels(CommBus commBus, CommBusConnectorType commBusConnectorType)
 	{
 		commBusConnector = commBus.createConnector(this, commBusConnectorType);
+		carController = CarController.newInstance();
 
 		speed=0;
 		direction=0;
@@ -78,7 +80,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 	{
 		calcDirection();    //calculates first because new direction is effected by last speed
 		calcSpeed();
-		CarController.newInstance().autonomousController((int)direction,(float)speed);
+		carController.autonomousController((int)direction,(float)speed);
 	}
 
 	private void calcDirection()
