@@ -154,8 +154,8 @@ public class Top extends JFrame { // implements KeyListener
         //1 sec / 24 ~= 42 ms -> 24fps
         timer = new Timer(42, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                vRenderer.render();
 
+                vRenderer.render();
                 // Car control
                 if (!carController.isGasPressed())
                     carController.engineBrake();
@@ -164,6 +164,7 @@ public class Top extends JFrame { // implements KeyListener
 
                 bCar.setDriverInput((int)tempomatSpinner.getValue(), tick, hmi.getGearLever(), hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
                 bCar.doWork();
+                bCar.setCarPosition(carController.getCarPosition(), carController.getCarRotation());
 
                 steeringWheelLabel.grabFocus();
             }

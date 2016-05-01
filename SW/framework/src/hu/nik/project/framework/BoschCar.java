@@ -1,5 +1,6 @@
 package hu.nik.project.framework;
 
+import hu.nik.project.camera.Camera;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.gearbox.Gearbox;
 import hu.nik.project.environment.ScenePoint;
@@ -26,6 +27,7 @@ public class BoschCar extends Car {
     Gearbox gearbox;
     Tsr tsr;
     Ultrasonicsensor ultrasonicsensor; // The constructor is not straightforward, have to discuss it with the team
+    Camera camera;
     Wheels wheels;
     HmiManager hmiManager;
 
@@ -34,6 +36,9 @@ public class BoschCar extends Car {
         super(basePosition, rotation);
 
         commBus = new CommBus();
+
+        //camera = new Camera(commBus, CommBusConnectorType.Sender)
+
         acc = new ACC(commBus, CommBusConnectorType.SenderReceiver);
         engine = new Engine(commBus, CommBusConnectorType.SenderReceiver);
         gearbox = new Gearbox(0, commBus, CommBusConnectorType.SenderReceiver);
@@ -49,11 +54,12 @@ public class BoschCar extends Car {
         wheels.doWork();
     }
 
+    public void setCarPosition(ScenePoint position, int rotation) {
+        this.setBasePositonAndRotation(position, rotation);
+    }
+
     public void setDriverInput(int tempomatSpeed, int tick, int gearLeverPosition, boolean engine, boolean acc,
                                boolean tsr, boolean pp, boolean aeb, boolean lka, boolean tempomat) {
         hmiManager.setDriverInputMessagePackage(tempomatSpeed, tick, gearLeverPosition, engine, acc, tsr, pp, aeb, lka, tempomat);
     }
-
-
-    // Need to consult with visualization to continue!!!!!!!!!!!!!!
 }
