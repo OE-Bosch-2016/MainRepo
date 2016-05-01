@@ -1,5 +1,7 @@
 package hu.nik.project.visualisation.car;
 
+import hu.nik.project.environment.Scene;
+import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.utils.Transformation;
 import hu.nik.project.utils.Vector2D;
 
@@ -193,7 +195,7 @@ public class CarController {
         return rightRotate;
     }
 
-    public Vector2D getCarPosition() {
+    public ScenePoint getCarPosition() {
         return Transformation.transformFromVector2D(car.getPosition());
     }
 
