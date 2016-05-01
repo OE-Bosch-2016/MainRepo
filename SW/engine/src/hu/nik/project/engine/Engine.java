@@ -138,4 +138,8 @@ public class Engine implements ICommBusDevice {
             }
         }
     }
+
+    public boolean isStarted() {
+        return started;
+    }
 }

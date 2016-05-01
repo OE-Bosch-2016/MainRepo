@@ -18,7 +18,7 @@ import hu.nik.project.visualisation.main.Top;
 public class Main {
 
     static Logger programLogger;
-    static Scene scene;
+    public static Scene scene;
     static BoschCar car;
     static Top top;
 
