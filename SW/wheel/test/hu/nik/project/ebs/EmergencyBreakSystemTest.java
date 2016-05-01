@@ -17,27 +17,17 @@ import static org.junit.Assert.*;
  */
 public class EmergencyBreakSystemTest {
 
-    CommBus commBus = new CommBus();
-    Scene scene;
-    Camera c;
-    EmergencyBreakSystem e;
 
 
     @Before
     public void setUp() throws Exception {
-        c = new Camera(commBus, CommBusConnectorType.Sender, scene);
-        e = new EmergencyBreakSystem(commBus,CommBusConnectorType.SenderReceiver);
 
-        c.visibleObjects = new SceneObject[4];
-        c.visibleObjects[1] = new People(new ScenePoint(10,10),0, People.PeopleType.MAN);
-        c.SendToCom();
 
     }
 
     @Test
     public void commBusDataArrived() throws Exception {
-        assertArrayEquals(c.visibleObjects,e.visibleObjectArray);
-        assertEquals(c.visibleObjects,e.visibleObjectArray);
+
     }
 
     @Test

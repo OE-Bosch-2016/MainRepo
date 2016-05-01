@@ -22,6 +22,7 @@ public class Engine implements ICommBusDevice {
     final int minRpm = 500;
     private int lastGearStage;
     int lasttime;
+    boolean started;
 
     //output
     private double rpm;
@@ -71,7 +72,7 @@ public class Engine implements ICommBusDevice {
         } else if (gearStage < lastGearStage) { //shift down
             onShiftDown();
         }
-        SendToCom();
+        //SendToCom(); //disabled this func to avoid cyclic call btw eng and gb
     }
 
     private void onShiftUp() {
@@ -138,6 +139,17 @@ public class Engine implements ICommBusDevice {
                 }
             } catch (CommBusException e) {
                 //sad times
+            }
+        }
+    }
+
+    public void start() {
+        if (started) return;
+        else {
+            try {
+                started = true;
+                commBusConnector.send(new EngineMessagePackage(rpm));
+            } catch (CommBusException e) {
             }
         }
     }

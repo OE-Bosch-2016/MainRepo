@@ -46,9 +46,6 @@ public class CommBus {
 
     private byte[] byteDataBuffer;  // represents the bytes on the bus
     private Class dataType;
-
-    private boolean multipleSending;
-
     private List<CommBusConnector> connectors = new ArrayList<>();
     private CommBusConnector acceptedConnector = null;
 
@@ -87,41 +84,31 @@ public class CommBus {
     }
 
     // invokeListeners passes the bus-content to the connected listeners
-    // !!!!!!!!!!! When write occours THIS should invoke without THREAD !!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!! When write occurs THIS should invoke without THREAD !!!!!!!!!!!!!!!!!!
     private void invokeListeners() {
 
-            // transmission handling
-                for (CommBusConnector connector : connectors) {
-                    if ((connector != acceptedConnector) && (byteDataBuffer != null)) {
+        // transmission handling
+        for (CommBusConnector connector : connectors) {
+            if ((connector != acceptedConnector) && (byteDataBuffer != null)) {
 
-                        //connector.setExceptionThrown(null);
-                        connector.setDataBuffer(byteDataBuffer.clone());    // data will be passed to the connector in own local buffer
-                        connector.setDataType(dataType);                // dataType can describe the type of data-package or sender
+                //connector.setExceptionThrown(null);
+                connector.setDataBuffer(byteDataBuffer.clone());    // data will be passed to the connector in own local buffer
+                connector.setDataType(dataType);                // dataType can describe the type of data-package or sender
 
-                        // the dataType will be passed as an argument of the event, so the connector can decide want to deal with it or not
-                        connector.getDevice().commBusDataArrived();
-                        if (byteDataBuffer == null)
-                            break;
-                    }
-                }
-                if (multipleSending) {
-                    multipleSending = false;
-                    clearBusData();
-                }
-                // all listener were notified
+                // the dataType will be passed as an argument of the event, so the connector can decide want to deal with it or not
+                connector.getDevice().commBusDataArrived();
+                if (byteDataBuffer == null)
+                    break;
+            }
+        }
+        clearBusData();
+
+        // all listener were notified
     }
 
-    protected void clearBusData() {
+    private void clearBusData() {
         byteDataBuffer = null; // dataBuffer is empty
         dataType = null;
         if (acceptedConnector != null) acceptedConnector = null; // bus is free (bus request is cleared)
-    }
-
-    protected void setMultipleSending(boolean multiple) {
-        multipleSending = multiple;
-    }
-
-    protected boolean getMultipleSending() {
-        return multipleSending;
     }
 }
