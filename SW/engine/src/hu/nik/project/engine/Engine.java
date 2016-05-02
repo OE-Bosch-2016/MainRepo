@@ -128,7 +128,7 @@ public class Engine implements ICommBusDevice {
                 rpm = minRpm;
             }
         }
-        myHmi.setRpm((int)rpm);
+        myHmi.tachometer((int)rpm);
         lasttime = time;
     }
 
