@@ -31,7 +31,6 @@ public class Gearbox implements ICommBusDevice {
         this.commBusConnector = commBus.createConnector(this, commBusConnectorType);
         this.rpm = 0;
         myHmi = Hmi.newInstance();
-        myHmi.numberedGearShiftPosition();
     }
 
     public String getStringData() {
@@ -81,6 +80,7 @@ public class Gearbox implements ICommBusDevice {
                 gearStage = -1;
                 break;
         }
+        myHmi.numberedGearShiftPosition(gearStage);
         calculateTorque();
     }
 
