@@ -7,12 +7,12 @@ public class Hmi implements IHmi {
 
     private static Hmi mInstance;
 
-    public static int GEAR_SHIFT_D = 0;
-    public static int GEAR_SHIFT_N = 1;
-    public static int GEAR_SHIFT_R = 2;
-    public static int GEAR_SHIFT_P = 3;
-    public static int GEAR_SHIFT_1 = 4;
-    public static int GEAR_SHIFT_2 = 5;
+    public final static int GEAR_SHIFT_D = 0;
+    public final static int GEAR_SHIFT_N = 1;
+    public final static int GEAR_SHIFT_R = 2;
+    public final static int GEAR_SHIFT_P = 3;
+    public final static int GEAR_SHIFT_1 = 4;
+    public final static int GEAR_SHIFT_2 = 5;
 
     private int kmh = 0;
     private int rpm = 800;
