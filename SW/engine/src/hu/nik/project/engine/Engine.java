@@ -133,7 +133,7 @@ public class Engine implements ICommBusDevice {
             try {
                 commBusConnector.send(message);
             } catch (CommBusException e) {
-                //sad times
+                e.printStackTrace();
             }
         }
     }
