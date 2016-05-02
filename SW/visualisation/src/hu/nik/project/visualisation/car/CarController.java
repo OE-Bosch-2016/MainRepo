@@ -31,6 +31,9 @@ public class CarController {
 
     private boolean handle;
 
+    // Visualisation
+    private int MOVE_ANIMATION = 50;
+
     public static CarController newInstance() {
         if (mInstance == null)
             mInstance = new CarController();
@@ -171,7 +174,7 @@ public class CarController {
         if (car != null) {
             carRotation = carAngle;
             car.rotation(carAngle);
-            car.move(speed);
+            car.move(speed / MOVE_ANIMATION);
         }
     }
 
