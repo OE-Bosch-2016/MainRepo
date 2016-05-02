@@ -7,6 +7,7 @@ import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 
 import hu.nik.project.gearbox.GearboxMessagePackage;
+import hu.nik.project.hmi.Hmi;
 import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 import hu.nik.project.engine.EngineMessagePackage;
 import hu.nik.project.visualisation.car.CarController;
@@ -15,6 +16,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 
 	private CommBusConnector commBusConnector;
 	private CarController carController;
+	private Hmi hmi;
 
 	//imput buffers
 	private double engineRPM;
@@ -69,6 +71,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 	{
 		commBusConnector = commBus.createConnector(this, commBusConnectorType);
 		carController = CarController.newInstance();
+		hmi = Hmi.newInstance();
 
 		speed=0;
 		direction=0;
@@ -104,6 +107,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 		*/
 
 		speed = Math.pow((2 * (engineTorque * engineRPM / 9.5488)), new Double("0.3333333"))/10; // 10 is to change from km/h to the pixelmap/h
+		hmi.mileage((float)speed * 10);
 		if (engineTorque >= 0) {
 			if(speed-brakeAdjustment*hmiBrake > 0) {
 				speed -= brakeAdjustment * hmiBrake; //have to change this to adjust for boolean brake variable

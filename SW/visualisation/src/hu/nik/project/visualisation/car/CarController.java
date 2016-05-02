@@ -161,11 +161,11 @@ public class CarController {
             else
                 gas += 0.09;
             //car.move(gas);
-            steeringWheelClass.control(gas, steeringWheel, KeyEvent.VK_DOWN);
+            //steeringWheelClass.control(gas, steeringWheel, KeyEvent.VK_DOWN);
         }
-        if (gas < 30) {
-            steeringWheelClass.setDefaultRpm(gas);
-        }
+//        if (gas < 30) {
+//            steeringWheelClass.setDefaultRpm(gas);
+//        }
     }
 
     public void restoreSteeringWheel(){
