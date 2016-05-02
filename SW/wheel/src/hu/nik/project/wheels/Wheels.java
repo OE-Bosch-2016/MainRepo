@@ -119,6 +119,6 @@ public class Wheels implements IWheels, ICommBusDevice {
 				speed=0;
 			}
 		}
-		System.out.println(engineRPM + "<-rpm " + engineTorque + "<-torque " + speed*10);
+		//System.out.println(engineRPM + "<-rpm " + engineTorque + "<-torque " + speed*10);
 	}
 }
