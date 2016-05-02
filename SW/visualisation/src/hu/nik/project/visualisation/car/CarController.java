@@ -134,10 +134,12 @@ public class CarController {
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            restoreSteeringWheel();
             rightRotate = false;
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            restoreSteeringWheel();
             leftRotate = false;
         }
 
@@ -164,6 +166,10 @@ public class CarController {
         if (gas < 30) {
             steeringWheelClass.setDefaultRpm(gas);
         }
+    }
+
+    public void restoreSteeringWheel(){
+        steeringWheel = 0;
     }
 
     public void initSteeringWheel(SteeringWheel steeringWheel) {
