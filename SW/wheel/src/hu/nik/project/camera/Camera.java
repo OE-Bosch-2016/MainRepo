@@ -38,7 +38,7 @@ public	SceneObject[] visibleObjects;
 			}
 			catch(CommBusException e)
 			{
-				break;
+				e.printStackTrace();
 			}
 		}
 	}

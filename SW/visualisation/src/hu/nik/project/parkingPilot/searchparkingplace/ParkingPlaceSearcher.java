@@ -23,7 +23,7 @@ public class ParkingPlaceSearcher implements ICommBusDevice {
             try {
                 ParkingPlaceSearcher data = (ParkingPlaceSearcher) commBusConnector.receive();
             } catch (CommBusException e) {
-                e.getMessage();
+                e.printStackTrace();
             }
         }
     }

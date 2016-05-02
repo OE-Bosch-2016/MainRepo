@@ -11,7 +11,6 @@ import hu.nik.project.hmi.Hmi;
 public class Gearbox implements ICommBusDevice {
 
     private CommBusConnector commBusConnector;
-    private String stringData = "";
     private Hmi myHmi;
 
     //input
@@ -33,10 +32,6 @@ public class Gearbox implements ICommBusDevice {
         myHmi = Hmi.newInstance();
     }
 
-    public String getStringData() {
-        return stringData;
-    }
-
     @Override
     public void commBusDataArrived() {
         Class dataType = commBusConnector.getDataType();
@@ -46,7 +41,7 @@ public class Gearbox implements ICommBusDevice {
                 rpm = data.getRpm();
                 operateGearbox();
             } catch (CommBusException e) {
-                stringData = e.getMessage();
+                e.printStackTrace();
             }
         }
         else if(dataType == DriverInputMessagePackage.class)
@@ -56,7 +51,7 @@ public class Gearbox implements ICommBusDevice {
                 gearLever = data.getGearLeverPosition();
 				operateGearbox();
             } catch (CommBusException e) {
-                stringData = e.getMessage();
+                e.printStackTrace();
             }
 		}
     }
@@ -107,7 +102,7 @@ public class Gearbox implements ICommBusDevice {
             commBusConnector.send(message);
         }
         catch (CommBusException e) {
-                //sad times
+            e.printStackTrace();
         }
     }
 }

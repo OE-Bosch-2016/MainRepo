@@ -32,7 +32,7 @@ package hu.nik.project.ebs;
                         enabled = data.aebIsActive();
                         driverWheel = data.getWheelAngle();
                     } catch (CommBusException e) {
-
+                        e.printStackTrace();
                     }
                 }
 
@@ -45,7 +45,7 @@ package hu.nik.project.ebs;
                             currDist = data.getCurrentDistance() ;
                             currRelSpeed = data.getRelativeSpeed() ;
                         } catch (CommBusException e) {
-                            //stringData = e.getMessage();
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -61,7 +61,7 @@ package hu.nik.project.ebs;
                                 sent = true;
                             }
                         } catch (CommBusException e) {
-                            break;
+                            e.printStackTrace();
                         }
                     }
                 }

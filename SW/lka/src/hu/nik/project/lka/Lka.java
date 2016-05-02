@@ -47,6 +47,7 @@ public class Lka implements ICommBusDevice {
                 enabled = data.lkaIsActive();
             } catch (CommBusException e) {
                 lastErrorMessage = e.getMessage();
+                e.printStackTrace();
             }
         }
 
@@ -86,6 +87,7 @@ public class Lka implements ICommBusDevice {
                 }
             } catch (CommBusException e) {
                 lastErrorMessage = e.getMessage();
+                e.printStackTrace();
             }
         }
     }
@@ -108,7 +110,7 @@ public class Lka implements ICommBusDevice {
             commBusConnector.send(new LkaMessagePackage(requestedSteeringWheelAngle, maximumSpeedForKeepingLane));
         }
         catch (CommBusException e) {
-            //sad times
+            e.printStackTrace();
         }
     }
 

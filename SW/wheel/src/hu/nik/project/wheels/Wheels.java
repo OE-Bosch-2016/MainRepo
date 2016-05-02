@@ -43,7 +43,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 			try {
 				engineRPM = ((EngineMessagePackage) commBusConnector.receive()).getRpm();
 			} catch (CommBusException e) {
-				//stringData = e.getMessage();
+				e.printStackTrace();
 			}
 		}
 
@@ -53,7 +53,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 				hmiWheel = data.getWheelAngle();
 				hmiBrake = data.getCarBreak();
 			} catch (CommBusException e) {
-				//stringData = e.getMessage();
+				e.printStackTrace();
 			}
 		}
 
@@ -62,7 +62,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 				engineTorque = ((GearboxMessagePackage)commBusConnector.receive()).getTorque();
 
 			} catch (CommBusException e) {
-				//stringData = e.getMessage();
+				e.printStackTrace();
 			}
 		}
 	}
