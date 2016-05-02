@@ -2,6 +2,7 @@ package hu.nik.project.visualisation.car;
 
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.hmi.Hmi;
 import hu.nik.project.utils.Transformation;
 import hu.nik.project.utils.Vector2D;
 
@@ -41,9 +42,9 @@ public class CarController {
         this.shunt = shunt;
         if (car != null) {
             handle = false;
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT && gas != 0) {
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //&& gas != 0
                 turnRight();
-            } else if (e.getKeyCode() == KeyEvent.VK_LEFT && gas != 0) {
+            } else if (e.getKeyCode() == KeyEvent.VK_LEFT) { //&& gas != 0
                 turnLeft();
             }
 
@@ -69,20 +70,20 @@ public class CarController {
 
     private void turnLeft() {
         leftRotate = true;
-        //if (steeringWheel > -180)
-        steeringWheel -= 5;
+        if (steeringWheel > -180)
+            steeringWheel -= 5;
 
-        car.rotation(steeringWheel);
+        //car.rotation(steeringWheel);
 
         handleSecondButtonUpOrDown();
     }
 
     private void turnRight() {
         rightRotate = true;
-        //if (steeringWheel < 180)
-        steeringWheel += 5;
+        if (steeringWheel < 180)
+            steeringWheel += 5;
 
-        car.rotation(steeringWheel);
+        //car.rotation(steeringWheel);
 
         handleSecondButtonUpOrDown();
     }
