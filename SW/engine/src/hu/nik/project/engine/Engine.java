@@ -2,6 +2,7 @@ package hu.nik.project.engine;
 
 import hu.nik.project.communication.*;
 import hu.nik.project.gearbox.GearboxMessagePackage;
+import hu.nik.project.hmi.Hmi;
 import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 
 /*
@@ -23,6 +24,7 @@ public class Engine implements ICommBusDevice {
     private int lastGearStage;
     int lasttime;
     boolean started;
+    private Hmi myHmi;
 
     //output
     private double rpm;
@@ -34,6 +36,7 @@ public class Engine implements ICommBusDevice {
         lastGearStage = 0;
         gearStage = 0;
         time = lasttime = 0;
+        myHmi = Hmi.newInstance();
     }
 
     public String getStringData() {
@@ -110,9 +113,9 @@ public class Engine implements ICommBusDevice {
         lasttime = time - lasttime;
         double operatingPoint = 5 * (Math.pow(Math.E, rpm / 1600) - 1);
         if (throttle > 0) {
-            operatingPoint += (double) lasttime / 1000;
+            operatingPoint += (double) lasttime / 5;
         } else {
-            operatingPoint -= (double) lasttime / 1000;
+            operatingPoint -= (double) lasttime / 5;
         }
         if (operatingPoint < 0) {
             operatingPoint = 0;
@@ -125,6 +128,7 @@ public class Engine implements ICommBusDevice {
                 rpm = minRpm;
             }
         }
+        myHmi.setRpm((int)rpm);
         lasttime = time;
     }
 
