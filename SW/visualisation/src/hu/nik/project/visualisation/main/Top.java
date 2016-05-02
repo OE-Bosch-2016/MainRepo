@@ -20,6 +20,7 @@ import org.jfree.data.general.DefaultValueDataset;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -378,6 +379,18 @@ public class Top extends JFrame { // implements KeyListener
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("Engine")) {
                 hmiButtonArray[0] = !hmiButtonArray[0];
+                if(hmiButtonArray[0])
+                {
+                    engineButton.setBackground(Color.DARK_GRAY);
+                    engineButton.setOpaque(true);
+                    engineButton.setForeground(Color.WHITE);
+                }else
+                {
+                    engineButton.setBackground(Color.LIGHT_GRAY);
+                    engineButton.setOpaque(true);
+                    engineButton.setForeground(Color.DARK_GRAY);
+                }
+
 
                 if(hmiButtonArray[0])
                     hmi.gearshift(Hmi.GEAR_SHIFT_D);
@@ -386,10 +399,43 @@ public class Top extends JFrame { // implements KeyListener
 
             } else if (e.getActionCommand().equals("ACC")) {
                 hmiButtonArray[1] = !hmiButtonArray[1];
+                if(hmiButtonArray[1])
+                {
+                    ACCButton.setBackground(Color.DARK_GRAY);
+                    ACCButton.setOpaque(true);
+                    ACCButton.setForeground(Color.WHITE);
+                }else
+                {
+                    ACCButton.setBackground(Color.LIGHT_GRAY);
+                    ACCButton.setOpaque(true);
+                    ACCButton.setForeground(Color.DARK_GRAY);
+                }
             } else if (e.getActionCommand().equals("TSR")) {
                 hmiButtonArray[2] = !hmiButtonArray[2];
+                if(hmiButtonArray[2])
+                {
+                    TSRButton.setBackground(Color.DARK_GRAY);
+                    TSRButton.setOpaque(true);
+                    TSRButton.setForeground(Color.WHITE);
+                }else
+                {
+                    TSRButton.setBackground(Color.LIGHT_GRAY);
+                    TSRButton.setOpaque(true);
+                    TSRButton.setForeground(Color.DARK_GRAY);
+                }
             } else if (e.getActionCommand().equals("PP")) {
                 hmiButtonArray[3] = !hmiButtonArray[3];
+                if(hmiButtonArray[3])
+                {
+                    PPButton.setBackground(Color.DARK_GRAY);
+                    PPButton.setOpaque(true);
+                    PPButton.setForeground(Color.WHITE);
+                }else
+                {
+                    PPButton.setBackground(Color.LIGHT_GRAY);
+                    PPButton.setOpaque(true);
+                    PPButton.setForeground(Color.DARK_GRAY);
+                }
 
                 if(hmiButtonArray[3])
                     hmi.gearshift(Hmi.GEAR_SHIFT_R);
@@ -397,11 +443,34 @@ public class Top extends JFrame { // implements KeyListener
                     hmi.gearshift(Hmi.GEAR_SHIFT_D);
             } else if (e.getActionCommand().equals("AEB")) {
                 hmiButtonArray[4] = !hmiButtonArray[4];
+                if(hmiButtonArray[4])
+                {
+                    AEBButton.setBackground(Color.DARK_GRAY);
+                    AEBButton.setOpaque(true);
+                    AEBButton.setForeground(Color.WHITE);
+                }else
+                {
+                    AEBButton.setBackground(Color.LIGHT_GRAY);
+                    AEBButton.setOpaque(true);
+                    AEBButton.setForeground(Color.DARK_GRAY);
+                }
             } else if (e.getActionCommand().equals("LKA")) {
                 hmiButtonArray[5] = !hmiButtonArray[5];
+                if(hmiButtonArray[5])
+                {
+                    LKAButton.setBackground(Color.DARK_GRAY);
+                    LKAButton.setOpaque(true);
+                    LKAButton.setForeground(Color.WHITE);
+                }else
+                {
+                    LKAButton.setBackground(Color.LIGHT_GRAY);
+                    LKAButton.setOpaque(true);
+                    LKAButton.setForeground(Color.DARK_GRAY);
+                }
             } else {
                 hmiButtonArray[6] = !hmiButtonArray[6];
             }
+
         }
     };
 }
