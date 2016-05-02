@@ -174,7 +174,7 @@ public class CarController {
         if (car != null) {
             carRotation = carAngle;
             car.rotation(carAngle);
-            car.move(speed / MOVE_ANIMATION);
+            car.move(speed);
         }
     }
 
