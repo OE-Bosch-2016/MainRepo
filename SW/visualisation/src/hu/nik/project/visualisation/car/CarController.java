@@ -71,7 +71,7 @@ public class CarController {
     private void turnLeft() {
         leftRotate = true;
         if (steeringWheel > -180)
-            steeringWheel -= 5;
+            steeringWheel -= 10;
 
         //car.rotation(steeringWheel);
 
@@ -81,7 +81,7 @@ public class CarController {
     private void turnRight() {
         rightRotate = true;
         if (steeringWheel < 180)
-            steeringWheel += 5;
+            steeringWheel += 10;
 
         //car.rotation(steeringWheel);
 
