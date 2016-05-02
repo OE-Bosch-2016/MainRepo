@@ -3,6 +3,7 @@ package hu.nik.project.gearbox;
 import hu.nik.project.communication.*;
 import hu.nik.project.engine.EngineMessagePackage;
 import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
+import hu.nik.project.hmi.Hmi;
 
 /**
  * @author András & Gergő
@@ -11,6 +12,7 @@ public class Gearbox implements ICommBusDevice {
 
     private CommBusConnector commBusConnector;
     private String stringData = "";
+    private Hmi myHmi;
 
     //input
     int gearLever;
@@ -28,6 +30,8 @@ public class Gearbox implements ICommBusDevice {
         this.gearStage = this.gearLever = gearLever;
         this.commBusConnector = commBus.createConnector(this, commBusConnectorType);
         this.rpm = 0;
+        myHmi = Hmi.newInstance();
+        myHmi.numberedGearShiftPosition();
     }
 
     public String getStringData() {
@@ -60,7 +64,7 @@ public class Gearbox implements ICommBusDevice {
 
     public void operateGearbox() {
         switch (gearLever) {
-            case 1:
+            case Hmi.GEAR_SHIFT_D:
                 if (gearStage > 0 && gearStage < 5 && rpm > maxShiftRpm) {
                     gearStage++;
                 } else if (gearStage > 2 && rpm < minShiftRpm) {
@@ -70,10 +74,10 @@ public class Gearbox implements ICommBusDevice {
                     gearStage = 1;
                 }
                 break;
-            case 0:
+            case Hmi.GEAR_SHIFT_N:
                 gearStage = 0;
                 break;
-            default:
+            case Hmi.GEAR_SHIFT_R:
                 gearStage = -1;
                 break;
         }
