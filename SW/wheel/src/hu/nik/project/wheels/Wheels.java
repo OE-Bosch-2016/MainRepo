@@ -23,11 +23,10 @@ public class Wheels implements IWheels, ICommBusDevice {
 	private float hmiBrake;
 
 	//adjust these by testing
-	static private double turningAdjustment = 0.01;      //proportion to simulate turning realistically
+	static private double turningAdjustment = 0.5;      //proportion to simulate turning realistically
 	static private double framerate = 24;
 	static private double accelerationAdjustment = 0.2; //proportion to convert torque to acceleration
-	static private double brakeAdjustment = 0.2;		//proportion to turn brake pedal to deceleration
-	static private double natureBrake = 0.02;			//deceleration of environment
+	static private double brakeAdjustment = 0.2;		//proportion to turn brake pedal to deceleration			//deceleration of environment
 
 	//output buffers
 	private double speed; 						   //given in km/h
@@ -104,7 +103,7 @@ public class Wheels implements IWheels, ICommBusDevice {
 		natureBrake=0.3*1.25*3=1.125;
 		*/
 
-		speed = Math.pow((2 * (engineTorque * engineRPM / 0.0095488) / (natureBrake)), new Double("0.3333333"));
+		speed = Math.pow((2 * (engineTorque * engineRPM / 9.5488)), new Double("0.3333333"));
 		if (engineTorque >= 0) {
 			speed -= brakeAdjustment * hmiBrake; //have to change this to adjust for boolean brake variable
 		} else {
