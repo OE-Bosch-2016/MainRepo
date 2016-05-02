@@ -57,11 +57,9 @@ public class BoschCar extends Car {
 
     public void doWork() {
         hmiManager.doWork();
-        if (engine.isStarted()) {
-            engine.doWork();
-            gearbox.doWork();
-            wheels.doWork();
-        }
+        engine.doWork();
+        gearbox.doWork();
+        wheels.doWork();
     }
 
     public void setCarPosition(ScenePoint position, int rotation) {
