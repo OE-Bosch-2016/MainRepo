@@ -11,7 +11,6 @@ import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 public class Engine implements ICommBusDevice {
 
     private CommBusConnector commBusConnector;
-    private String stringData = "";
 
     //input
     double throttle;
@@ -39,10 +38,6 @@ public class Engine implements ICommBusDevice {
         myHmi = Hmi.newInstance();
     }
 
-    public String getStringData() {
-        return stringData;
-    }
-
     @Override
     public void commBusDataArrived() {
         Class dataType = commBusConnector.getDataType();
@@ -53,7 +48,7 @@ public class Engine implements ICommBusDevice {
                 operateShift();
                 //data küldés a buszra
             } catch (CommBusException e) {
-                stringData = e.getMessage();
+                e.printStackTrace();
             }
         } else if (dataType == DriverInputMessagePackage.class) //throttle
         {
@@ -64,7 +59,7 @@ public class Engine implements ICommBusDevice {
                 time = (int) data.getTick();
                 calculateRpm();
             } catch (CommBusException e) {
-                stringData = e.getMessage();
+                e.printStackTrace();
             }
         }
     }

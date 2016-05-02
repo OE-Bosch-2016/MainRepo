@@ -28,7 +28,7 @@ public class Tsr implements ICommBusDevice{
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
                 enabled = data.tsrIsActive();
             } catch (CommBusException e) {
-
+                e.printStackTrace();
             }
 
         } else
@@ -41,6 +41,7 @@ public class Tsr implements ICommBusDevice{
                     commBusConnector.send( new TsrMessagePackage(0,data.getCenter()));
             } catch (CommBusException e) {
                 stringData = e.getMessage();
+                e.printStackTrace();
             }
         } else if (dataType == DirectionSign.class) {
             try {
@@ -49,6 +50,7 @@ public class Tsr implements ICommBusDevice{
                 commBusConnector.send( new TsrMessagePackage(0,data.getCenter()));
             } catch (CommBusException e) {
                 stringData = e.getMessage();
+                e.printStackTrace();
             }
         } else if (dataType == SpeedSign.class) {
             try {
@@ -81,6 +83,7 @@ public class Tsr implements ICommBusDevice{
                 if(packet!=null) commBusConnector.send(packet);
             } catch (CommBusException e) {
                 stringData = e.getMessage();
+                e.printStackTrace();
             }
         }
     }

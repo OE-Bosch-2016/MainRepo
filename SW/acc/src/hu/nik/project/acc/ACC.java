@@ -11,7 +11,6 @@ import hu.nik.project.wheels.WheelsMessagePackage; // -> wheelStateInDegrees, cu
 public class ACC implements ICommBusDevice {
 
     private CommBusConnector commBusConnector;
-    private String stringData = "";
     private boolean enabled = false;
 
     //input
@@ -34,10 +33,6 @@ public class ACC implements ICommBusDevice {
         gasPedal = breakPedal = 0;
     }
 
-    public String getStringData() {
-        return stringData;
-    }
-
     @Override
     public void commBusDataArrived() {
         Class dataType = commBusConnector.getDataType();
@@ -52,7 +47,7 @@ public class ACC implements ICommBusDevice {
                     operateACC();
                 }
             } catch (CommBusException e) {
-                stringData = e.getMessage();
+                e.printStackTrace();
             }
         } else if (dataType == DriverInputMessagePackage.class) {
             try {
@@ -63,7 +58,7 @@ public class ACC implements ICommBusDevice {
                 breakPedal = data.getCarBreak();
 
             } catch (CommBusException e) {
-                stringData = e.getMessage();
+                e.printStackTrace();
             }
         }
         else if(dataType == RadarMessagePacket.class)
@@ -73,7 +68,7 @@ public class ACC implements ICommBusDevice {
                 nearestObstacleDistance = (int)data.getCurrentDistance();
 				operateACC();
             } catch (CommBusException e) {
-                stringData = e.getMessage();
+                e.printStackTrace();
             }
 		}
     }
@@ -120,7 +115,7 @@ public class ACC implements ICommBusDevice {
                     sent = true;
                 }
             } catch (CommBusException e) {
-                //sad times
+                e.printStackTrace();
             }
         }
     }
