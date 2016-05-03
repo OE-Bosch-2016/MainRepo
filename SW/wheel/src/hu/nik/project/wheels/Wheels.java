@@ -125,4 +125,8 @@ public class Wheels implements IWheels, ICommBusDevice {
 		}
 		//System.out.println(engineRPM + "<-rpm " + engineTorque + "<-torque " + speed*10);
 	}
+
+	public double getSpeed() {
+		return speed;
+	}
 }

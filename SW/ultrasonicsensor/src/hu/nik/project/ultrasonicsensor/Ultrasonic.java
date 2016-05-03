@@ -114,15 +114,18 @@ public class Ultrasonic {
 ////                System.out.println("");
 ////            }
 ////        }
-        
-        UltrasonicModul um = new UltrasonicModul(cb,cmtype,currPosition,scene);
+
 //      
         int rot = 270;
         int rot2 =180; 
         ScenePoint sce = new ScenePoint(3100, 500);
         Car car = new Car(sce, rot);
+
         System.out.println("car base: " +car.getBasePosition());
         System.out.println("car centre: "+car.getCenterPoint());
+
+        UltrasonicModul um = new UltrasonicModul(cb,cmtype, car, scene);
+
         um.getNearestObjectDistances(sce,rot);
         for (int i = 0; i < um.getClosestDistance().length ; i++) {
             System.out.println("Closest distance in zone:" +i+ " ; " +um.getClosestDistance()[i]);

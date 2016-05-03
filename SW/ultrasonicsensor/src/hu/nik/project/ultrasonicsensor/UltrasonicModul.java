@@ -12,6 +12,7 @@ import hu.nik.project.communication.CommBusException;
 import hu.nik.project.communication.ICommBusDevice;
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.environment.objects.Car;
 import java.util.ArrayList;
 
 /**
@@ -36,14 +37,14 @@ public class UltrasonicModul implements ICommBusDevice {
     }
     
 
-    public UltrasonicModul(CommBus commBus, CommBusConnectorType commBusConnectorType, ScenePoint currPos, Scene scene) {
+    public UltrasonicModul(CommBus commBus, CommBusConnectorType commBusConnectorType, Car car, Scene scene) {
         commBusConnector = commBus.createConnector(this, commBusConnectorType);
         closestDistance = new double[8];
         sonars = new Sonar[8];
-        currPosition = currPos;
+        currPosition = car.getBasePosition();
         this.scene = scene;
         for (int i = 0; i < sonars.length; i++) {
-            sonars[i] = new Sonar(fov, startAngle, currPos);
+            sonars[i] = new Sonar(fov, startAngle, currPosition);
             startAngle += fov;
         }
     }

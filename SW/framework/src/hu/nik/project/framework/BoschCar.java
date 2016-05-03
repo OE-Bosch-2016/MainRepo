@@ -8,7 +8,9 @@ import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.objects.Car;
 import hu.nik.project.environment.objects.SceneObjectException;
 import hu.nik.project.hmi.manager.HmiManager;
+import hu.nik.project.radar.RadarModul;
 import hu.nik.project.tsr.Tsr;
+import hu.nik.project.ultrasonicsensor.UltrasonicModul;
 import hu.nik.project.wheels.Wheels;
 import hu.nik.project.acc.ACC;
 import hu.nik.project.communication.CommBus;
@@ -29,8 +31,9 @@ public class BoschCar extends Car {
     Engine engine;
     Gearbox gearbox;
     Tsr tsr;
-    Ultrasonicsensor ultrasonicsensor; // The constructor is not straightforward, have to discuss it with the team
+    UltrasonicModul ultrasonic; // The constructor is not straightforward, have to discuss it with the team
     Camera camera;
+    RadarModul radar;
     Wheels wheels;
     HmiManager hmiManager;
 
@@ -43,6 +46,8 @@ public class BoschCar extends Car {
 
         // Sensors
         camera = new Camera(commBus, CommBusConnectorType.Sender, Main.scene, this);
+        radar = new RadarModul(Main.scene, commBus, (float)45.0, 24);
+        ultrasonic = new UltrasonicModul(commBus, CommBusConnectorType.Sender, this, Main.scene);
 
         // Driver assistant components
         acc = new ACC(commBus, CommBusConnectorType.SenderReceiver);
