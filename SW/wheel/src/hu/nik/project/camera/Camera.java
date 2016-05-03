@@ -62,7 +62,7 @@ public	SceneObject[] visibleObjects;
     
 	private void calcClosestSign() //need to get the car ???!!
 	{
-		ArrayList<SceneObject> visibleObjectsArrayList = currentScene.getVisibleSceneObjects(currentCar.getBasePosition(),currentCar.getRotation(),70);
+		ArrayList<SceneObject> visibleObjectsArrayList = currentScene.getVisibleSceneObjects(currentCar.getBasePosition(),currentCar.getRotation()+90,70);
 		visibleObjects = new SceneObject[visibleObjectsArrayList.size()];
 
 		int j = 0;

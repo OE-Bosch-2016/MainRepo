@@ -1,10 +1,12 @@
 package hu.nik.project.camera;
 
+
 import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.objects.Car;
+import hu.nik.project.environment.objects.DirectionSign;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,8 +25,9 @@ public class CameraTest {
     public void setUp() throws Exception {
 
         Scene scene = new Scene("..\\SceneRoads\\road_1.xml");
-        Car car = new Car(new ScenePoint(3250, 2900), 0);
+        Car car = new Car(new ScenePoint(3375, 2525), 0);
         CommBus commBus = new CommBus();
+        //Car car = new Car(new ScenePoint(3201,3001), 0);
 
         camera = new Camera(commBus, CommBusConnectorType.Sender, scene, car);
     }
@@ -32,13 +35,13 @@ public class CameraTest {
     @Test
     public void getClosestSign() throws Exception {
         camera.doWork();
-        Assert.assertEquals("", camera.getClosestSign());
+        Assert.assertEquals(DirectionSign.DirectionType.ROUNDABOUT, camera.getClosestSign().getObjectType());
     }
 
 
     public void getLaneDistance() throws Exception {
         camera.doWork();
-        Assert.assertEquals("", camera.getLaneDistance());
+       // Assert.assertEquals("", camera.getLaneDistance());
     }
 
 }
