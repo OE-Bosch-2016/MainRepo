@@ -37,7 +37,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
      * @param sensorScene ISensorScene interface from module enviroment
      * @param commbus Communication bus from module communication
      * @param angelOfSight the alpha value of our Radar [view angle]
-     * @param samplingTime we use this time to calculate relative speed, MUST BE IN MILISEC!!
+     * @param samplingTime we use this time to calculate relative speed, MUST BE IN MILISEC!! [TimerTick]
      */
     public RadarModul(ISensorScene sensorScene, CommBus commbus, float angelOfSight, int samplingTime) {
         _sensorScene = sensorScene;
@@ -70,7 +70,6 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         _currentSpeed=(double)_carcontroller.getGas();
         ScenePoint curentPosition = _carcontroller.getCarPosition();
         int observerRotation = _carcontroller.getCarRotation();
-
         RadarMessagePacket msgPacket = getDetectedObjsRelativeSpeedAndDistance(observerRotation,curentPosition);
         if(msgPacket!=null){
             try {
