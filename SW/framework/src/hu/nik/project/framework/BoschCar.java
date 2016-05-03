@@ -46,7 +46,7 @@ public class BoschCar extends Car {
 
         // Sensors
         camera = new Camera(commBus, CommBusConnectorType.Sender, Main.scene, this);
-        radar = new RadarModul(Main.scene, commBus, (float)45.0, 24);
+        radar = new RadarModul(Main.scene, commBus, (float)45.0, 42);
         ultrasonic = new UltrasonicModul(commBus, CommBusConnectorType.Sender, this, Main.scene);
 
         // Driver assistant components
