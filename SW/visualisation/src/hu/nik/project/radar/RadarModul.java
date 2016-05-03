@@ -310,6 +310,10 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         _radarPacketObservableList.clear();
     }
 
+    public void doWork() {
+
+    }
+
 //</editor-fold>
 
     // Listener --------------------------------------------------------------------------------------------------------
