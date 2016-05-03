@@ -11,6 +11,8 @@ import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 
+import java.util.ArrayList;
+
 public class Camera implements ICamera, ICommBusDevice {
 	
 	SceneObject closestSign; 	//given in the object itself
@@ -21,12 +23,15 @@ public class Camera implements ICamera, ICommBusDevice {
 
 public	SceneObject[] visibleObjects;
 
+
 	private CommBusConnector commBusConnector;
 
 	@Override
 	public void commBusDataArrived(){}
 
 	public void doWork() {
+		calcClosestSign();
+		//calcLaneDistance();
 		boolean sent = false;
 		CameraMessagePackage message = new CameraMessagePackage(closestSign,laneDistance,IsLaneRestricted); //so it doesnt have to remake it every time
 		while(!sent)
@@ -43,12 +48,6 @@ public	SceneObject[] visibleObjects;
 		}
 	}
 
-	public void calcOnTick()
-	{
-		calcClosestSign();
-		calcLaneDistance();
-	}
-
 	public Camera(CommBus commBus, CommBusConnectorType commBusConnectorType, Scene scene, Car car) //scene has to be given in pointer?
 	{
 		commBusConnector = commBus.createConnector(this, commBusConnectorType);
@@ -63,7 +62,15 @@ public	SceneObject[] visibleObjects;
     
 	private void calcClosestSign() //need to get the car ???!!
 	{
-		visibleObjects = (SceneObject[]) currentScene.getVisibleSceneObjects(currentCar.getBasePosition(),currentCar.getRotation(),70).toArray();
+		ArrayList<SceneObject> visibleObjectsArrayList = currentScene.getVisibleSceneObjects(currentCar.getBasePosition(),currentCar.getRotation(),70);
+		visibleObjects = new SceneObject[visibleObjectsArrayList.size()];
+
+		int j = 0;
+		for(SceneObject so : visibleObjectsArrayList) {
+			visibleObjects[j++] = so;
+		}
+
+		//visibleObjects = (SceneObject[]) currentScene.getVisibleSceneObjects(currentCar.getBasePosition(),currentCar.getRotation(),70).toArray();
 
 		//set closest sign
 		double min=999999;	//irrationally high number for minimum selection
@@ -119,7 +126,7 @@ public	SceneObject[] visibleObjects;
 		}
 	}
 	
-	private void calcLaneDistance()
+	/*private void calcLaneDistance()
 	{
 		//Road road = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70);
 		Road road = null; //temporary to make it complie^
@@ -144,7 +151,7 @@ public	SceneObject[] visibleObjects;
         	    }
         	}
 
-	}
+	}*/
 	
 	private double pDistance(double x,double y,double x1,double y1,double x2,double y2)
 	{
