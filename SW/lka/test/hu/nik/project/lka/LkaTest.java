@@ -63,7 +63,11 @@ public class LkaTest {
 
         LkaMessagePackage mp;
 
-        // LKA on ?
+        // LKA on
+        testDriverInput.SendAsDriverInput(true);
+        Thread.sleep(100);
+
+        Assert.assertEquals("", lka.getLastErrorMessage());
         Assert.assertTrue(lka.getEnabled());
 
         // Camera send a higher distance
@@ -83,7 +87,11 @@ public class LkaTest {
 
         LkaMessagePackage mp;
 
-        // LKA on ?
+        // LKA on
+        testDriverInput.SendAsDriverInput(true);
+        Thread.sleep(100);
+
+        Assert.assertEquals("", lka.getLastErrorMessage());
         Assert.assertTrue(lka.getEnabled());
 
         // Camera send a lower distance
