@@ -6,7 +6,7 @@ import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.objects.Car;
 import hu.nik.project.environment.objects.SceneObject;
 import hu.nik.project.utils.Vector2D;
-import hu.nik.project.wheels.WheelsMessagePackage;
+import hu.nik.project.visualisation.car.CarController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -22,6 +22,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     private CommBus _communicationBus;
     private ISensorScene _sensorScene;
     private CommBusConnector _commBusConnector;
+    private CarController _carcontroller;
 
     private static final int _viewDistance = 200;
     private float _angelOfSight;
@@ -31,13 +32,12 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     private HashMap<Integer, float[]> _previousVectorsHashMap;
     private ObservableList<RadarMessagePacket> _radarPacketObservableList;
-    private OnRadarObjectsListener _radarObjectsListener;
 
     /**
      * @param sensorScene ISensorScene interface from module enviroment
      * @param commbus Communication bus from module communication
      * @param angelOfSight the alpha value of our Radar [view angle]
-     * @param samplingTime we use this time to calculate relative speed, MUST BE IN MILISEC!!
+     * @param samplingTime we use this time to calculate relative speed, MUST BE IN MILISEC!! [TimerTick]
      */
     public RadarModul(ISensorScene sensorScene, CommBus commbus, float angelOfSight, int samplingTime) {
         _sensorScene = sensorScene;
@@ -45,12 +45,12 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         _angelOfSight = angelOfSight;
         _sampingTime = samplingTime;
 
-        _commBusConnector = commbus.createConnector(this, CommBusConnectorType.SenderReceiver);
+        _commBusConnector = commbus.createConnector(this, CommBusConnectorType.Sender);
 
         _previousVectorsHashMap = new HashMap<Integer, float[]>();
 
         _radarPacketObservableList = FXCollections.observableList(new ArrayList<RadarMessagePacket>());
-
+        _carcontroller = CarController.newInstance();
     }
 
     //<editor-fold desc="Properties of radar Modul">
@@ -65,40 +65,36 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     //</editor-fold>
 
-    public void commBusDataArrived() {
-        WheelsMessagePackage msgPacket;
-        Class wheelMessagePacket = _commBusConnector.getDataType();
-        if (wheelMessagePacket == WheelsMessagePackage.class) {
+
+    public void doWork() {
+        _currentSpeed=(double)_carcontroller.getGas();
+        ScenePoint curentPosition = _carcontroller.getCarPosition();
+        int observerRotation = _carcontroller.getCarRotation();
+        RadarMessagePacket msgPacket = getDetectedObjsRelativeSpeedAndDistance(observerRotation,curentPosition);
+        if(msgPacket!=null){
             try {
-                msgPacket = (WheelsMessagePackage) _commBusConnector.receive();
-                if(msgPacket!=null){
-                    _currentSpeed = msgPacket.speed;
-                }
+                SendPacketToDatabus(msgPacket);
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void commBusDataArrived() {
+        //we do nothing here?
+    }
+
     public RadarMessagePacket getDetectedObjsRelativeSpeedAndDistance(int observerRotation, ScenePoint currentPosition) {
         Vector2D currentPos = new Vector2D((float) currentPosition.getX(), (float) currentPosition.getY());
-
         ArrayList<Car> incomingData = getSceneObjectsInSpecificArea(currentPos, observerRotation, (int) _angelOfSight);
         if (incomingData != null) {
             ArrayList<Car> recent = getMostRecentVectorsFromEnv(incomingData);
             _radarPacketObservableList = getDetectedObjsRelativeSpeedDistance(recent, currentPos, _currentSpeed);
             RadarMessagePacket packet = getClosestObjectFromList(_radarPacketObservableList);
-            //send packet here if packet is not null
             return packet;
         } else {
             return null;
         }
-    }
-
-
-    // Setter ----------------------------------------------------------------------------------------------------------
-    public void setOnRadarObjectListListener(OnRadarObjectsListener radarObjectsListener) {
-        _radarObjectsListener = radarObjectsListener;
     }
 
     //<editor-fold desc="Private methods">
@@ -310,15 +306,6 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         _radarPacketObservableList.clear();
     }
 
-    public void doWork() {
-
-    }
 
 //</editor-fold>
-
-    // Listener --------------------------------------------------------------------------------------------------------
-    public interface OnRadarObjectsListener {
-        void objectListChanged(ObservableList<RadarMessagePacket> result);
-    }
-
 }
