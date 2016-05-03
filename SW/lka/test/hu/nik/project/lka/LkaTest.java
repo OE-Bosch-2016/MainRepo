@@ -31,7 +31,7 @@ public class LkaTest {
     }
 
     @Test
-    public void testLkaProcess() throws Exception {
+    public void testLkaProcessEnableAndNormalDistance() throws Exception {
 
         LkaMessagePackage mp;
 
@@ -48,35 +48,55 @@ public class LkaTest {
         Thread.sleep(100);
 
         Assert.assertEquals("", lka.getLastErrorMessage());
+        lka.doWork();
+        Thread.sleep(100);
 
         Assert.assertEquals("", testDevice.getStringData());
         mp = (LkaMessagePackage)testDevice.getLastData();
         Assert.assertNotNull(mp);
         Assert.assertEquals(0, mp.getRequestedSteeringWheelAngle());
         Assert.assertTrue(mp.getMaximumSpeedForKeepingLane() > 40);
+    }
+
+    @Test
+    public void testLkaProcessHigherDistance() throws Exception {
+
+        LkaMessagePackage mp;
+
+        // LKA on ?
+        Assert.assertTrue(lka.getEnabled());
 
         // Camera send a higher distance
         testCamera.SendAsCameraMessage(87 + 30); // it's a normal distance
+        Thread.sleep(100);
+        lka.doWork();
         Thread.sleep(100);
 
         mp = (LkaMessagePackage)testDevice.getLastData();
         Assert.assertNotNull(mp);
         Assert.assertEquals(-5, mp.getRequestedSteeringWheelAngle());
         Assert.assertTrue(mp.getMaximumSpeedForKeepingLane() > 40);
+    }
+
+    @Test
+    public void testLkaProcessLowerDistance() throws Exception {
+
+        LkaMessagePackage mp;
+
+        // LKA on ?
+        Assert.assertTrue(lka.getEnabled());
 
         // Camera send a lower distance
         testCamera.SendAsCameraMessage(87 - 30); // it's a normal distance
+        Thread.sleep(100);
+        lka.doWork();
         Thread.sleep(100);
 
         mp = (LkaMessagePackage)testDevice.getLastData();
         Assert.assertNotNull(mp);
         Assert.assertEquals(+5, mp.getRequestedSteeringWheelAngle());
         Assert.assertTrue(mp.getMaximumSpeedForKeepingLane() > 40);
-
     }
-
-
-
 }
 
 
