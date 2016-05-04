@@ -163,7 +163,7 @@ public class Top extends JFrame { // implements KeyListener
 
                 if(hmiButtonArray[0]) tick++;
 
-                bCar.setDriverInput((int)tempomatSpinner.getValue(), tick, hmi.getGearLever(), hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
+                bCar.setDriverInput(Integer.valueOf(tempomatSpinner.getValue().toString()), tick, hmi.getGearLever(), hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
                 bCar.doWork();
                 bCar.setCarPosition(carController.getCarPosition(), carController.getCarRotation());
 
@@ -281,6 +281,10 @@ public class Top extends JFrame { // implements KeyListener
         public void numberedGearShiftChanged(int position) {
             setCurrentGearShiftPosition(position);
         }
+
+        public void steerengWheelChanged(double angle) {
+            steeringWheelLabel.setIcon(steeringWheel.GetSteeringWheel(angle));
+        }
     };
 
     private void simulateMoving(int type) {
@@ -376,7 +380,7 @@ public class Top extends JFrame { // implements KeyListener
             else if (e.getKeyChar() == 'r')
                 car.setPosition(new Vector2D(501, 90));
 
-            carController.keyEvent(e, hmi.getGearLever() == Hmi.getGearShiftR());
+            carController.keyEvent(e, hmi.getGearLever() == Hmi.getGearShiftR(), hmiButtonArray[0]);
            // steeringWheel.control(e);
 
         }

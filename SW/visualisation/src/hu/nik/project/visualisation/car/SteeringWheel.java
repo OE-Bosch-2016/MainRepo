@@ -36,23 +36,26 @@ public class SteeringWheel {
     public SteeringWheel(JLabel label) {
         this.hmi = Hmi.newInstance();
         this.label = label;
+        loadImage();
+    }
+
+    private void loadImage(){
+        try {
+            scaledImage = ImageIO.read(new File(Config.pathSteeringWheel));
+            scaledImage = Scalr.resize(scaledImage, 250, 250);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public ImageIcon GetSteeringWheel(double rotate)
     {
-        try {
-            rotation = rotation + rotate;
-            scaledImage = ImageIO.read(new File(Config.pathSteeringWheel));
-            scaledImage = Scalr.resize(scaledImage, 250, 250);
-            scaledImage = rotate(scaledImage, rotation);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        for (OnBreakSteeringWheelListener hl : listeners)
-            hl.steeringWheelAngleChanged(rotation);
 
-        return new ImageIcon(scaledImage);
+//        for (OnBreakSteeringWheelListener hl : listeners)
+//            hl.steeringWheelAngleChanged(rotation);
+
+        return new ImageIcon(rotate(scaledImage, rotate));
     }
 
     public void control(float gas,float rotate,int e)
@@ -114,13 +117,12 @@ public class SteeringWheel {
 
 
     public BufferedImage rotate(BufferedImage image, double angle) {
-        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+        angle = Math.toRadians(angle);
         int w = image.getWidth(), h = image.getHeight();
-        int neww = (int)Math.floor(w*cos+h*sin), newh = (int)Math.floor(h*cos+w*sin);
         GraphicsConfiguration gc = getDefaultConfiguration();
-        BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
+        BufferedImage result = gc.createCompatibleImage(image.getWidth(), image.getHeight(), Transparency.TRANSLUCENT);
         Graphics2D g = result.createGraphics();
-        g.translate((neww-w)/2, (newh-h)/2);
+        g.translate((image.getWidth()-w)/2, (image.getHeight()-h)/2);
         g.rotate(angle, w / 2, h / 2);
         g.drawRenderedImage(image, null);
         g.dispose();

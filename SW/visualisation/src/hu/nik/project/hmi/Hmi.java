@@ -26,6 +26,8 @@ public class Hmi implements IHmi {
         return mInstance;
     }
 
+    private Hmi(){}
+
     public void mileage(float mile) {
         if (hmiListener != null)
             hmiListener.mileAgeChanged(mile);
@@ -52,6 +54,13 @@ public class Hmi implements IHmi {
     public void numberedGearShiftPosition(int stage){
         if (hmiListener != null)
             hmiListener.numberedGearShiftChanged(stage);
+        else
+            throw new NullPointerException("Hmi listener is missing");
+    }
+
+    public void steeringWheelPosition(double angle){
+        if (hmiListener != null)
+            hmiListener.steerengWheelChanged(angle);
         else
             throw new NullPointerException("Hmi listener is missing");
     }
@@ -95,5 +104,7 @@ public class Hmi implements IHmi {
         void gearshiftChanged(int gearshift);
 
         void numberedGearShiftChanged(int position);
+
+        void steerengWheelChanged(double angle);
     }
 }

@@ -20,6 +20,7 @@ public class CarController {
     private float brake = 0;
     private float steeringWheel = 0; //+- 180
     SteeringWheel steeringWheelClass;
+    private Hmi hmi;
     private int carRotation = 0;
 
     private boolean gasPressed;
@@ -31,9 +32,6 @@ public class CarController {
 
     private boolean handle;
 
-    // Visualisation
-    private int MOVE_ANIMATION = 50;
-
     public static CarController newInstance() {
         if (mInstance == null)
             mInstance = new CarController();
@@ -41,9 +39,13 @@ public class CarController {
         return mInstance;
     }
 
-    public void keyEvent(KeyEvent e, boolean shunt) {
+    private CarController(){
+        hmi = Hmi.newInstance();
+    }
+
+    public void keyEvent(KeyEvent e, boolean shunt, boolean engineWork) {
         this.shunt = shunt;
-        if (car != null) {
+        if (car != null && engineWork) {
             handle = false;
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //&& gas != 0
                 turnRight();
@@ -75,7 +77,7 @@ public class CarController {
         leftRotate = true;
         if (steeringWheel > -180)
             steeringWheel -= 10;
-
+        hmi.steeringWheelPosition(steeringWheel);
         //car.rotation(steeringWheel);
 
         handleSecondButtonUpOrDown();
@@ -85,7 +87,7 @@ public class CarController {
         rightRotate = true;
         if (steeringWheel < 180)
             steeringWheel += 10;
-
+        hmi.steeringWheelPosition(steeringWheel);
         //car.rotation(steeringWheel);
 
         handleSecondButtonUpOrDown();
@@ -170,6 +172,7 @@ public class CarController {
 
     public void restoreSteeringWheel(){
         steeringWheel = 0;
+        hmi.steeringWheelPosition(steeringWheel);
     }
 
     public void initSteeringWheel(SteeringWheel steeringWheel) {
