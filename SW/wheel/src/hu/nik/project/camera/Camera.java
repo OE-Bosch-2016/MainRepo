@@ -32,20 +32,16 @@ public	SceneObject[] visibleObjects;
 	public void doWork() {
 		calcClosestSign();
 		//calcLaneDistance();
-		boolean sent = false;
 		CameraMessagePackage message = new CameraMessagePackage(closestSign,laneDistance,IsLaneRestricted); //so it doesnt have to remake it every time
-		while(!sent)
-		{
 			try {
 				if(commBusConnector.send(message)) {
-					sent = true;
 				}
 			}
 			catch(CommBusException e)
 			{
 				e.printStackTrace();
 			}
-		}
+
 	}
 
 	public Camera(CommBus commBus, CommBusConnectorType commBusConnectorType, Scene scene, Car car) //scene has to be given in pointer?
