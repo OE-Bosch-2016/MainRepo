@@ -103,20 +103,16 @@ public class ACC implements ICommBusDevice {
             //do nothing
             // pedal = 0;
         }
-        SendToCom();
     }
 
-    public void SendToCom() {
-        boolean sent = false;
+    public void doWork() {
         ACCMessagePackage message = new ACCMessagePackage(gasPedal, breakPedal); //so it doesnt have to remake it every time
-        while(!sent) {
-            try {
-                if (commBusConnector.send(message)) {
-                    sent = true;
-                }
-            } catch (CommBusException e) {
+
+        try {
+            commBusConnector.send(message);
+        } catch (CommBusException e) {
                 e.printStackTrace();
-            }
         }
     }
 }
+
