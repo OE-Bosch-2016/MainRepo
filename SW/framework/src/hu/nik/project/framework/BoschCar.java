@@ -61,7 +61,19 @@ public class BoschCar extends Car {
     }
 
     public void doWork() {
+
+        // Do the sensor job!
+        camera.doWork();
+        radar.doWork();
+
+        // Send the driverinput package
         hmiManager.doWork();
+
+        // Call the DA modules
+        tsr.doWork();
+        acc.doWork();
+
+        // Base components call chain
         engine.doWork();
         gearbox.doWork();
         wheels.doWork();
