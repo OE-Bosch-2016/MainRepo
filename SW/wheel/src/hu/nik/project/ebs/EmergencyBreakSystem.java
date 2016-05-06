@@ -81,7 +81,7 @@ package hu.nik.project.ebs;
 
                 if(Math.abs(driverWheel)>20 && currRelSpeed<0 && currDist<500 ) //5m
                {
-                EBSState= 10;
+                EBSState= 9;
                }
 
                 EBSState= 0;
