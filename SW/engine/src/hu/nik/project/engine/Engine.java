@@ -65,12 +65,15 @@ public class Engine implements ICommBusDevice {
         {
             try {
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
+
+                started = data.engineIsActive();
+                time = (int)data.getTick();
+
                 if (!data.accIsActive()) {//ACC is on? => ignore this input
                     throttle = (double) data.getCarGas();//ACC is off => get this input
+                    calculateRpm();
                 }
-                started = data.engineIsActive();
-                time = (int) data.getTick();
-                calculateRpm();
+
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
