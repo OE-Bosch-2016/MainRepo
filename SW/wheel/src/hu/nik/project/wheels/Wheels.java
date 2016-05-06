@@ -1,11 +1,13 @@
 package hu.nik.project.wheels;
 
+import hu.nik.project.acc.ACCMessagePackage;
 import hu.nik.project.communication.ICommBusDevice;
 import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 
+import hu.nik.project.ebs.EmergencyBreakSystemMessagePackage;
 import hu.nik.project.gearbox.GearboxMessagePackage;
 import hu.nik.project.hmi.Hmi;
 import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
@@ -23,11 +25,13 @@ public class Wheels implements IWheels, ICommBusDevice {
 	private double engineTorque;
 	private float hmiWheel;
 	private float hmiBrake;
+	private float accBrake;
+	private float ebsBrake;
+	private float currentBrake;
 
 	//adjust these by testing
 	static private double turningAdjustment = 0.2;      //proportion to simulate turning realistically
 	static private double framerate = 24;
-	static private double accelerationAdjustment = 0.2; //proportion to convert torque to acceleration
 	static private double brakeAdjustment = 1.8;		//proportion to turn brake pedal to deceleration			//deceleration of environment
 
 	//output buffers
@@ -65,6 +69,25 @@ public class Wheels implements IWheels, ICommBusDevice {
 				e.printStackTrace();
 			}
 		}
+
+		if (dataType == ACCMessagePackage.class) {
+			try {
+				accBrake = ((ACCMessagePackage)commBusConnector.receive()).getBreakPedal();
+
+			} catch (CommBusException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (dataType == EmergencyBreakSystemMessagePackage.class) {
+			try {
+				ebsBrake = ((EmergencyBreakSystemMessagePackage)commBusConnector.receive()).deceleration;
+
+			} catch (CommBusException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	public Wheels(CommBus commBus, CommBusConnectorType commBusConnectorType)
@@ -97,6 +120,18 @@ public class Wheels implements IWheels, ICommBusDevice {
 	}
 
 	private void calcSpeed() {
+		currentBrake=hmiBrake;
+
+		if(accBrake!=-1){
+			currentBrake=accBrake;
+		}
+
+		if(ebsBrake!=-1){
+			currentBrake=ebsBrake;
+		}
+
+		accBrake=-1;
+		ebsBrake=-1;
 		/*
 		Power (kW) = Torque (N.m) x Speed (RPM) /0.0095488
 		c=0.3
@@ -109,15 +144,15 @@ public class Wheels implements IWheels, ICommBusDevice {
 		speed = Math.pow((2 * (engineTorque * engineRPM / 9.5488)), new Double("0.3333333"))/10; // 10 is to change from km/h to the pixelmap/h
 		hmi.mileage((float)speed * 10);
 		if (engineTorque >= 0) {
-			if(speed-brakeAdjustment*hmiBrake > 0) {
-				speed -= brakeAdjustment * hmiBrake; //have to change this to adjust for boolean brake variable
+			if(speed-brakeAdjustment*currentBrake > 0) {
+				speed -= brakeAdjustment * currentBrake; //have to change this to adjust for boolean brake variable
 			}
 			else {
 			speed=0;
 			}
 		} else {
-			if(speed-brakeAdjustment*hmiBrake < 0) {
-			speed += brakeAdjustment * hmiBrake;
+			if(speed-brakeAdjustment*currentBrake < 0) {
+			speed += brakeAdjustment * currentBrake;
 			}
 			else {
 				speed=0;

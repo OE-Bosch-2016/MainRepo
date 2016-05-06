@@ -74,11 +74,16 @@ package hu.nik.project.ebs;
 
 
             public void calcEBSState() {
-               if(Math.abs(driverWheel)>20 && currRelSpeed<0 && currDist<75 )
-               {
-                EBSState=(float)currRelSpeed;
+                if(Math.abs(driverWheel)>20 && currRelSpeed<0 && currDist<5000 ) //50m
+                {
+                    EBSState= (float)(-0.16*currRelSpeed)+1 ;
+                }
 
+                if(Math.abs(driverWheel)>20 && currRelSpeed<0 && currDist<500 ) //5m
+               {
+                EBSState= 10;
                }
+
                 EBSState= 0;
             }
         }
