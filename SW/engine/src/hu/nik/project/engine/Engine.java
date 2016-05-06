@@ -4,6 +4,7 @@ import hu.nik.project.communication.*;
 import hu.nik.project.gearbox.GearboxMessagePackage;
 import hu.nik.project.hmi.Hmi;
 import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
+import hu.nik.project.acc.ACCMessagePackage;
 
 /*
  * @author Laci & Patrik
@@ -31,6 +32,7 @@ public class Engine implements ICommBusDevice {
 
     public Engine(CommBus commBus, CommBusConnectorType commBusConnectorType) {
         this.commBusConnector = commBus.createConnector(this, commBusConnectorType);
+        throttle = 0;
         rpm = 0;
         lastGearStage = 0;
         gearStage = 0;
@@ -50,12 +52,23 @@ public class Engine implements ICommBusDevice {
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
+        } else if (dataType == ACCMessagePackage.class) //ACC throttle
+        {
+            try {
+                ACCMessagePackage data = (ACCMessagePackage) commBusConnector.receive();
+                throttle = (double) data.getGasPedal();
+                calculateRpm();
+            } catch (CommBusException e) {
+                e.printStackTrace();
+            }
         } else if (dataType == DriverInputMessagePackage.class) //throttle
         {
             try {
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
+                if (!data.accIsActive()) {//ACC is on? => ignore this input
+                    throttle = (double) data.getCarGas();//ACC is off => get this input
+                }
                 started = data.engineIsActive();
-                throttle = (double) data.getCarGas();
                 time = (int) data.getTick();
                 calculateRpm();
             } catch (CommBusException e) {
@@ -123,7 +136,7 @@ public class Engine implements ICommBusDevice {
                 rpm = minRpm;
             }
         }
-        myHmi.tachometer((int)rpm);
+        myHmi.tachometer((int) rpm);
         lasttime = time;
     }
 
