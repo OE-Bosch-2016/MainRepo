@@ -53,6 +53,7 @@ package hu.nik.project.ebs;
 
             public void doWork() {
                 if (enabled) {
+                    calcEBSState();
                     boolean sent = false;
                     EmergencyBreakSystemMessagePackage message = new EmergencyBreakSystemMessagePackage(EBSState); //so it doesnt have to remake it every time
                     while (!sent) {
