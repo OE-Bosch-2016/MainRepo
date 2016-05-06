@@ -76,7 +76,7 @@ public class UltrasonicModul implements ICommBusDevice {
         for (int i = 0; i < sonars.length; i++) {
             Sonar son = sonars[i];
             ScenePoint newSonarPos = ScenePoint.rotatePointAroundPoint(currPos, son.getSonarPos(), rotation);
-            System.out.println(son.getSonarPos() + "; " + newSonarPos + " ;" + son.getStartAngle() + "; " + (son.getStartAngle() + rotation));
+//            System.out.println(son.getSonarPos() + "; " + newSonarPos + " ;" + son.getStartAngle() + "; " + (son.getStartAngle() + rotation));
             closestDistance[i] = son.getNearestObjectDistance(scene.getVisibleSceneObjects(newSonarPos, (son.getStartAngle() + rotation), (int) son.getFov(), son.getSonarViewDis()), newSonarPos);
 
         }
