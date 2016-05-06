@@ -74,7 +74,11 @@ public class UltrasonicModul implements ICommBusDevice {
     public void getNearestObjectDistances(ScenePoint currPos, int rotation) throws CommBusException
     {
 
-        
+        startAngle = 0;
+        for (int i = 0; i < sonars.length; i++) {
+            sonars[i] = new Sonar(fov, startAngle, currPos);
+            startAngle += fov;
+        }
         
         for (int i = 0; i < sonars.length; i++) {
             Sonar son = sonars[i];
