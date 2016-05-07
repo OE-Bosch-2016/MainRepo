@@ -32,6 +32,9 @@ public class CarController {
 
     private boolean handle;
 
+    // Interface
+    DisableDA disableDA;
+
     public static CarController newInstance() {
         if (mInstance == null)
             mInstance = new CarController();
@@ -46,10 +49,12 @@ public class CarController {
     public void keyEvent(KeyEvent e, boolean shunt, boolean engineWork) {
         this.shunt = shunt;
         if (car != null && engineWork) {
+            if(disableDA != null) disableDA.onDisable();
+
             handle = false;
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //&& gas != 0
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                 turnRight();
-            } else if (e.getKeyCode() == KeyEvent.VK_LEFT) { //&& gas != 0
+            } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                 turnLeft();
             }
 
@@ -223,5 +228,14 @@ public class CarController {
     // Setter ----------------------------------------------------------------------------------------------------------
     public void setCar(Car car) {
         this.car = car;
+    }
+
+    public void setDisableDA(DisableDA disableDA) {
+        this.disableDA = disableDA;
+    }
+
+    // Interface -------------------------------------------------------------------------------------------------------
+    public interface DisableDA{
+        public void onDisable();
     }
 }

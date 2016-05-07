@@ -19,6 +19,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
 import org.jfree.data.general.DefaultValueDataset;
+import org.jfree.xml.attributehandlers.BooleanAttributeHandler;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -121,6 +122,7 @@ public class Top extends JFrame { // implements KeyListener
 
     private void init() {
         carController = CarController.newInstance();
+        carController.setDisableDA(disableDA);
         parkingTimer = new Timer(42, parkingTimerListener);
         parkingPilot = new PPMain();
         moveTimer = new Timer(42, moveListener);
@@ -161,7 +163,7 @@ public class Top extends JFrame { // implements KeyListener
                 if (!carController.isGasPressed())
                     carController.engineBrake();
 
-                if(hmiButtonArray[0]) tick++;
+                if (hmiButtonArray[0]) tick++;
 
                 bCar.setDriverInput(Integer.valueOf(tempomatSpinner.getValue().toString()), tick, hmi.getGearLever(), hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
                 bCar.doWork();
@@ -330,6 +332,18 @@ public class Top extends JFrame { // implements KeyListener
 
     }
 
+    private void setButtonStyle(boolean isActive, JButton button) {
+        if (isActive) {
+            button.setBackground(Color.DARK_GRAY);
+            button.setOpaque(true);
+            button.setForeground(Color.WHITE);
+        } else {
+            button.setBackground(Color.LIGHT_GRAY);
+            button.setOpaque(true);
+            button.setForeground(Color.DARK_GRAY);
+        }
+    }
+
     // Listener --------------------------------------------------------------------------------------------------------
     private ActionListener moveListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -381,12 +395,12 @@ public class Top extends JFrame { // implements KeyListener
                 car.setPosition(new Vector2D(501, 90));
 
             carController.keyEvent(e, hmi.getGearLever() == Hmi.getGearShiftR(), hmiButtonArray[0]);
-           // steeringWheel.control(e);
+            // steeringWheel.control(e);
 
         }
 
         public void keyReleased(KeyEvent e) {
-           // steeringWheel.control(e);
+            // steeringWheel.control(e);
             carController.keyReleased(e);
         }
     };
@@ -395,98 +409,55 @@ public class Top extends JFrame { // implements KeyListener
         public void actionPerformed(ActionEvent e) {
             if (e.getActionCommand().equals("Engine")) {
                 hmiButtonArray[0] = !hmiButtonArray[0];
-                if(hmiButtonArray[0])
-                {
-                    engineButton.setBackground(Color.DARK_GRAY);
-                    engineButton.setOpaque(true);
-                    engineButton.setForeground(Color.WHITE);
-                }else
-                {
-                    engineButton.setBackground(Color.LIGHT_GRAY);
-                    engineButton.setOpaque(true);
-                    engineButton.setForeground(Color.DARK_GRAY);
-                }
+                setButtonStyle(hmiButtonArray[0], engineButton);
 
-
-                if(hmiButtonArray[0])
+                if (hmiButtonArray[0])
                     hmi.gearshift(Hmi.GEAR_SHIFT_D);
                 else
                     hmi.gearshift(Hmi.GEAR_SHIFT_P);
 
             } else if (e.getActionCommand().equals("ACC")) {
                 hmiButtonArray[1] = !hmiButtonArray[1];
-                if(hmiButtonArray[1])
-                {
-                    ACCButton.setBackground(Color.DARK_GRAY);
-                    ACCButton.setOpaque(true);
-                    ACCButton.setForeground(Color.WHITE);
-                }else
-                {
-                    ACCButton.setBackground(Color.LIGHT_GRAY);
-                    ACCButton.setOpaque(true);
-                    ACCButton.setForeground(Color.DARK_GRAY);
-                }
+                setButtonStyle(hmiButtonArray[1], ACCButton);
+
             } else if (e.getActionCommand().equals("TSR")) {
                 hmiButtonArray[2] = !hmiButtonArray[2];
-                if(hmiButtonArray[2])
-                {
-                    TSRButton.setBackground(Color.DARK_GRAY);
-                    TSRButton.setOpaque(true);
-                    TSRButton.setForeground(Color.WHITE);
-                }else
-                {
-                    TSRButton.setBackground(Color.LIGHT_GRAY);
-                    TSRButton.setOpaque(true);
-                    TSRButton.setForeground(Color.DARK_GRAY);
-                }
+                setButtonStyle(hmiButtonArray[2], TSRButton);
+
             } else if (e.getActionCommand().equals("PP")) {
                 hmiButtonArray[3] = !hmiButtonArray[3];
-                if(hmiButtonArray[3])
-                {
-                    PPButton.setBackground(Color.DARK_GRAY);
-                    PPButton.setOpaque(true);
-                    PPButton.setForeground(Color.WHITE);
-                }else
-                {
-                    PPButton.setBackground(Color.LIGHT_GRAY);
-                    PPButton.setOpaque(true);
-                    PPButton.setForeground(Color.DARK_GRAY);
-                }
+                setButtonStyle(hmiButtonArray[3], PPButton);
 
-                if(hmiButtonArray[3])
+                if (hmiButtonArray[3])
                     hmi.gearshift(Hmi.GEAR_SHIFT_R);
                 else
                     hmi.gearshift(Hmi.GEAR_SHIFT_D);
             } else if (e.getActionCommand().equals("AEB")) {
                 hmiButtonArray[4] = !hmiButtonArray[4];
-                if(hmiButtonArray[4])
-                {
-                    AEBButton.setBackground(Color.DARK_GRAY);
-                    AEBButton.setOpaque(true);
-                    AEBButton.setForeground(Color.WHITE);
-                }else
-                {
-                    AEBButton.setBackground(Color.LIGHT_GRAY);
-                    AEBButton.setOpaque(true);
-                    AEBButton.setForeground(Color.DARK_GRAY);
-                }
+                setButtonStyle(hmiButtonArray[4], AEBButton);
+
             } else if (e.getActionCommand().equals("LKA")) {
                 hmiButtonArray[5] = !hmiButtonArray[5];
-                if(hmiButtonArray[5])
-                {
-                    LKAButton.setBackground(Color.DARK_GRAY);
-                    LKAButton.setOpaque(true);
-                    LKAButton.setForeground(Color.WHITE);
-                }else
-                {
-                    LKAButton.setBackground(Color.LIGHT_GRAY);
-                    LKAButton.setOpaque(true);
-                    LKAButton.setForeground(Color.DARK_GRAY);
-                }
+                setButtonStyle(hmiButtonArray[5], LKAButton);
+
             } else {
                 hmiButtonArray[6] = !hmiButtonArray[6];
+                if (hmiButtonArray[6])
+                    tempomatButton.setText("Bekapcsolva");
+                else
+                    tempomatButton.setText("Kikapcsolva");
             }
 
         }
+    };
+
+    CarController.DisableDA disableDA = () -> {
+        for (int i = 1; i < hmiButtonArray.length - 1; i++) {
+            hmiButtonArray[i] = false;
+            JButton button = i == 1 ? ACCButton : i == 2 ?
+                    TSRButton : i == 3 ? PPButton : i == 4 ? AEBButton : LKAButton;
+            setButtonStyle(hmiButtonArray[i], button);
+        }
+
     };
 }
