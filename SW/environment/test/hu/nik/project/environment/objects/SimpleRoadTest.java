@@ -129,4 +129,11 @@ public class SimpleRoadTest {
         Assert.assertEquals(simpleRoad.toString(), clonedSimpleRoad.toString());
     }
 
+    @Test
+    public void testIsPointOnRoad() throws Exception {
+        Assert.assertTrue(simpleRoad.isPointOnTheRoad(new ScenePoint(2300, 2000)));
+        Assert.assertTrue(simpleRoad.isPointOnTheRoad(new ScenePoint(simpleRoad.getBasePosition().getX(), simpleRoad.getBasePosition().getY())));
+        Assert.assertTrue(simpleRoad.isPointOnTheRoad(new ScenePoint(simpleRoad.getBottomPoint().getX(), simpleRoad.getBottomPoint().getY())));
+        Assert.assertFalse(simpleRoad.isPointOnTheRoad(new ScenePoint(2500, 2300)));
+    }
 }

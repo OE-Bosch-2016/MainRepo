@@ -90,4 +90,66 @@ public class CurvedRoad extends Road implements Serializable {
     public ScenePoint getReferencePoint() {
         return referencePoint;
     }
+
+    private boolean isWithinAngle(ScenePoint point, ScenePoint startPoint, ScenePoint endPoint) {
+        double pointAngle = Math.abs(Math.atan2(point.getY(), point.getX()));
+        double startAngle = Math.abs(Math.atan2(startPoint.getY(), startPoint.getX()));
+        double endAngle = Math.abs(Math.atan2(endPoint.getY(), endPoint.getX()));
+
+        return (startAngle <= pointAngle) && (pointAngle <= endAngle);
+    }
+
+    private boolean isWithinRadius(ScenePoint relativePoint) {
+        return (relativePoint.getX()*relativePoint.getX() + relativePoint.getY()*relativePoint.getY() <= (radius + 175) * (radius + 175)) &&
+                (relativePoint.getX()*relativePoint.getX() + relativePoint.getY()*relativePoint.getY() >= radius / 2 * radius / 2);
+    }
+
+    public boolean isPointOnTheRoad(ScenePoint point) {
+        ScenePoint nullRotatedPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), point, 360 - getRotation());
+        ScenePoint nullRotatedReferencePoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), referencePoint, 360 - getRotation());
+        ScenePoint relativePoint = new ScenePoint(nullRotatedPoint.getX() - nullRotatedReferencePoint.getX(), nullRotatedPoint.getY() - nullRotatedReferencePoint.getY());
+
+        int rotation = 0;
+
+        switch (type) {
+            case SIMPLE_45_LEFT:
+            case SIMPLE_45_RIGHT: {
+                rotation = 45;
+                break;
+            }
+            case SIMPLE_65_LEFT:
+            case SIMPLE_65_RIGHT: {
+                rotation = 65;
+                break;
+            }
+            case SIMPLE_90_LEFT:
+            case SIMPLE_90_RIGHT: {
+                rotation = 90;
+                break;
+            }
+        }
+
+        ScenePoint relativeStart = null;
+        ScenePoint relativeEnd = null;
+
+        switch (type) {
+            case SIMPLE_45_LEFT:
+            case SIMPLE_65_LEFT:
+            case SIMPLE_90_LEFT: {
+                relativeStart = new ScenePoint((nullRotatedReferencePoint.getX() + (175 * 3)) - nullRotatedReferencePoint.getX(), 0);
+                relativeEnd = ScenePoint.rotatePointAroundPoint(new ScenePoint(0, 0), relativeStart, rotation);
+                break;
+            }
+
+            case SIMPLE_45_RIGHT:
+            case SIMPLE_65_RIGHT:
+            case SIMPLE_90_RIGHT: {
+                relativeEnd = new ScenePoint((nullRotatedReferencePoint.getX() - (175 * 3)) - nullRotatedReferencePoint.getX(), 0);
+                relativeStart = ScenePoint.rotatePointAroundPoint(new ScenePoint(0, 0), relativeEnd, 360 - rotation);
+                break;
+            }
+        }
+
+        return (isWithinAngle(relativePoint, relativeStart, relativeEnd) && isWithinRadius(relativePoint));
+    }
 }

@@ -68,4 +68,10 @@ public class SimpleRoad extends Road implements Serializable {
         super.publicWriteObject(aOutputStream);
     }
 
+    public boolean isPointOnTheRoad(ScenePoint point) {
+        ScenePoint bottomRightPoint = new ScenePoint(getBasePosition().getX() + getTrackWidth() * 2, getBasePosition().getY() + getTrackWidth() * 2);
+        ScenePoint nullRotatedPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), point, 360 - getRotation());
+
+        return ( ScenePoint.isPointInARectangle(nullRotatedPoint, getBasePosition(), bottomRightPoint) );
+    }
 }

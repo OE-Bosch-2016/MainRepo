@@ -82,6 +82,5 @@ abstract public class Road<T> extends SceneObject implements Serializable {
         super.publicWriteObject(aOutputStream);
     }
 
-
-
+    public abstract boolean isPointOnTheRoad(ScenePoint point);
 }

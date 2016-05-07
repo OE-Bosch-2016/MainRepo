@@ -14,8 +14,10 @@ public class CurvedRoadTest {
 
     private static CurvedRoad curvedRoad90Left;
     private static CurvedRoad curvedRoad90Right;
-
     private static CurvedRoad curvedRoad45Right;
+    private static CurvedRoad curvedRoad45Left;
+    private static CurvedRoad curvedRoad65Left;
+    private static CurvedRoad curvedRoad65Right;
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -25,6 +27,10 @@ public class CurvedRoadTest {
         curvedRoad90Right = new CurvedRoad(new ScenePoint(775, 1913), 90, CurvedRoad.CurvedRoadType.SIMPLE_90_RIGHT);
         // Object 14
         curvedRoad45Right = new CurvedRoad(new ScenePoint(1000, 3508), 135, CurvedRoad.CurvedRoadType.SIMPLE_45_RIGHT);
+        // Objects from picture not scene XML
+        curvedRoad45Left = new CurvedRoad(new ScenePoint(1800, 1300), 0, CurvedRoad.CurvedRoadType.SIMPLE_45_LEFT);
+        curvedRoad65Left = new CurvedRoad(new ScenePoint(1200, 1300), 0, CurvedRoad.CurvedRoadType.SIMPLE_65_LEFT);
+        curvedRoad65Right = new CurvedRoad(new ScenePoint(1200, 2000), 0, CurvedRoad.CurvedRoadType.SIMPLE_65_RIGHT);
     }
 
     @Test
@@ -78,5 +84,33 @@ public class CurvedRoadTest {
 
         Assert.assertEquals(1124, curvedRoad45Right.getBottomPoint().getX());
         Assert.assertEquals(3632, curvedRoad45Right.getBottomPoint().getY());
+    }
+
+    @Test
+    public void testIsPointOnRoad() throws Exception {
+
+        Assert.assertTrue(curvedRoad90Left.isPointOnTheRoad(new ScenePoint(3100, 500)));
+        Assert.assertTrue(curvedRoad90Left.isPointOnTheRoad(new ScenePoint(curvedRoad90Left.getBottomPoint().getX(), curvedRoad90Left.getBottomPoint().getY())));
+        Assert.assertFalse(curvedRoad90Left.isPointOnTheRoad(new ScenePoint(2500, 2300)));
+
+        Assert.assertTrue(curvedRoad90Right.isPointOnTheRoad(new ScenePoint(397, 2101)));
+        Assert.assertTrue(curvedRoad90Right.isPointOnTheRoad(new ScenePoint(curvedRoad90Right.getBottomPoint().getX(), curvedRoad90Right.getBottomPoint().getY())));
+        Assert.assertFalse(curvedRoad90Right.isPointOnTheRoad(new ScenePoint(2500, 2300)));
+
+        Assert.assertTrue(curvedRoad45Right.isPointOnTheRoad(new ScenePoint(1000, 3600)));
+        Assert.assertTrue(curvedRoad45Right.isPointOnTheRoad(new ScenePoint(curvedRoad45Right.getBottomPoint().getX(), curvedRoad45Right.getBottomPoint().getY())));
+        Assert.assertFalse(curvedRoad45Right.isPointOnTheRoad(new ScenePoint(1750, 1750)));
+
+        Assert.assertTrue(curvedRoad45Left.isPointOnTheRoad(new ScenePoint(1800, 1250)));
+        Assert.assertTrue(curvedRoad45Left.isPointOnTheRoad(new ScenePoint(curvedRoad45Left.getBottomPoint().getX(), curvedRoad45Left.getBottomPoint().getY())));
+        Assert.assertFalse(curvedRoad45Left.isPointOnTheRoad(new ScenePoint(500, 500)));
+
+        Assert.assertTrue(curvedRoad65Left.isPointOnTheRoad(new ScenePoint(1180, 1000)));
+        Assert.assertTrue(curvedRoad65Left.isPointOnTheRoad(new ScenePoint(curvedRoad65Left.getBottomPoint().getX(), curvedRoad65Left.getBottomPoint().getY())));
+        Assert.assertFalse(curvedRoad65Left.isPointOnTheRoad(new ScenePoint(1155, 1000)));
+
+        Assert.assertTrue(curvedRoad65Right.isPointOnTheRoad(new ScenePoint(1000, 1800)));
+        Assert.assertTrue(curvedRoad65Right.isPointOnTheRoad(new ScenePoint(curvedRoad65Right.getBottomPoint().getX(), curvedRoad65Right.getBottomPoint().getY())));
+        Assert.assertFalse(curvedRoad65Right.isPointOnTheRoad(new ScenePoint(1300, 1650)));
     }
 }

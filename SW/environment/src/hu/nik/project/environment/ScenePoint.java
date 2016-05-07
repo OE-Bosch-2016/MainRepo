@@ -147,5 +147,8 @@ public class ScenePoint implements Serializable {
         aOutputStream.writeInt(y);
     }
 
-
+    public static boolean isPointInARectangle(ScenePoint point, ScenePoint rectLowPoint, ScenePoint rectHighPoint) {
+        return (point.getX() >= rectLowPoint.getX()) && (point.getY() >= rectLowPoint.getY()) &&
+                (point.getX() <= rectHighPoint.getX()) && (point.getY() <= rectHighPoint.getY());
+    }
 }
