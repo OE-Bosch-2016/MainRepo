@@ -1,5 +1,6 @@
 package hu.nik.project.environment.objects;
 
+import hu.nik.project.environment.Scene;
 import hu.nik.project.environment.ScenePoint;
 
 import java.io.Serializable;
@@ -80,5 +81,34 @@ public class AdvancedRoad extends Road implements Serializable {
                 ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getBottomPoint()) ||
                 ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getLeftPoint()) ||
                 ScenePoint.isVisibleFromObserver( observerBase, observerRotation, viewAngle, viewDistance, getRightPoint());
+    }
+
+    public boolean isPointOnTheRoad(ScenePoint point) {
+        ScenePoint nullRotatedPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), point, 360 - getRotation());
+        ScenePoint nullRotatedTopPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), getTopPoint(), 360 - getRotation());
+        ScenePoint nullRotatedBottomPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), getBottomPoint(), 360 - getRotation());
+
+        if (type == AdvancedRoadType.ROTARY || type == AdvancedRoadType.CROSSROADS) {
+            ScenePoint nullRotatedRightPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), getRightPoint(), 360 - getRotation());
+
+            return (ScenePoint.isPointInARectangle(nullRotatedPoint, new ScenePoint(getBasePosition().getX(), getBasePosition().getY() - 350), new ScenePoint(nullRotatedRightPoint.getX(), nullRotatedRightPoint.getY() + 175)) ||
+                    ScenePoint.isPointInARectangle(nullRotatedPoint, new ScenePoint(nullRotatedTopPoint.getX() - 175, nullRotatedTopPoint.getY()), new ScenePoint(nullRotatedBottomPoint.getX() + 175, nullRotatedBottomPoint.getY())));
+        }
+        else {
+            if (type == AdvancedRoadType.JUNCTIONLEFT) {
+                ScenePoint nullRotatedLeftPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), getLeftPoint(), 360 - getRotation());
+
+                return (ScenePoint.isPointInARectangle(nullRotatedPoint, new ScenePoint(getBasePosition().getX() - 350, getBasePosition().getY()), new ScenePoint(nullRotatedBottomPoint.getX() + 175, nullRotatedBottomPoint.getY())) ||
+                        ScenePoint.isPointInARectangle(nullRotatedPoint, new ScenePoint(nullRotatedLeftPoint.getX(), nullRotatedLeftPoint.getY() - 175), new ScenePoint(getBasePosition().getX(), getBasePosition().getY() + 875)));
+            } else {
+                if (type == AdvancedRoadType.JUNCTIONRIGHT) {
+                    ScenePoint nullRotatedRightPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), getRightPoint(), 360 - getRotation());
+
+                    return (ScenePoint.isPointInARectangle(nullRotatedPoint, getBasePosition(), new ScenePoint(nullRotatedBottomPoint.getX() + 175, nullRotatedBottomPoint.getY())) ||
+                            ScenePoint.isPointInARectangle(nullRotatedPoint, new ScenePoint(getBasePosition().getX(), getBasePosition().getY() + 525), new ScenePoint(nullRotatedRightPoint.getX(), nullRotatedRightPoint.getY() + 175)));
+                }
+            }
+        }
+        return false;
     }
 }

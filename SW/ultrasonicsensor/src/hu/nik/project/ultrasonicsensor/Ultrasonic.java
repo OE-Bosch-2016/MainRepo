@@ -130,11 +130,7 @@ public class Ultrasonic {
         for (int i = 0; i < um.getClosestDistance().length ; i++) {
             System.out.println("Closest distance in zone:" +i+ " ; " +um.getClosestDistance()[i]);
         }
-        um.SendToBus();
-        
-        
-        
-        
+        //um.SendToBus();
     }
 
 }
