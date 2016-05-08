@@ -3,6 +3,7 @@ package hu.nik.project.tsr;
 import hu.nik.project.communication.CommBus;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.environment.objects.Car;
 import hu.nik.project.environment.objects.DirectionSign;
 import hu.nik.project.environment.objects.PrioritySign;
 import hu.nik.project.environment.objects.SpeedSign;
@@ -30,7 +31,7 @@ public class TsrTest {
         directionSignToSend = new DirectionSign(new ScenePoint(235, 3908), 270, DirectionSign.DirectionType.FORWARD_LEFT);
         commBus = new CommBus();
         senderDevice = new TestDevice(commBus, SpeedSign.class, CommBusConnectorType.SenderReceiver);
-        tsrModule = new Tsr(commBus, CommBusConnectorType.SenderReceiver);
+        tsrModule = new Tsr(commBus, CommBusConnectorType.SenderReceiver, new Car(new ScenePoint(100, 100), 0));
         tsrReceiverDevice = new TestDevice(commBus, TsrMessagePackage.class, CommBusConnectorType.SenderReceiver);
     }
 
