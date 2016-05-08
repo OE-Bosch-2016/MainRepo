@@ -24,7 +24,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     private CommBusConnector _commBusConnector;
     private CarController _carcontroller;
 
-    private static final int _viewDistance = 200;
+    private static final int _viewDistance = 1000;
     private float _angelOfSight;
     private int _sampingTime;  //must be in Milisec
 
@@ -34,8 +34,8 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     private ObservableList<RadarMessagePacket> _radarPacketObservableList;
 
     /**
-     * @param sensorScene ISensorScene interface from module enviroment
-     * @param commbus Communication bus from module communication
+     * @param sensorScene  ISensorScene interface from module enviroment
+     * @param commbus      Communication bus from module communication
      * @param angelOfSight the alpha value of our Radar [view angle]
      * @param samplingTime we use this time to calculate relative speed, MUST BE IN MILISEC!! [TimerTick]
      */
@@ -65,13 +65,13 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     //</editor-fold>
 
-
+    //hmi.getKhm();
     public void doWork() {
-        _currentSpeed=(double)_carcontroller.getGas();
+        _currentSpeed = (double) _carcontroller.getGas();
         ScenePoint curentPosition = _carcontroller.getCarPosition();
-        int observerRotation = _carcontroller.getCarRotation();
-        RadarMessagePacket msgPacket = getDetectedObjsRelativeSpeedAndDistance(observerRotation,curentPosition);
-        if(msgPacket!=null){
+        int observerRotation = _carcontroller.getCarRotation()+90;
+        RadarMessagePacket msgPacket = getDetectedObjsRelativeSpeedAndDistance(observerRotation, curentPosition);
+        if (msgPacket != null) {
             try {
                 SendPacketToDatabus(msgPacket);
             } catch (CommBusException e) {
@@ -106,7 +106,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     private ArrayList<Car> getSceneObjectsInSpecificArea(Vector2D currentPos, int observerRotation, int viewAngle) {
         ArrayList<SceneObject> sceneObjectArrayList =
-                _sensorScene.getVisibleSceneObjects(new ScenePoint((int) currentPos.get_coordinateX(), (int) currentPos.get_coordinateX()), observerRotation, viewAngle, _viewDistance);
+                _sensorScene.getVisibleSceneObjects(new ScenePoint((int) currentPos.get_coordinateX(), (int) currentPos.get_coordinateY()), observerRotation, viewAngle, _viewDistance);
 
         if (sceneObjectArrayList != null) {
             ArrayList<Car> carArrayList = new ArrayList<Car>();
@@ -212,11 +212,11 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
 
     private double getDistance(Vector2D x, Vector2D y) {
         double pixelToMeterValue = 0.08;
-        double carWidth=2;
+        double carWidth = 2;
 
         double xCoordinate = Math.pow(x.get_coordinateX() - y.get_coordinateX(), 2);
         double yCoordinate = Math.pow(x.get_coordinateY() - y.get_coordinateY(), 2);
-        return Math.sqrt(xCoordinate + yCoordinate) * pixelToMeterValue-carWidth/2;
+        return Math.sqrt(xCoordinate + yCoordinate) * pixelToMeterValue - carWidth / 2;
     }
 
     private double getCurrentSpeedOfSpecificObj(RadarMessagePacket previous, Car car) {
@@ -301,7 +301,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
         return (index < _radarPacketObservableList.size());  //if we exited from the loop before the size, that means we have a non zero value
     }
 
-    private void EmtyAllArrayLists(){
+    private void EmtyAllArrayLists() {
         _previousVectorsHashMap.clear();
         _radarPacketObservableList.clear();
     }
