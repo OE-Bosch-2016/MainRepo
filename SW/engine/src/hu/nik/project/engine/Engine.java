@@ -36,6 +36,7 @@ public class Engine implements ICommBusDevice {
         rpm = 0;
         lastGearStage = 0;
         gearStage = 0;
+        started = false;
         time = lasttime = 0;
         myHmi = Hmi.newInstance();
     }
@@ -57,7 +58,9 @@ public class Engine implements ICommBusDevice {
             try {
                 ACCMessagePackage data = (ACCMessagePackage) commBusConnector.receive();
                 throttle = (double) data.getGasPedal();
-                calculateRpm();
+                if (started) {
+                    calculateRpm();
+                }
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
@@ -67,13 +70,13 @@ public class Engine implements ICommBusDevice {
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
 
                 started = data.engineIsActive();
-                time = (int)data.getTick();
-
-                if (!data.accIsActive()) {//ACC is on? => ignore this input
-                    throttle = (double) data.getCarGas();//ACC is off => get this input
-                    calculateRpm();
+                time = (int) data.getTick();
+                if (started) {
+                    if (!data.accIsActive()) {//ACC is on? => ignore this input
+                        throttle = (double) data.getCarGas();//ACC is off => get this input
+                        calculateRpm();
+                    }
                 }
-
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
