@@ -9,6 +9,10 @@ import hu.nik.project.environment.objects.Car;
 import hu.nik.project.environment.objects.SceneObjectException;
 import hu.nik.project.framework.BoschCar;
 
+import hu.nik.project.utils.ImageLoader;
+import hu.nik.project.utils.Vector2D;
+import hu.nik.project.visualisation.car.AutonomousCar;
+import hu.nik.project.visualisation.car.util.Creator;
 import hu.nik.project.visualisation.main.Top;
 
 /**
@@ -66,6 +70,7 @@ public class Main {
         // Add dummy stopped cars into the environment
         try {
             Car dummyCar = new Car(new ScenePoint(3015, 1945), 90);
+            Creator.addObstacle(new AutonomousCar(new Vector2D(3015, 1945), ImageLoader.getCarImage()), 90);
             scene.addDummyCarToScene(dummyCar);
         } catch (SceneObjectException e) {
             System.out.println("Error during the car creation: " + e.getMessage());
