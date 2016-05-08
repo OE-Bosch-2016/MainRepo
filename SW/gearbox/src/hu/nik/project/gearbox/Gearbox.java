@@ -49,7 +49,7 @@ public class Gearbox implements ICommBusDevice {
 			try {
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
                 gearLever = data.getGearLeverPosition();
-				operateGearbox();
+				//operateGearbox();
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
@@ -61,7 +61,7 @@ public class Gearbox implements ICommBusDevice {
             case Hmi.GEAR_SHIFT_D:
                 if (gearStage > 0 && gearStage < 5 && rpm > maxShiftRpm) {
                     gearStage++;
-                } else if (gearStage > 2 && rpm < minShiftRpm) {
+                } else if (gearStage >= 2 && rpm < minShiftRpm) {
                     gearStage--;
                 }
                 if (gearStage < 1) {

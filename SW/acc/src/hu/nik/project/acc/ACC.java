@@ -3,7 +3,8 @@ package hu.nik.project.acc;
 import hu.nik.project.communication.*;
 import hu.nik.project.radar.RadarMessagePacket;//nearestObjectDistance
 import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;//ACCIsOn, TargetSpeed
-import hu.nik.project.wheels.WheelsMessagePackage; // -> wheelStateInDegrees, currentSpeed
+//import hu.nik.project.wheels.WheelsMessagePackage; // -> wheelStateInDegrees, currentSpeed
+import hu.nik.project.hmi.Hmi;
 
 /**
  * @author Patrik
@@ -12,6 +13,8 @@ public class ACC implements ICommBusDevice {
 
     private CommBusConnector commBusConnector;
     private boolean enabled = false;
+    private Hmi myHmi;
+
 
     //input
     private double wheelStateInDegrees;
@@ -24,19 +27,20 @@ public class ACC implements ICommBusDevice {
     private final int maxSpeed = 200; //in km/h
 
     //output
-    float gasPedal,breakPedal;
+    float gasPedal, breakPedal;
 
     public ACC(CommBus commBus, CommBusConnectorType commBusConnectorType) {
         this.commBusConnector = commBus.createConnector(this, commBusConnectorType);
         minFollowingTime = 2;
         wheelStateInDegrees = currentSpeed = targetSpeed = nearestObstacleDistance = 0;
         gasPedal = breakPedal = 0;
+        myHmi = Hmi.newInstance();
     }
 
     @Override
     public void commBusDataArrived() {
         Class dataType = commBusConnector.getDataType();
-        if (dataType == WheelsMessagePackage.class) {
+        /*if (dataType == WheelsMessagePackage.class) {
             try {
                 WheelsMessagePackage data = (WheelsMessagePackage) commBusConnector.receive();
                 //wheelStateInDegrees = data.getDirection();
@@ -49,7 +53,8 @@ public class ACC implements ICommBusDevice {
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
-        } else if (dataType == DriverInputMessagePackage.class) {
+        } */
+        if (dataType == DriverInputMessagePackage.class) {
             try {
                 DriverInputMessagePackage data = (DriverInputMessagePackage) commBusConnector.receive();
                 enabled = data.accIsActive();
@@ -60,20 +65,21 @@ public class ACC implements ICommBusDevice {
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
-        }
-        else if(dataType == RadarMessagePacket.class)
-		{
-			try {
+        } else if (dataType == RadarMessagePacket.class) {
+            try {
                 RadarMessagePacket data = (RadarMessagePacket) commBusConnector.receive();
-                nearestObstacleDistance = (int)data.getCurrentDistance();
-				operateACC();
+                nearestObstacleDistance = (int) data.getCurrentDistance();
+                if (enabled) {
+                    operateACC();
+                }
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
-		}
+        }
     }
 
     public void operateACC() {
+        currentSpeed = myHmi.getKhm();
         if (targetSpeed != 0) {//ACC is on
             double safeDistance = currentSpeed / 3.6 * minFollowingTime;//km/h to m/s * s = m
             if (targetSpeed < currentSpeed) {
