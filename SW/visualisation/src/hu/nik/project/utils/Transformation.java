@@ -10,7 +10,7 @@ public class Transformation {
     public static ScenePoint transformFromVector2D(Vector2D coordinate){
         float rate[] = scaleRate();
 
-        return new ScenePoint((int)(coordinate.get_coordinateX() * rate[0]), (int)(coordinate.get_coordinateY() * rate[1]));
+        return new ScenePoint((int)(coordinate.get_coordinateX() * rate[0]), (int)(((coordinate.get_coordinateY() * rate[1]) + Config.originalY) / 2));
     }
 
     public static Vector2D transformToVector2D(ScenePoint coordinate){
