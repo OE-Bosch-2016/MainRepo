@@ -81,6 +81,7 @@ public class BoschCar extends Car {
 
     public void setCarPosition(ScenePoint position, int rotation) {
         this.setBasePositonAndRotation(position, rotation);
+        calCulalatePoints();
     }
 
     public void setDriverInput(int tempomatSpeed, int tick, int gearLeverPosition, boolean engine, boolean acc,

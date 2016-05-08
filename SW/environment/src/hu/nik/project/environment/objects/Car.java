@@ -25,11 +25,15 @@ public class Car extends SceneObject {
     public Car(ScenePoint basePosition, int rotation) throws SceneObjectException {
         super(basePosition, rotation);
         this.type = CarType.CAR;
-        topPoint = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + carWidth / 2, basePosition.getY()), rotation);
-        bottomPoint = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + carWidth / 2, basePosition.getY() + carHeight), rotation);
-        leftPoint = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX(), basePosition.getY() + carHeight / 2), rotation);
-        rightPoint = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + carWidth, basePosition.getY() + carHeight / 2), rotation);
-        centerPoint = ScenePoint.rotatePointAroundPoint(basePosition, new ScenePoint(basePosition.getX() + carWidth / 2, basePosition.getY() + carHeight / 2), rotation);
+        calCulalatePoints();
+    }
+
+    protected void calCulalatePoints() {
+        topPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), new ScenePoint(getBasePosition().getX() + carWidth / 2, getBasePosition().getY()), getRotation());
+        bottomPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), new ScenePoint(getBasePosition().getX() + carWidth / 2, getBasePosition().getY() + carHeight), getRotation());
+        leftPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), new ScenePoint(getBasePosition().getX(), getBasePosition().getY() + carHeight / 2), getRotation());
+        rightPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), new ScenePoint(getBasePosition().getX() + carWidth, getBasePosition().getY() + carHeight / 2), getRotation());
+        centerPoint = ScenePoint.rotatePointAroundPoint(getBasePosition(), new ScenePoint(getBasePosition().getX() + carWidth / 2, getBasePosition().getY() + carHeight / 2), getRotation());
     }
 
     @Override
