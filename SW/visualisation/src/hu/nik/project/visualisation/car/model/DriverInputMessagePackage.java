@@ -20,10 +20,9 @@ public class DriverInputMessagePackage implements Serializable {
     private boolean pp;
     private boolean aeb;
     private boolean lka;
-    private boolean tempomat;
 
     public DriverInputMessagePackage(float carBrake, float wheelAngle, float carGas, int tempomatSpeed, int gearLeverPosition, int tick, boolean engine, boolean acc,
-                                     boolean tsr, boolean pp, boolean aeb, boolean lka, boolean tempomat) {
+                                     boolean tsr, boolean pp, boolean aeb, boolean lka) {
         this.carBrake = carBrake;
         this.wheelAngle = wheelAngle;
         this.carGas = carGas;
@@ -36,7 +35,6 @@ public class DriverInputMessagePackage implements Serializable {
         this.pp = pp;
         this.aeb = aeb;
         this.lka = lka;
-        this.tempomat = tempomat;
     }
 
     // Getter ----------------------------------------------------------------------------------------------------------
@@ -58,10 +56,6 @@ public class DriverInputMessagePackage implements Serializable {
 
     public boolean engineIsActive() {
         return engine;
-    }
-
-    public boolean tempomatisActive() {
-        return tempomat;
     }
 
     public int getTick() {

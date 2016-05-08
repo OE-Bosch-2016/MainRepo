@@ -84,7 +84,7 @@ public class BoschCar extends Car {
     }
 
     public void setDriverInput(int tempomatSpeed, int tick, int gearLeverPosition, boolean engine, boolean acc,
-                               boolean tsr, boolean pp, boolean aeb, boolean lka, boolean tempomat) {
-        hmiManager.setDriverInputMessagePackage(tempomatSpeed, tick, gearLeverPosition, engine, acc, tsr, pp, aeb, lka, tempomat);
+                               boolean tsr, boolean pp, boolean aeb, boolean lka) {
+        hmiManager.setDriverInputMessagePackage(tempomatSpeed, tick, gearLeverPosition, engine, acc, tsr, pp, aeb, lka);
     }
 }

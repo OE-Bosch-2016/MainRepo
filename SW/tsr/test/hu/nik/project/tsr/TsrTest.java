@@ -38,7 +38,7 @@ public class TsrTest {
     public void testSendAndReceiveSpeedSign() throws Exception {
 
         // TSR on
-        DriverInputMessagePackage driverInputMessagePackage = new DriverInputMessagePackage(0,0,0,0,0,0,false,false,true,false,false,false,false);
+        DriverInputMessagePackage driverInputMessagePackage = new DriverInputMessagePackage(0,0,0,0,0,0,false,false,true,false,false,false);
         senderDevice.getCommBusConnector().send(driverInputMessagePackage);
         Thread.sleep(100);
         tsrModule.doWork();
@@ -68,7 +68,7 @@ public class TsrTest {
     public void testSendAndReceivePrioritySign() throws Exception {
 
         // TSR on
-        DriverInputMessagePackage driverInputMessagePackage = new DriverInputMessagePackage(0,0,0,0,0,0,false,false,true,false,false,false,false);
+        DriverInputMessagePackage driverInputMessagePackage = new DriverInputMessagePackage(0,0,0,0,0,0,false,false,true,false,false,false);
         senderDevice.getCommBusConnector().send(driverInputMessagePackage);
         Thread.sleep(100);
         tsrModule.doWork();
@@ -99,7 +99,7 @@ public class TsrTest {
     public void testSendAndReceiveDirectionSign() throws Exception {
 
         // TSR on
-        DriverInputMessagePackage driverInputMessagePackage = new DriverInputMessagePackage(0,0,0,0,0,0,false,false,true,false,false,false,false);
+        DriverInputMessagePackage driverInputMessagePackage = new DriverInputMessagePackage(0,0,0,0,0,0,false,false,true,false,false,false);
         senderDevice.getCommBusConnector().send(driverInputMessagePackage);
         Thread.sleep(100);
         tsrModule.doWork();
