@@ -14,11 +14,13 @@ public class CarWithConcreteClassTest {
 
     private static Car car;
     private static Car modifyPositionAndRoatation;
+    private static Car visibilitiTest;
 
     @BeforeClass
     public static void setUp() throws Exception {
         car = new Car(new ScenePoint(500, 500), 90);
         modifyPositionAndRoatation = new Car(new ScenePoint(600, 600), 85);
+        visibilitiTest = new Car(new ScenePoint(500, 500), 0);
     }
 
     @Test
@@ -63,5 +65,10 @@ public class CarWithConcreteClassTest {
         Assert.assertEquals(1000, modifyPositionAndRoatation.getBasePosition().getX());
         Assert.assertEquals(1000, modifyPositionAndRoatation.getBasePosition().getY());
         Assert.assertEquals(90, modifyPositionAndRoatation.getRotation());
+    }
+
+    @Test
+    public void isVisibleFromObserver() {
+        Assert.assertTrue(car.isVisibleFromObserver(new ScenePoint(500, 750), 90, 45, 200)); // 90 degrees because of the car is 0 rotated (forward scanning);
     }
 }
