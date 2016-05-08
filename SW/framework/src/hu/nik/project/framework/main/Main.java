@@ -65,7 +65,7 @@ public class Main {
 
         // Add dummy stopped cars into the environment
         try {
-            Car dummyCar = new Car(new ScenePoint(3100, 365), 90);
+            Car dummyCar = new Car(new ScenePoint(3015, 1945), 90);
             scene.addDummyCarToScene(dummyCar);
         } catch (SceneObjectException e) {
             System.out.println("Error during the car creation: " + e.getMessage());
