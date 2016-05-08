@@ -42,7 +42,7 @@ public class SteeringWheel {
     private void loadImage(){
         try {
             scaledImage = ImageIO.read(new File(Config.pathSteeringWheel));
-            scaledImage = Scalr.resize(scaledImage, 250, 250);
+            scaledImage = Scalr.resize(scaledImage, 200, 200);
         } catch (IOException e) {
             e.printStackTrace();
         }

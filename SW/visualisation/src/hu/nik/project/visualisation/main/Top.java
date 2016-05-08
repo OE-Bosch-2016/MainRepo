@@ -2,28 +2,22 @@ package hu.nik.project.visualisation.main;
 
 import hu.nik.project.framework.BoschCar;
 import hu.nik.project.hmi.Hmi;
-import hu.nik.project.hmi.manager.HmiManager;
 import hu.nik.project.parkingPilot.PPMain;
 import hu.nik.project.parkingPilot.util.ParkingCalculator;
 import hu.nik.project.utils.Config;
 import hu.nik.project.utils.ImageLoader;
 import hu.nik.project.utils.Transformation;
 import hu.nik.project.utils.Vector2D;
+import hu.nik.project.visualisation.VisualizationRenderer;
 import hu.nik.project.visualisation.car.AutonomousCar;
 import hu.nik.project.visualisation.car.CarController;
 import hu.nik.project.visualisation.car.SteeringWheel;
-import hu.nik.project.visualisation.VisualizationRenderer;
-
-import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
 import org.jfree.data.general.DefaultValueDataset;
-import org.jfree.xml.attributehandlers.BooleanAttributeHandler;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -64,9 +58,10 @@ public class Top extends JFrame { // implements KeyListener
     private JLabel currentSpeed;
     private JSpinner tempomatSpinner;
     private JLabel tempomat;
-    private JButton tempomatButton;
     private JPanel actualGearShiftPane;
     private JTextPane actualGearShiftPosition;
+    private JButton gearLeverUpButton;
+    private JButton gearLeverDownButton;
     private SteeringWheel steeringWheel;
 
     //Timer
@@ -145,6 +140,10 @@ public class Top extends JFrame { // implements KeyListener
         setContentPane(rootPanel);
         pack();
 
+        // Gear lever
+        gearLeverDownButton.addActionListener(gearLeverDown);
+        gearLeverUpButton.addActionListener(gearLeverUp);
+
         //visualisation.car.car setup
         Vector2D position = Transformation.transformToVector2D(bCar.getBasePosition());
         car = new AutonomousCar(position, ImageLoader.getCarImage());
@@ -165,7 +164,7 @@ public class Top extends JFrame { // implements KeyListener
 
                 if (hmiButtonArray[0]) tick++;
 
-                bCar.setDriverInput(Integer.valueOf(tempomatSpinner.getValue().toString()), tick, hmi.getGearLever(), hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5], hmiButtonArray[6]);
+                bCar.setDriverInput(Integer.valueOf(tempomatSpinner.getValue().toString()), tick, hmi.getGearLever(), hmiButtonArray[0], hmiButtonArray[1], hmiButtonArray[2], hmiButtonArray[3], hmiButtonArray[4], hmiButtonArray[5]);
                 bCar.doWork();
                 bCar.setCarPosition(carController.getCarPosition(), carController.getCarRotation());
 
@@ -180,7 +179,6 @@ public class Top extends JFrame { // implements KeyListener
         PPButton.addActionListener(hmiButtons);
         AEBButton.addActionListener(hmiButtons);
         LKAButton.addActionListener(hmiButtons);
-        tempomatButton.addActionListener(hmiButtons);
 
         steeringWheelLabel.addKeyListener(keyListener);
         steeringWheelLabel.setFocusable(true);
@@ -414,7 +412,7 @@ public class Top extends JFrame { // implements KeyListener
                 if (hmiButtonArray[0])
                     hmi.gearshift(Hmi.GEAR_SHIFT_D);
                 else
-                    hmi.gearshift(Hmi.GEAR_SHIFT_P);
+                    hmi.gearshift(Hmi.GEAR_SHIFT_N);
 
             } else if (e.getActionCommand().equals("ACC")) {
                 hmiButtonArray[1] = !hmiButtonArray[1];
@@ -439,13 +437,6 @@ public class Top extends JFrame { // implements KeyListener
             } else if (e.getActionCommand().equals("LKA")) {
                 hmiButtonArray[5] = !hmiButtonArray[5];
                 setButtonStyle(hmiButtonArray[5], LKAButton);
-
-            } else {
-                hmiButtonArray[6] = !hmiButtonArray[6];
-                if (hmiButtonArray[6])
-                    tempomatButton.setText("Bekapcsolva");
-                else
-                    tempomatButton.setText("Kikapcsolva");
             }
 
         }
@@ -459,5 +450,15 @@ public class Top extends JFrame { // implements KeyListener
             setButtonStyle(hmiButtonArray[i], button);
         }
 
+    };
+
+    private ActionListener gearLeverUp = e -> {
+        if(hmi.getGearLever() > Hmi.GEAR_SHIFT_D)
+            hmi.gearshift(hmi.getGearLever() - 1);
+    };
+
+    private ActionListener gearLeverDown = e -> {
+        if(hmi.getGearLever() < Hmi.GEAR_SHIFT_2)
+            hmi.gearshift(hmi.getGearLever() + 1);
     };
 }

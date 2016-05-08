@@ -49,18 +49,20 @@ public class CarController {
     public void keyEvent(KeyEvent e, boolean shunt, boolean engineWork) {
         this.shunt = shunt;
         if (car != null && engineWork) {
-            if(disableDA != null) disableDA.onDisable();
-
             handle = false;
             if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                if(disableDA != null) disableDA.onDisable();
                 turnRight();
             } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                if(disableDA != null) disableDA.onDisable();
                 turnLeft();
             }
 
             if (e.getKeyCode() == KeyEvent.VK_UP) {
+                if(disableDA != null) disableDA.onDisable();
                 goAhead();
             } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                if(disableDA != null) disableDA.onDisable();
                 brake();
             }
         }
@@ -138,6 +140,7 @@ public class CarController {
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             gasPressed = false;
+            gas = 0;
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
@@ -152,6 +155,7 @@ public class CarController {
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             shuntPressed = false;
+            brake = 0;
         }
     }
 

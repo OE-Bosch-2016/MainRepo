@@ -26,10 +26,10 @@ public class HmiManager implements ICommBusDevice{
     }
 
     public void setDriverInputMessagePackage(int tempomatSpeed, int tick, int gearLeverPosition, boolean engine, boolean acc,
-                              boolean tsr, boolean pp, boolean aeb, boolean lka, boolean tempomat) {
+                              boolean tsr, boolean pp, boolean aeb, boolean lka) {
 
         messagePackage = new DriverInputMessagePackage(carController.getBrake(), carController.getSteeringWheel(), carController.getGas(),
-                tempomatSpeed, gearLeverPosition, tick, engine, acc, tsr, pp, aeb, lka, tempomat);
+                tempomatSpeed, gearLeverPosition, tick, engine, acc, tsr, pp, aeb, lka);
     }
 
     public void doWork() {
