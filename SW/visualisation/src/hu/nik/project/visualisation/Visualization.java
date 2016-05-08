@@ -76,7 +76,7 @@ public abstract class Visualization implements IWheelVisualization {
                 label.setSize(Config.carImageSizeX, Config.carImageSizeY);
                 //car.setPosition(transformToVisulasation(car.getPosition()));
                 car.setPosition(transformToVector2D(car.getPosition()));
-                label.setLocation((int)car.getPosition().get_coordinateX(), (int)car.getPosition().get_coordinateY());
+                label.setLocation((int)car.getPosition().get_coordinateX(), (int)car.getPosition().get_coordinateY() * 2);
 
                 _drawingArea.add(label);
                 _drawingArea.setComponentZOrder(label, 0);
