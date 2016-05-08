@@ -63,7 +63,7 @@ public class SceneTest {
     public void addCarToScene() throws Exception {
         ScenePoint carPosition = new ScenePoint(500, 500);
         Car car = new Car(carPosition, 90);
-        scene.addCarToScene(car);
+        scene.addDummyCarToScene(car);
         Assert.assertTrue(scene.getSceneObjectByPosition(carPosition).getClass() == Car.class);
     }
 

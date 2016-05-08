@@ -20,7 +20,7 @@ public class ACC implements ICommBusDevice {
     private double wheelStateInDegrees;
     private double currentSpeed;
     private int targetSpeed;
-    private int nearestObstacleDistance;
+    private int nearestObstacleDistance = 1000;
 
     //inner
     private int minFollowingTime; //in secs
@@ -32,7 +32,7 @@ public class ACC implements ICommBusDevice {
     public ACC(CommBus commBus, CommBusConnectorType commBusConnectorType) {
         this.commBusConnector = commBus.createConnector(this, commBusConnectorType);
         minFollowingTime = 2;
-        wheelStateInDegrees = currentSpeed = targetSpeed = nearestObstacleDistance = 0;
+        wheelStateInDegrees = currentSpeed = targetSpeed = 0;
         gasPedal = breakPedal = 0;
         myHmi = Hmi.newInstance();
     }
@@ -69,9 +69,6 @@ public class ACC implements ICommBusDevice {
             try {
                 RadarMessagePacket data = (RadarMessagePacket) commBusConnector.receive();
                 nearestObstacleDistance = (int) data.getCurrentDistance();
-                if (enabled) {
-                    operateACC();
-                }
             } catch (CommBusException e) {
                 e.printStackTrace();
             }
@@ -112,9 +109,9 @@ public class ACC implements ICommBusDevice {
     }
 
     public void doWork() {
-        ACCMessagePackage message = new ACCMessagePackage(gasPedal, breakPedal); //so it doesnt have to remake it every time
-
         if (enabled) {
+            operateACC();
+            ACCMessagePackage message = new ACCMessagePackage(gasPedal, breakPedal); //so it doesnt have to remake it every time
             try {
                 commBusConnector.send(message);
             } catch (CommBusException e) {

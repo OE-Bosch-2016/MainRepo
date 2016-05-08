@@ -64,7 +64,7 @@ public class Scene implements ISensorScene {
         return null;
     }
 
-    public boolean addCarToScene(Car car) {
+    public boolean addDummyCarToScene(Car car) {
         if (!sceneObjects.contains(car)) {
             sceneObjects.add(car);
             return true;

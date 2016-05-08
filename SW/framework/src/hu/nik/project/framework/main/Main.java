@@ -5,6 +5,7 @@ import hu.nik.project.environment.ScenePoint;
 import hu.nik.project.environment.XMLParserException;
 import hu.nik.project.environment.logger.Logger;
 import hu.nik.project.environment.logger.LoggerException;
+import hu.nik.project.environment.objects.Car;
 import hu.nik.project.environment.objects.SceneObjectException;
 import hu.nik.project.framework.BoschCar;
 
@@ -61,6 +62,15 @@ public class Main {
             programLogger.log("Error during the car creation: " + e.getMessage());
             System.exit(1);
         }
+
+        // Add dummy stopped cars into the environment
+        try {
+            Car dummyCar = new Car(new ScenePoint(3100, 365), 90);
+        } catch (SceneObjectException e) {
+            System.out.println("Error during the car creation: " + e.getMessage());
+            programLogger.log("Error during the car creation: " + e.getMessage());
+        }
+        scene.addDummyCarToScene(car);
 
         // Start the visualisation
         programLogger.log("Starting visualisation...");

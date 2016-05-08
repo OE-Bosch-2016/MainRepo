@@ -29,15 +29,19 @@ public class Hmi implements IHmi {
     private Hmi(){}
 
     public void mileage(float mile) {
-        if (hmiListener != null)
+        if (hmiListener != null) {
             hmiListener.mileAgeChanged(mile);
+            kmh = (int)mile;
+        }
         else
             throw new NullPointerException("Hmi listener is missing");
     }
 
     public void tachometer(float value) {
-        if (hmiListener != null)
+        if (hmiListener != null) {
             hmiListener.tachometerChanged(value);
+            rpm = (int)value;
+        }
         else
             throw new NullPointerException("Hmi listener is missing");
     }
