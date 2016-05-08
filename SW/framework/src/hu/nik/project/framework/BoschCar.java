@@ -51,7 +51,7 @@ public class BoschCar extends Car {
 
         // Driver assistant components
         acc = new ACC(commBus, CommBusConnectorType.SenderReceiver);
-        tsr = new Tsr(commBus, CommBusConnectorType.SenderReceiver);
+        tsr = new Tsr(commBus, CommBusConnectorType.SenderReceiver, this);
 
         // Base components
         engine = new Engine(commBus, CommBusConnectorType.SenderReceiver);

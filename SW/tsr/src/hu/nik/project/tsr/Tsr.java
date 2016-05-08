@@ -4,6 +4,7 @@ import hu.nik.project.communication.*;
 import hu.nik.project.environment.objects.DirectionSign;
 import hu.nik.project.environment.objects.PrioritySign;
 import hu.nik.project.environment.objects.SpeedSign;
+import hu.nik.project.environment.objects.Car;
 import hu.nik.project.visualisation.car.model.DriverInputMessagePackage;
 
 /**
@@ -15,9 +16,11 @@ public class Tsr implements ICommBusDevice{
     private String stringData = "";
     private boolean enabled;
     private TsrMessagePackage packet = null;
+    private Car boschCar;
 
-    public Tsr(CommBus commBus, CommBusConnectorType commBusConnectorType) {
+    public Tsr(CommBus commBus, CommBusConnectorType commBusConnectorType, Car boschCar) {
         commBusConnector = commBus.createConnector(this, commBusConnectorType);
+        this.boschCar = boschCar;
     }
 
     @Override
