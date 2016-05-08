@@ -106,6 +106,7 @@ public class ACC implements ICommBusDevice {
             //do nothing
             // pedal = 0;
         }
+        nearestObstacleDistance = 1000;
     }
 
     public void doWork() {
