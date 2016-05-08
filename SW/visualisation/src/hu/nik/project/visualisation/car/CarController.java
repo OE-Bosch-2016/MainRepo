@@ -140,6 +140,7 @@ public class CarController {
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             gasPressed = false;
+            gas = 0;
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
@@ -154,6 +155,7 @@ public class CarController {
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             shuntPressed = false;
+            brake = 0;
         }
     }
 
