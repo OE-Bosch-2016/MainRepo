@@ -24,7 +24,7 @@ public class RadarModul implements IRadarSensor, ICommBusDevice {
     private CommBusConnector _commBusConnector;
     private CarController _carcontroller;
 
-    private static final int _viewDistance = 1000;
+    private static final int _viewDistance = 20000;  // 100 pixel ~ 1m ==> 200m = 200*100 pixel (Hodvogner 2016.05.08)
     private float _angelOfSight;
     private int _sampingTime;  //must be in Milisec
 

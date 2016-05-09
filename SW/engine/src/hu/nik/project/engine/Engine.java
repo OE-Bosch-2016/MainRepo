@@ -147,13 +147,19 @@ public class Engine implements ICommBusDevice {
     }
 
     public void doWork() {
+
+        EngineMessagePackage message;
+
         if (started) {
-            EngineMessagePackage message = new EngineMessagePackage(rpm); //so it doesnt have to remake it every time
-            try {
-                commBusConnector.send(message);
-            } catch (CommBusException e) {
-                e.printStackTrace();
-            }
+            message = new EngineMessagePackage(rpm); //so it doesnt have to remake it every time
+        } else {
+            message = new EngineMessagePackage(0);
+        }
+
+        try {
+            commBusConnector.send(message);
+        } catch (CommBusException e) {
+            e.printStackTrace();
         }
     }
 }

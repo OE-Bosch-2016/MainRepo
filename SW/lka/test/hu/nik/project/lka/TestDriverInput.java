@@ -21,7 +21,7 @@ public class TestDriverInput implements ICommBusDevice {
     public void commBusDataArrived() {}
 
     public void SendAsDriverInput(boolean lkaEnabled) throws Exception {
-        DriverInputMessagePackage message = new DriverInputMessagePackage(0,0,0,0,0,0,true,true,true,false,false,lkaEnabled,false);
+        DriverInputMessagePackage message = new DriverInputMessagePackage(0,0,0,0,0,0,true,true,true,false,false,lkaEnabled);
         commBusConnector.send(message);
     }
 

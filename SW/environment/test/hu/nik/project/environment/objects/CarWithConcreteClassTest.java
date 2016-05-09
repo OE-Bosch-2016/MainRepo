@@ -69,6 +69,7 @@ public class CarWithConcreteClassTest {
 
     @Test
     public void isVisibleFromObserver() {
-        Assert.assertTrue(car.isVisibleFromObserver(new ScenePoint(500, 750), 90, 45, 200)); // 90 degrees because of the car is 0 rotated (forward scanning);
+        Assert.assertFalse(car.isVisibleFromObserver(new ScenePoint(500, 701), 90, 45, 200)); // 90 degrees because of the car is 0 rotated (forward scanning);
+        Assert.assertTrue(car.isVisibleFromObserver(new ScenePoint(500, 699), 90, 45, 200)); // 90 degrees because of the car is 0 rotated (forward scanning);
     }
 }
