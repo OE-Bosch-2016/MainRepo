@@ -19,6 +19,17 @@ public class Transformation {
         return new Vector2D(coordinate.getX() / rate[0], coordinate.getY() / rate[1]);
     }
 
+    public static Vector2D transformToVisulasation(Vector2D coordinate){
+        coordinate.set_coordinateY((coordinate.get_coordinateY() - Config.originalY) / 2);
+        return coordinate;
+    }
+
+    public static Vector2D transformToVector2D(Vector2D coordinate){
+        float rate[] = scaleRate();
+
+        return new Vector2D(coordinate.get_coordinateX() / rate[0], coordinate.get_coordinateY() / rate[1]);
+    }
+
     private static float[] scaleRate(){
         float[] rate = new float[2];
         rate[0] = (float)Config.originalX / (float)Config.realSizeX;
