@@ -1,14 +1,15 @@
 package hu.nik.project.communication;
 
+
+import hu.nik.project.environment.ScenePoint;
+import hu.nik.project.environment.objects.SimpleRoad;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.nio.ByteBuffer;
-import hu.nik.project.environment.objects.SimpleRoad;
-import hu.nik.project.environment.ScenePoint;
 
 /**
  * Created by hodvogner.zoltan on 2016.03.24.
