@@ -11,6 +11,7 @@ import hu.nik.project.communication.CommBusConnector;
 import hu.nik.project.communication.CommBusConnectorType;
 import hu.nik.project.communication.CommBusException;
 
+
 import java.util.ArrayList;
 
 public class Camera implements ICamera, ICommBusDevice {
@@ -122,32 +123,39 @@ public	SceneObject[] visibleObjects;
 		}
 	}
 	
-	/*private void calcLaneDistance()
+	private void calcLaneDistance()
 	{
-		//Road road = currentScene.getVisibleSceneObjects(car.getBasePosition(),car.getRotation(),70);
-		Road road = null; //temporary to make it complie^
-	       	if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT)
-	       	{
-            	laneDistance = pDistance(currentCar.getBasePosition().getX(), currentCar.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
-        	}
-                else 
+		Road road=null;
+		for(int i=0; i<visibleObjects.length;i++)
 		{
-        	   double carDistanceToPoint = Math.sqrt(
-                           Math.pow(currentCar.getBasePosition().getX() - ((CurvedRoad)road).getReferencePoint().getX(),2)
-                         + Math.pow(currentCar.getBasePosition().getY() - ((CurvedRoad)road).getReferencePoint().getY(),2)
-                           );
-        	    if (carDistanceToPoint > (((CurvedRoad)road).getRadius()))
-                        
-        	    {
-        	      laneDistance = carDistanceToPoint - ((CurvedRoad)road).getRadius();
-        	    }
-        	    else
-        	    {
-        	        laneDistance = ((CurvedRoad)road).getRadius() - carDistanceToPoint;
-        	    }
-        	}
+			if (visibleObjects[i].getObjectType() == SimpleRoad.class || visibleObjects[i].getObjectType() == AdvancedRoad.class)
+			{
+				if(((Road)visibleObjects[i]).isPointOnTheRoad(currentCar.getBasePosition()));
+				{
+					road = (Road)visibleObjects[i];
+				}
+			}
+		}
 
-	}*/
+		if (road!=null) {
+			if (road.getObjectType() == SimpleRoad.SimpleRoadType.SIMPLE_STRAIGHT) {
+				laneDistance = pDistance(currentCar.getBasePosition().getX(), currentCar.getBasePosition().getY(), road.getTopPoint().getX(), road.getTopPoint().getY(), road.getBottomPoint().getX(), road.getBottomPoint().getY());
+			} else {
+				double carDistanceToPoint = Math.sqrt(
+						Math.pow(currentCar.getBasePosition().getX() - ((CurvedRoad) road).getReferencePoint().getX(), 2)
+								+ Math.pow(currentCar.getBasePosition().getY() - ((CurvedRoad) road).getReferencePoint().getY(), 2)
+				);
+				if (carDistanceToPoint > (((CurvedRoad) road).getRadius()))
+
+				{
+					laneDistance = carDistanceToPoint - ((CurvedRoad) road).getRadius();
+				} else {
+					laneDistance = ((CurvedRoad) road).getRadius() - carDistanceToPoint;
+				}
+			}
+		}
+
+	}
 	
 	private double pDistance(double x,double y,double x1,double y1,double x2,double y2)
 	{
